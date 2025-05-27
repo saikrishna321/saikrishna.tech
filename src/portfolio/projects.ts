@@ -50,7 +50,7 @@ const projects = [
     title: 'Appium Gestures Plugin',
     description: 'Appium plugin designed to perform gestures using W3C Actions.',
     source: 'https://github.com/AppiumTestDistribution/appium-gestures-plugin',
-    imgSource: 'ATD.webp', // This was 'ATD.webp', seems fine as a generic for the org's plugins
+    imgSource: 'GesturesPlugin.jpg',
   },
   // Added Taiko
   {
@@ -58,7 +58,7 @@ const projects = [
     description:
       'Taiko is a free and open source browser automation tool built by the team behind Gauge.',
     source: 'https://github.com/getgauge/taiko',
-    imgSource: 'taiko.webp', // Assuming this image will exist or be added to assets
+    imgSource: 'taiko.png',
   },
   // MCP WebDriverAgent Server - REMOVED
   // MCP Appium Gestures Server - REMOVED

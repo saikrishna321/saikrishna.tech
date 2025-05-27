@@ -479,36 +479,24 @@ console.log('Test completed successfully!');`}</pre>
           <h2 className='text-4xl font-heading font-bold text-center mb-16 text-white'>
             Open Source Projects
           </h2>
-          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+          <div className='flex flex-wrap justify-center gap-8'>
             {projects.map((project, index) => (
-              <div
-                key={index}
-                className='bg-gray-800/50 rounded-xl overflow-hidden border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:transform hover:scale-105'
-              >
-                {project.imgSource && (
-                  <div className='h-48 bg-gray-700 flex items-center justify-center p-4'>
-                    <img
-                      src={`/src/assets/images/${project.imgSource}`}
-                      alt={project.title}
-                      className='w-32 h-32 object-cover rounded-full'
-                    />
-                  </div>
-                )}
-                <div className='p-6'>
-                  <h3 className='text-xl font-heading font-bold mb-3 text-white'>
-                    {project.title}
-                  </h3>
-                  <p className='text-gray-400 mb-4'>{project.description}</p>
-                  <a
-                    href={project.source}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-200'
-                  >
-                    View Project →
-                  </a>
-                </div>
-              </div>
+              project.imgSource && (
+                <a
+                  key={index}
+                  href={project.source}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='transition-all duration-300 hover:scale-110'
+                  title={project.title}
+                >
+                  <img
+                    src={project.imgSource.startsWith('http') ? project.imgSource : `/src/assets/images/${project.imgSource}`}
+                    alt={project.title}
+                    className='w-24 h-24 object-cover rounded-full hover:shadow-lg'
+                  />
+                </a>
+              )
             ))}
           </div>
         </div>
