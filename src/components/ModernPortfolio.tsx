@@ -11,7 +11,7 @@ const ModernPortfolio = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0)
 
-  const roles = ['Blogger', 'Open source contributor', 'Mentor']
+  const roles = ['Blogger', 'Open source contributor', 'Mentor', 'Conference Speaker', 'Community Organizer']
 
   useEffect(() => {
     const handleScroll = () => {
