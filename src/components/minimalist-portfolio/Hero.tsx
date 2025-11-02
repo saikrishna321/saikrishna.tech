@@ -186,7 +186,7 @@ const Hero: React.FC<HeroProps> = ({ onGetInTouch }) => {
 
   useEffect(() => {
     const currentRole = roles[currentRoleIndex];
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
 
     if (!isDeleting && displayText.length < currentRole.length) {
       // Typing out
