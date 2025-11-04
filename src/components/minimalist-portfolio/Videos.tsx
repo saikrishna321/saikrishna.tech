@@ -103,7 +103,10 @@ const Videos: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className="bg-surface rounded-lg overflow-hidden border border-surface hover:border-primary transition-all duration-300">
+              <div 
+                className="bg-surface rounded-lg overflow-hidden border border-surface hover:border-primary transition-all duration-300 cursor-pointer"
+                onClick={() => window.open(video.url, '_blank', 'noopener,noreferrer')}
+              >
                 <div className="relative aspect-video overflow-hidden">
                   <img
                     src={video.thumbnail}
@@ -134,18 +137,8 @@ const Videos: React.FC = () => {
 
                 {/* Video Content */}
                 <div className="p-4">
-                  <h3 
-                    className="text-lg font-bold text-light mb-2 hover:text-primary transition-colors cursor-pointer"
-                    onClick={() => window.open(video.url, '_blank', 'noopener,noreferrer')}
-                  >
-                    {video.title}
-                  </h3>
-                  <p className="text-light/75 text-sm mb-3 line-clamp-2">
-                    {video.description}
-                  </p>
-                  
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex flex-wrap gap-2">
                     {video.tags.slice(0, 3).map((tag, idx) => (
                       <span
                         key={idx}
@@ -159,15 +152,6 @@ const Videos: React.FC = () => {
                         +{video.tags.length - 3} more
                       </span>
                     )}
-                  </div>
-
-                  {/* Published Date */}
-                  <div className="text-light/50 text-xs font-mono">
-                    {new Date(video.publishedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
                   </div>
                 </div>
               </div>

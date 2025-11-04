@@ -10,15 +10,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
     window.open(video.url, '_blank', 'noopener,noreferrer')
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
-
   return (
     <div 
       className='bg-gray-900/50 rounded-xl border border-gray-800 hover:border-blue-500 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer overflow-hidden'
@@ -57,7 +48,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
       {/* Video Content */}
       <div className='p-6'>
         {/* Tags */}
-        <div className='flex flex-wrap gap-2 mb-4'>
+        <div className='flex flex-wrap gap-2'>
           {video.tags.slice(0, 3).map((tag, index) => (
             <span
               key={index}
@@ -71,11 +62,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
               +{video.tags.length - 3} more
             </span>
           )}
-        </div>
-
-        {/* Published Date */}
-        <div className='text-gray-500 text-sm'>
-          Published on {formatDate(video.publishedAt)}
         </div>
       </div>
     </div>

@@ -198,5 +198,14 @@ export const videos: Video[] = [
     thumbnail: 'https://img.youtube.com/vi/lugEm6j1Nl8/maxresdefault.jpg',
     publishedAt: '2025-11-01',
     tags: ['YouTube', 'Video'],
+  },
+  {
+    id: '20',
+    title: 'New Short',
+    description: 'Quick mobile testing tip.',
+    url: 'https://www.youtube.com/shorts/7MoJrRvB6No',
+    thumbnail: 'https://img.youtube.com/vi/7MoJrRvB6No/maxresdefault.jpg',
+    publishedAt: '2025-01-15',
+    tags: ['YouTube', 'Shorts', 'Video'],
   }
 ]
