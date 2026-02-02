@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import heroImage from '../../assets/images/profile_sai.webp';
-import lambdaTestLogo from '../../assets/images/LambdaTest-logo1.png';
+import React, { useEffect, useState } from 'react';
 import backgroundImage from '../../assets/images/background1.png';
+import heroImage from '../../assets/images/profile_sai.webp';
+import testMuAiLogo from '../../assets/images/testmuai-logo.svg';
 import { SOCIAL_LINKS } from '../../portfolio/constants';
 
 interface LandingHeroProps {
@@ -256,7 +256,7 @@ console.log('Test completed successfully!');`}</pre>
               </h2>
               <div className="flex justify-center lg:justify-start items-center mb-6">
                 <span className="text-lg md:text-xl text-light/75 mr-3">at</span>
-                <img src={lambdaTestLogo} alt="LambdaTest Logo" className="w-32 md:w-40 h-auto" />
+                <img src={testMuAiLogo} alt="TestMu AI Logo" className="w-32 md:w-40 h-auto" />
               </div>
             </motion.div>
 

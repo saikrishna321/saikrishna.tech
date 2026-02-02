@@ -1,10 +1,9 @@
-import React from 'react'
-import Projects from '../containers/projects/Projects'
+import heroImage from '../assets/images/SrinivasanSekar.webp'; // Added import
+import AboutMe from '../containers/aboutme/AboutMe'; // Added import
 import Blogs from '../containers/blogs/Blogs'
 import Conferences from '../containers/conferences/conferences'
+import Projects from '../containers/projects/Projects'
 import Workshops from '../containers/workshops/Workshops'
-import AboutMe from '../containers/aboutme/AboutMe' // Added import
-import heroImage from '../assets/images/SrinivasanSekar.webp' // Added import
 
 export default function Home() {
   return (
@@ -18,7 +17,7 @@ export default function Home() {
             className="w-48 h-48 rounded-full mx-auto mb-8 border-4 border-custom-highlight" 
           />
           <h1 className="text-5xl font-bold font-sign mb-4">Sai Krishna</h1>
-          <p className="text-2xl font-inter mb-6">Director of Engineering at LambdaTest</p>
+          <p className="text-2xl font-inter mb-6">Director of Engineering at TestMu AI</p>
           <div className="text-lg font-lora">
             <p>Conference Speaker | Mentor | Blogger | Open Source Contributor | Community Organiser</p>
           </div>

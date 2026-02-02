@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
-import { SOCIAL_LINKS } from '../../portfolio/constants';
-import lambdaTestLogo from '../../assets/images/LambdaTest-logo1.png';
+import React, { useEffect, useState } from 'react';
 import heroImage from '../../assets/images/profile_sai.webp';
+import testMuAiLogo from '../../assets/images/testmuai-logo.svg';
+import { SOCIAL_LINKS } from '../../portfolio/constants';
 
 // Animated SVG Path Drawing Component
 const PathDrawing: React.FC = () => {
@@ -405,7 +405,7 @@ const Hero: React.FC<HeroProps> = ({ onGetInTouch }) => {
           <motion.h2 variants={itemVariants} className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-light/75 mt-2">Director of Engineering</motion.h2>
           <motion.div variants={itemVariants} className="mt-4 flex items-center gap-3 justify-center lg:justify-start">
             <span className="text-lg text-light/75">at</span>
-            <img src={lambdaTestLogo} alt="LambdaTest Logo" className="h-8 md:h-10" />
+            <img src={testMuAiLogo} alt="TestMu AI Logo" className="h-8 md:h-10" />
           </motion.div>
           <motion.div variants={itemVariants} className="mt-4">
             <p className="text-lg text-light/75 text-center lg:text-left">
@@ -427,7 +427,7 @@ const Hero: React.FC<HeroProps> = ({ onGetInTouch }) => {
             </p>
           </motion.div>
           <motion.p variants={itemVariants} className="mt-6 max-w-xl text-lg text-light/75 text-center lg:text-left mx-auto lg:mx-0">
-            I'm a passionate technologist and leader in the software testing and automation space. As Director of Engineering at LambdaTest, I drive innovation in cloud-based testing platforms that serve millions of developers worldwide.
+            I'm a passionate technologist and leader in the software testing and automation space. As Director of Engineering at TestMu AI, I drive innovation in cloud-based testing platforms that serve millions of developers worldwide.
           </motion.p>
           <motion.div variants={itemVariants} className="mt-12 flex justify-center lg:justify-start">
             <motion.a

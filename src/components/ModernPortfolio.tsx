@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { projects } from '../portfolio/projects'
-import { conferences } from '../portfolio/conferences'
-import { blogs } from '../portfolio/blogs'
-import heroImage from '../assets/images/profile_sai.webp'
-import lambdaTestLogo from '../assets/images/LambdaTest-logo1.png'
 import backgroundImage from '../assets/images/background1.png'
+import heroImage from '../assets/images/profile_sai.webp'
+import testMuAiLogo from '../assets/images/testmuai-logo.svg'
+import { blogs } from '../portfolio/blogs'
+import { conferences } from '../portfolio/conferences'
+import { projects } from '../portfolio/projects'
 
 // Import project images
 import appiumImg from '../assets/images/appium.webp'
-import seleniumImg from '../assets/images/selenium.webp'
-import webdriverioImg from '../assets/images/webdriverio.webp'
+import AppiumWaitImg from '../assets/images/AppiumWait2.webp'
 import ATDImg from '../assets/images/ATD.webp'
 import DeviceFarmImg from '../assets/images/DeviceFarm-Logo.jpg'
-import AppiumWaitImg from '../assets/images/AppiumWait2.webp'
 import GesturesPluginImg from '../assets/images/GesturesPlugin.jpg'
-import taikoImg from '../assets/images/taiko.png'
 import mcpWdaLogoImg from '../assets/images/mcp-wdalogo.png'
+import seleniumImg from '../assets/images/selenium.webp'
+import taikoImg from '../assets/images/taiko.png'
+import webdriverioImg from '../assets/images/webdriverio.webp'
 
 // Create mapping for project images
 const projectImageMap: Record<string, string> = {
@@ -85,8 +85,8 @@ const ModernPortfolio = () => {
     {
       icon: '🚀',
       title: 'Director of Engineering',
-      description: 'Leading engineering teams at LambdaTest - cloud testing platform',
-      highlight: 'LambdaTest Leadership',
+      description: 'Leading engineering teams at TestMu AI - cloud testing platform',
+      highlight: 'TestMu AI Leadership',
     },
     {
       icon: '🔧',
@@ -467,7 +467,7 @@ console.log('Test completed successfully!');`}</pre>
                 </h2>
                 <div className='flex justify-center lg:justify-start items-center mb-6'>
                   <span className='text-lg md:text-xl text-gray-300 mr-3'>at</span>
-                  <img src={lambdaTestLogo} alt='LambdaTest Logo' className='w-32 md:w-40 h-auto' />
+                  <img src={testMuAiLogo} alt='TestMu AI Logo' className='w-32 md:w-40 h-auto' />
                 </div>
               </div>
 
@@ -659,7 +659,7 @@ console.log('Test completed successfully!');`}</pre>
               I&apos;m a passionate technologist and leader in the software testing and automation
               space. As{' '}
               <span className='relative inline-block bg-gradient-to-r from-blue-400/30 via-blue-400/40 to-blue-400/30 px-1 py-0.5 rounded-sm transform -skew-x-1'>
-                Director of Engineering at LambdaTest
+                Director of Engineering at TestMu AI
               </span>
               , I drive innovation in cloud-based testing platforms that serve{' '}
               <span className='relative inline-block bg-gradient-to-r from-blue-400/30 via-blue-400/40 to-blue-400/30 px-1 py-0.5 rounded-sm transform skew-x-1'>

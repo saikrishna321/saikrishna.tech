@@ -1,5 +1,5 @@
+import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import React, { useEffect } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import AnimatedSection from './AnimatedSection';
 
 // Animated Counter Component
@@ -61,7 +61,7 @@ const About: React.FC = () => {
               <h3 className="text-2xl font-bold text-primary mb-4">Professional Journey</h3>
               <div className="space-y-4 text-base text-light/80 leading-relaxed">
                 <p>
-                  Hello! I'm <span className="text-primary font-semibold">Sai Krishna</span>, a passionate technologist and leader in the software testing and automation space. As Director of Engineering at LambdaTest, I drive innovation in cloud-based testing platforms that serve millions of developers worldwide, enabling seamless cross-browser and mobile testing.
+                  Hello! I'm <span className="text-primary font-semibold">Sai Krishna</span>, a passionate technologist and leader in the software testing and automation space. As Director of Engineering at TestMu AI, I drive innovation in cloud-based testing platforms that serve millions of developers worldwide, enabling seamless cross-browser and mobile testing.
                 </p>
                 
                 <p>
