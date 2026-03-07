@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
+
 interface Section {
   id: string;
   name: string;
@@ -14,9 +15,16 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ sections, onNavigate, activeSectionId }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const navRef = useRef<HTMLUListElement>(null);
   const navItemsRef = useRef<(HTMLLIElement | null)[]>([]);
+  // Track scroll for glass nav
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -49,16 +57,9 @@ const Header: React.FC<HeaderProps> = ({ sections, onNavigate, activeSectionId }
       }
     };
 
-    // Initial update
     updateIndicator();
-
-    // Update on window resize
     window.addEventListener('resize', updateIndicator);
-    
-    // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(updateIndicator);
-    
-    // Also use a small timeout as fallback
     const timeout = setTimeout(updateIndicator, 100);
 
     return () => {
@@ -66,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ sections, onNavigate, activeSectionId }
       clearTimeout(timeout);
     };
   }, [activeSectionId, sections]);
-  
+
   const handleLinkClick = (id: string) => {
     onNavigate(id);
     setIsMenuOpen(false);
@@ -87,17 +88,17 @@ const Header: React.FC<HeaderProps> = ({ sections, onNavigate, activeSectionId }
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-sm shadow-md">
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass-nav' : 'bg-transparent'}`}>
         <div className="container mx-auto px-6 md:px-12 lg:px-24 flex justify-between items-center h-20">
           <button onClick={() => onNavigate('home')} className="text-2xl font-bold text-primary font-mono">SK</button>
-          
+
           <nav className="hidden md:block">
             <ul ref={navRef} className="flex items-center space-x-8 relative">
               {sections.map((section, index) => (
                 <li key={section.id} ref={el => { navItemsRef.current[index] = el; }}>
                   <motion.button
                     onClick={() => handleLinkClick(section.id)}
-                    className={`text-base md:text-lg font-mono transition-colors duration-300 ${activeSectionId === section.id ? 'text-primary' : 'text-light hover:text-primary'}`}
+                    className={`nav-link text-base md:text-lg font-medium transition-colors duration-300 ${activeSectionId === section.id ? 'text-primary' : 'text-light hover:text-primary/80'}`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -116,46 +117,49 @@ const Header: React.FC<HeaderProps> = ({ sections, onNavigate, activeSectionId }
               />
             </ul>
           </nav>
-          
-          <button
-            className="md:hidden z-[60] relative"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? (
-              <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <div className="w-6 h-6 flex flex-col justify-around">
-                <motion.span
-                  className="block w-full h-0.5 bg-primary origin-center"
-                  variants={topBarVariants}
-                  animate={isMenuOpen ? 'open' : 'closed'}
-                  transition={{ duration: 0.3 }}
-                ></motion.span>
-                <motion.span
-                  className="block w-full h-0.5 bg-primary"
-                  variants={middleBarVariants}
-                  animate={isMenuOpen ? 'open' : 'closed'}
-                  transition={{ duration: 0.3 }}
-                ></motion.span>
-                <motion.span
-                  className="block w-full h-0.5 bg-primary origin-center"
-                  variants={bottomBarVariants}
-                  animate={isMenuOpen ? 'open' : 'closed'}
-                  transition={{ duration: 0.3 }}
-                ></motion.span>
-              </div>
-            )}
-          </button>
+
+          <div className="flex items-center gap-3">
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden z-[60] relative"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? (
+                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <div className="w-6 h-6 flex flex-col justify-around">
+                  <motion.span
+                    className="block w-full h-0.5 bg-primary origin-center"
+                    variants={topBarVariants}
+                    animate={isMenuOpen ? 'open' : 'closed'}
+                    transition={{ duration: 0.3 }}
+                  ></motion.span>
+                  <motion.span
+                    className="block w-full h-0.5 bg-primary"
+                    variants={middleBarVariants}
+                    animate={isMenuOpen ? 'open' : 'closed'}
+                    transition={{ duration: 0.3 }}
+                  ></motion.span>
+                  <motion.span
+                    className="block w-full h-0.5 bg-primary origin-center"
+                    variants={bottomBarVariants}
+                    animate={isMenuOpen ? 'open' : 'closed'}
+                    transition={{ duration: 0.3 }}
+                  ></motion.span>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Backdrop overlay - Outside header for proper z-index stacking */}
+      {/* Backdrop overlay */}
       {isMenuOpen && (
         <motion.div
-          className="fixed inset-0 bg-dark/95 backdrop-blur-sm z-[90] md:hidden"
+          className="fixed inset-0 mobile-menu-backdrop z-[90] md:hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -163,9 +167,9 @@ const Header: React.FC<HeaderProps> = ({ sections, onNavigate, activeSectionId }
         />
       )}
 
-      {/* Mobile menu - Outside header for proper z-index stacking */}
+      {/* Mobile menu */}
       <motion.div
-        className="fixed top-0 right-0 h-full w-3/4 max-w-sm bg-surface shadow-2xl z-[100] md:hidden overflow-y-auto"
+        className="fixed top-0 right-0 h-full w-3/4 max-w-sm mobile-menu-panel shadow-2xl z-[100] md:hidden overflow-y-auto"
         initial={false}
         animate={{
           x: isMenuOpen ? 0 : '100%'
@@ -178,8 +182,8 @@ const Header: React.FC<HeaderProps> = ({ sections, onNavigate, activeSectionId }
               <li key={section.id}>
                 <motion.button
                   onClick={() => handleLinkClick(section.id)}
-                  className={`text-xl font-mono w-full text-left py-2 transition-colors duration-300 ${
-                    activeSectionId === section.id ? 'text-primary' : 'text-light hover:text-primary'
+                  className={`mobile-nav-link text-xl w-full text-left py-3 px-4 rounded-lg transition-all duration-300 ${
+                    activeSectionId === section.id ? 'text-primary border-l-primary bg-primary/10' : 'text-light'
                   }`}
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.95 }}

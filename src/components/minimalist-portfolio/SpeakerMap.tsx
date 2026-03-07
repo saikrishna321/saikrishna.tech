@@ -1,0 +1,388 @@
+import { useEffect, useState, useRef, useCallback } from 'react';
+import Globe from 'react-globe.gl';
+
+const styles = `
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+`;
+
+const CONFERENCES = [
+  { city: 'London', country: 'UK', lat: 51.5074, lng: -0.1278, conf: 'AppiumConf', year: '2019', talk: 'Life Cycle of an Appium Command' },
+  { city: 'Austin', country: 'USA', lat: 30.2672, lng: -97.7431, conf: 'SeleniumConf', year: '2017', talk: 'Dockerize Appium Tests: Test Inside Containers', video: 'https://youtu.be/jGW6ycW_tTQ' },
+  { city: 'Chicago', country: 'USA', lat: 41.8781, lng: -87.6298, conf: 'SeleniumConf', year: '2023', talk: 'Clean Code Practices for Test Automation' },
+  { city: 'Colombo', country: 'Sri Lanka', lat: 6.9271, lng: 79.8612, conf: 'SLASSCOM', year: '2019', talk: 'Shift Left for Better End-User Experience' },
+  { city: 'Dublin', country: 'Ireland', lat: 53.3498, lng: -6.2603, conf: 'Quest for Quality', year: '2018', talk: 'On Demand Private Appium Device Cloud using ATD' },
+  { city: 'Tallinn', country: 'Estonia', lat: 59.4370, lng: 24.7536, conf: 'Nordic Testing Days', year: '2025', talk: 'Advanced Appium Workshop' },
+  { city: 'Barcelona', country: 'Spain', lat: 41.3851, lng: 2.1734, conf: 'SeleniumConf', year: '2018', talk: 'Next Level Front-end Testing with DevTools & WebDriver' },
+  { city: 'Belgrade', country: 'Serbia', lat: 44.7866, lng: 20.4489, conf: 'Belgrade Test Conference', year: '2018', talk: 'On Demand Private Appium Device Cloud' },
+  { city: 'Vilnius', country: 'Lithuania', lat: 54.6872, lng: 25.2797, conf: 'TestCon Europe', year: '2025', talk: 'Testing Agentic AI Applications: Beyond Traditional QA' },
+  { city: 'Singapore', country: 'Singapore', lat: 1.3521, lng: 103.8198, conf: 'XConf', year: '2023', talk: 'Addressing Unconscious Bias & Ethics in Testing', video: 'https://youtu.be/QMr30Za_-vM' },
+  { city: 'Brussels', country: 'Belgium', lat: 50.8503, lng: 4.3517, conf: 'FOSDEM', year: '2017', talk: 'Future of Mobile Automation Testing, Appium Steals It', video: 'https://video.fosdem.org/2017/H.2213/mobile_testing_with_appium.mp4' },
+  { city: 'Bangalore', country: 'India', lat: 12.9716, lng: 77.5946, conf: 'SeleniumConf & AppiumConf', year: '2018', talk: 'Code Once Test Anywhere: Appium Device Cloud using ATD' },
+  { city: 'Chennai', country: 'India', lat: 13.0827, lng: 80.2707, conf: 'TechXpresso - IDFC First Bank', year: '2026', talk: 'Testing Autonomous AI Agents: Beyond Traditional QA' },
+  { city: 'Valencia', country: 'Spain', lat: 39.4699, lng: -0.3763, conf: 'SeleniumConf & AppiumConf', year: '2025', talk: 'Advanced Appium 2.0 Workshop', video: 'https://youtu.be/lugEm6j1Nl8' },
+];
+
+const VIRTUAL_CONFERENCES = [
+  { conf: 'Automation Guild', year: '2026', talk: 'Testing Autonomous AI Agents' },
+  { conf: 'TestMu Conf', year: '2025', talk: 'Mastering Appium 3 & QA for AI Agents' },
+  { conf: 'Spartans Summit', year: '2025', talk: 'Building & Testing AI-Agent Powered LLM Apps', video: 'https://www.youtube.com/watch?v=9mHfvGN7FwU' },
+  { conf: 'SeleniumConf', year: '2024', talk: 'Harnessing Open-Source: Building a Device Farm' },
+  { conf: 'AppiumConf', year: '2024', talk: 'The Performance Paradox: Mobile App Optimisation' },
+  { conf: 'Spartans Summit', year: '2024', talk: 'Web Performance Metrics for Testers', video: 'https://www.youtube.com/watch?v=uo_lX1pUv9o' },
+  { conf: 'TestMu Conf', year: '2023', talk: 'Building Appium 2.0 Plugin Live', video: 'https://www.youtube.com/watch?v=b6yWXfLpazc' },
+  { conf: 'SeleniumConf', year: '2022', talk: 'Build Your Own Appium 2.0 Driver' },
+  { conf: 'TestMu Conf', year: '2022', talk: "Appium: Endgame & What's Next?" },
+  { conf: 'Automation Guild', year: '2022', talk: 'Testing Containers & k8s Manifests' },
+  { conf: 'Worqference', year: '2022', talk: 'Automate Mobile Gestures Using Appium' },
+  { conf: 'Agile India', year: '2022', talk: 'Speed Matters: Client Side Performance' },
+  { conf: 'VodQA', year: '2022', talk: 'Build Appium 2.0 Plugins Workshop' },
+  { conf: 'AppiumConf', year: '2021', talk: 'Build Your Own Appium Plugin' },
+  { conf: 'Agile India', year: '2021', talk: 'Testing Service Mesh & k8s Manifests' },
+  { conf: 'Automation Guild', year: '2021', talk: 'Consumer Driven Contracts' },
+  { conf: 'Future of Testing: Mobile', year: '2021', talk: "Appium 2.0: What's Next" },
+  { conf: 'SeleniumConf', year: '2020', talk: 'Advanced Appium Workshop' },
+];
+
+const HOME = { city: 'Bangalore', country: 'India', lat: 12.9716, lng: 77.5946 };
+
+const arcsData = CONFERENCES.map((conf, i) => ({
+  startLat: HOME.lat,
+  startLng: HOME.lng,
+  endLat: conf.lat,
+  endLng: conf.lng,
+  color: ['rgba(253, 186, 174, 0.8)', 'rgba(232, 160, 144, 0.4)'],
+  conf: conf.conf,
+  city: conf.city,
+  index: i,
+}));
+
+const pointsData = [
+  { ...HOME, size: 0.8, color: '#10b981', label: 'Home Base' },
+  ...CONFERENCES.map(c => ({ ...c, size: 0.5, color: '#fdbaae', label: c.conf })),
+];
+
+const SpeakerMap = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [globeReady, setGlobeReady] = useState(false);
+  const [selectedConf, setSelectedConf] = useState<typeof CONFERENCES[0] | null>(null);
+  const [showVirtual, setShowVirtual] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const globeRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setDimensions({ width: rect.width, height: rect.height });
+      }
+    };
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
+  useEffect(() => {
+    if (globeRef.current && globeReady) {
+      globeRef.current.controls().autoRotate = true;
+      globeRef.current.controls().autoRotateSpeed = 0.5;
+      globeRef.current.controls().enableZoom = true;
+      globeRef.current.pointOfView({ lat: 20, lng: 77, altitude: 2.5 }, 1000);
+    }
+  }, [globeReady]);
+
+  const handlePointClick = useCallback((point: any) => {
+    if (point.label === 'Home Base') {
+      setShowVirtual(true);
+      setSelectedConf(null);
+      if (globeRef.current) {
+        globeRef.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 1.8 }, 1000);
+      }
+      return;
+    }
+    if (point.conf) {
+      const conf = CONFERENCES.find(c => c.city === point.city);
+      setSelectedConf(conf || null);
+      setShowVirtual(false);
+      if (globeRef.current) {
+        globeRef.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 1.8 }, 1000);
+      }
+    }
+  }, []);
+
+  const uniqueCountries = new Set(CONFERENCES.map(c => c.country)).size;
+
+  return (
+    <div className="relative w-full h-screen -mx-6 md:-mx-12 lg:-mx-16 -mt-32 -mb-12" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
+      <style>{styles}</style>
+
+      {/* Globe Container */}
+      <div
+        ref={containerRef}
+        className="absolute inset-0"
+        style={{ animation: isLoaded ? 'fade-in-up 1s ease-out forwards' : 'none' }}
+      >
+        {dimensions.width > 0 && (
+          <Globe
+            ref={globeRef}
+            width={dimensions.width}
+            height={dimensions.height}
+            globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+            bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+            backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+            arcsData={arcsData}
+            arcColor="color"
+            arcDashLength={0.5}
+            arcDashGap={0.2}
+            arcDashAnimateTime={2000}
+            arcStroke={0.5}
+            arcsTransitionDuration={1000}
+            pointsData={pointsData}
+            pointAltitude={0.01}
+            pointColor="color"
+            pointRadius="size"
+            pointsMerge={false}
+            onPointClick={handlePointClick}
+            atmosphereColor="#fdbaae"
+            atmosphereAltitude={0.2}
+            onGlobeReady={() => setGlobeReady(true)}
+          />
+        )}
+      </div>
+
+      {/* Overlay Gradient */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-page via-transparent to-page/50" />
+
+      {/* Stats Panel */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 p-6 z-10 transition-all duration-700 delay-500 ${
+          isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
+        <div className="max-w-4xl mx-auto">
+          {/* Title */}
+          <div className="mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-2">
+              <span className="text-primary">Conference Speaking</span>
+            </h2>
+            <p className="text-light/50 text-sm md:text-base">
+              Sharing knowledge on test automation, Appium & Selenium across the globe
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-6 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-light/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-light/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-light">{uniqueCountries}</p>
+                <p className="text-xs text-light/40 uppercase tracking-wider">Countries</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-light/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-light/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-light">{CONFERENCES.length}</p>
+                <p className="text-xs text-light/40 uppercase tracking-wider">Cities</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-light/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-light/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-light">{CONFERENCES.length + VIRTUAL_CONFERENCES.length}+</p>
+                <p className="text-xs text-light/40 uppercase tracking-wider">Talks</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Conference List */}
+          <div className="flex flex-wrap gap-2">
+            {CONFERENCES.map((conf, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setSelectedConf(conf);
+                  setShowVirtual(false);
+                  if (globeRef.current) {
+                    globeRef.current.pointOfView({ lat: conf.lat, lng: conf.lng, altitude: 1.5 }, 1000);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                  selectedConf?.city === conf.city && !showVirtual
+                    ? 'bg-primary text-page'
+                    : 'bg-light/5 text-light/60 hover:bg-light/10 hover:text-light'
+                }`}
+              >
+                {conf.city}
+              </button>
+            ))}
+            <button
+              onClick={() => {
+                setShowVirtual(!showVirtual);
+                setSelectedConf(null);
+                if (globeRef.current) {
+                  globeRef.current.pointOfView({ lat: HOME.lat, lng: HOME.lng, altitude: 2.0 }, 1000);
+                }
+              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 inline-flex items-center gap-1.5 ${
+                showVirtual
+                  ? 'bg-emerald-500 text-white'
+                  : 'bg-light/5 text-light/60 hover:bg-light/10 hover:text-light'
+              }`}
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Virtual ({VIRTUAL_CONFERENCES.length})
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Selected Conference Card */}
+      {selectedConf && (
+        <div
+          className="absolute top-24 right-6 z-20 w-72 p-4 rounded-2xl bg-light/5 backdrop-blur-xl border border-light/10"
+          style={{ animation: 'fade-in-up 0.3s ease-out forwards' }}
+        >
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <h3 className="font-semibold text-light">{selectedConf.city}</h3>
+              <p className="text-sm text-light/50">{selectedConf.country}</p>
+            </div>
+            <button onClick={() => setSelectedConf(null)} className="p-1 rounded-lg hover:bg-light/10 transition-colors">
+              <svg className="w-4 h-4 text-light/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm">
+              <div className="w-6 h-6 rounded-lg bg-light/10 flex items-center justify-center shrink-0">
+                <svg className="w-3 h-3 text-light/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <span className="text-light/70">{selectedConf.conf} &middot; {selectedConf.year}</span>
+            </div>
+            <div className="flex items-start gap-2 text-sm">
+              <div className="w-6 h-6 rounded-lg bg-light/10 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-3 h-3 text-light/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </div>
+              <span className="text-light/50 text-xs leading-relaxed">{selectedConf.talk}</span>
+            </div>
+            {selectedConf.video && (
+              <a
+                href={selectedConf.video}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-xs text-primary/80 hover:text-primary transition-colors mt-1"
+              >
+                <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <span>Watch Talk</span>
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Virtual Conferences Panel */}
+      {showVirtual && (
+        <div
+          className="absolute top-24 right-6 z-20 w-80 max-h-[70vh] rounded-2xl bg-light/5 backdrop-blur-xl border border-light/10 overflow-hidden flex flex-col"
+          style={{ animation: 'fade-in-up 0.3s ease-out forwards' }}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-light/5">
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <h3 className="font-semibold text-light text-sm">Virtual Conferences</h3>
+              <span className="text-xs text-light/40">{VIRTUAL_CONFERENCES.length}</span>
+            </div>
+            <button onClick={() => setShowVirtual(false)} className="p-1 rounded-lg hover:bg-light/10 transition-colors">
+              <svg className="w-4 h-4 text-light/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="overflow-y-auto p-3 space-y-1.5">
+            {VIRTUAL_CONFERENCES.map((vc, i) => (
+              <div key={i} className="p-3 rounded-xl bg-light/[0.03] hover:bg-light/[0.06] transition-colors">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-semibold text-emerald-400/80">{vc.conf}</span>
+                  <div className="flex items-center gap-2">
+                    {vc.video && (
+                      <a
+                        href={vc.video}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary/60 hover:text-primary transition-colors"
+                        title="Watch Talk"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </a>
+                    )}
+                    <span className="text-xs text-light/30 font-mono">{vc.year}</span>
+                  </div>
+                </div>
+                <p className="text-xs text-light/60 leading-relaxed">{vc.talk}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Legend */}
+      <div className="absolute top-24 left-6 z-10 space-y-2">
+        <div className="flex items-center gap-2 text-xs text-light/40">
+          <div className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span>Home Base</span>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-light/40">
+          <div className="w-2 h-2 rounded-full bg-primary" />
+          <span>In-Person ({CONFERENCES.length})</span>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-light/40">
+          <svg className="w-2 h-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span>Virtual ({VIRTUAL_CONFERENCES.length})</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SpeakerMap;

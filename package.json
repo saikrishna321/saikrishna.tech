@@ -14,14 +14,19 @@
   },
   "dependencies": {
     "@builder.io/partytown": "^0.8.0",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
     "@types/react-router-dom": "^5.3.3",
+    "@types/three": "^0.183.1",
     "@vercel/analytics": "^1.0.1",
     "eslint-config-react-app": "^7.0.0",
     "framer-motion": "^11.3.19",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-globe.gl": "^2.37.0",
     "react-router-dom": "^7.6.2",
-    "react-twitter-widgets": "^1.11.0"
+    "react-twitter-widgets": "^1.11.0",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",

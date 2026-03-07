@@ -16,7 +16,7 @@ const TwitterIcon = () => (
 
 const Footer: React.FC = () => {
   return (
-    <footer className="py-6 text-center">
+    <footer className="py-6 text-center border-t border-white/10">
         <div className="flex md:hidden justify-center items-center space-x-6 mb-4">
             <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="text-light/75 hover:text-primary transition-colors duration-300">
                 <GithubIcon />

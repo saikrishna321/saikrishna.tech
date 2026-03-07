@@ -36,7 +36,7 @@ const Workshops: React.FC = () => {
                 className="group relative"
               >
                 {/* Card Container */}
-                <div className="relative h-full bg-dark border border-surface/50 rounded-2xl overflow-hidden transition-all duration-500 hover:border-primary/50">
+                <div className="relative h-full glass-card-hover rounded-2xl overflow-hidden">
                   {/* Gradient Overlay on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
@@ -80,7 +80,7 @@ const Workshops: React.FC = () => {
                         {(workshop as any).location && (
                           <div className="flex items-center gap-2 text-light/60 text-sm">
                             <svg 
-                              className="w-4 h-4 text-primary" 
+                              className="w-4 h-4 text-primary"
                               fill="none" 
                               stroke="currentColor" 
                               viewBox="0 0 24 24"
@@ -97,7 +97,7 @@ const Workshops: React.FC = () => {
                           href={workshop.source}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary/10 border border-primary text-primary rounded-lg font-mono text-sm hover:bg-primary hover:text-dark transition-all duration-300 group/btn"
+                          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-dark rounded-lg font-mono text-sm font-semibold hover:bg-primary/90 transition-all duration-300 group/btn"
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >

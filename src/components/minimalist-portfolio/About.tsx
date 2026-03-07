@@ -57,7 +57,7 @@ const About: React.FC = () => {
         >
           {/* Biography Section - Left Side (2 columns) */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-dark border border-surface/30 rounded-2xl p-8 md:p-10 space-y-5">
+            <div className="glass-card rounded-2xl p-8 md:p-10 space-y-5">
               <h3 className="text-2xl font-bold text-primary mb-4">Professional Journey</h3>
               <div className="space-y-4 text-base text-light/80 leading-relaxed">
                 <p>
@@ -70,7 +70,7 @@ const About: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-dark border border-surface/30 rounded-2xl p-8 md:p-10 space-y-5">
+            <div className="glass-card rounded-2xl p-8 md:p-10 space-y-5">
               <h3 className="text-2xl font-bold text-primary mb-4">Beyond the Code</h3>
               <div className="space-y-4 text-base text-light/80 leading-relaxed">
                 <p>
@@ -89,11 +89,11 @@ const About: React.FC = () => {
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="group relative bg-dark border border-surface/30 rounded-xl p-6 hover:border-primary/50 transition-all duration-300 overflow-hidden"
+                className="group relative glass-card-hover glass-border-gradient rounded-xl p-6 overflow-hidden"
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                whileHover={{ y: -8, borderColor: '#64ffda' }}
+                whileHover={{ y: -8 }}
               >
                 {/* Gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

@@ -69,7 +69,7 @@ const OpenSource: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-surface rounded-lg overflow-hidden border border-surface hover:border-primary transition-all duration-300 group"
+                className="glass-card-hover rounded-lg overflow-hidden group"
                 whileHover={{ y: -8 }}
               >
                 <a

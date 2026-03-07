@@ -42,7 +42,7 @@ const Videos: React.FC = () => {
             placeholder="Search videos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 bg-surface border border-surface rounded-lg text-light placeholder-light/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-mono"
+            className="w-full px-4 py-3 glass-input rounded-lg text-light placeholder-light/50 font-mono"
           />
           <svg 
             className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-light/50"
@@ -59,9 +59,9 @@ const Videos: React.FC = () => {
           <motion.button
             onClick={() => setSelectedTag('')}
             className={`px-4 py-2 rounded-full text-sm font-mono transition-colors duration-300 ${
-              selectedTag === '' 
-                ? 'bg-primary text-dark' 
-                : 'bg-surface text-light/75 hover:text-primary hover:border hover:border-primary'
+              selectedTag === ''
+                ? 'bg-primary text-dark'
+                : 'glass-card text-light/75 hover:text-primary hover:border hover:border-primary'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -104,7 +104,7 @@ const Videos: React.FC = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div 
-                className="bg-surface rounded-lg overflow-hidden border border-surface hover:border-primary transition-all duration-300 cursor-pointer"
+                className="glass-card-hover rounded-lg overflow-hidden cursor-pointer"
                 onClick={() => window.open(video.url, '_blank', 'noopener,noreferrer')}
               >
                 <div className="relative aspect-video overflow-hidden">
@@ -170,7 +170,7 @@ const Videos: React.FC = () => {
               setSearchTerm('');
               setSelectedTag('');
             }}
-            className="px-6 py-3 border border-primary text-primary rounded font-mono hover:bg-primary/10 transition-colors duration-300"
+            className="px-6 py-3 glass-button border border-primary text-primary rounded font-mono hover:bg-primary/10 transition-colors duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

@@ -207,5 +207,15 @@ export const videos: Video[] = [
     thumbnail: 'https://img.youtube.com/vi/7MoJrRvB6No/maxresdefault.jpg',
     publishedAt: '2025-01-15',
     tags: ['YouTube', 'Shorts', 'Video'],
+  },
+  {
+    id: '21',
+    title: "Testing Autonomous AI Agents: A QA Practitioner's Guide",
+    description:
+      'Exploring how autonomous AI agents challenge conventional testing approaches. Examines real production failures from voice, phone, and chat agents, and provides practical QA strategies for non-deterministic systems.',
+    url: 'https://testguild.com/automation-guild-2026/',
+    thumbnail: 'https://testguild.com/wp-content/uploads/2025/11/AG2026-speakers-grid.png',
+    publishedAt: '2026-02-11',
+    tags: ['AI', 'Testing', 'Conference', 'Automation Guild'],
   }
 ]
