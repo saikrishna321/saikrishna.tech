@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appium MCP Local Agent — TechXpresso</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5fa;
+    --bg-card: #f4f4fa;
+    --bg-card-hover: #eaeaf4;
+    --accent: #5b4cdb;
+    --accent-light: #5b4cdb;
+    --accent-glow: rgba(91, 76, 219, 0.15);
+    --green: #0a9e9a;
+    --green-glow: rgba(10, 158, 154, 0.15);
+    --orange: #d4850a;
+    --red: #d63031;
+    --pink: #d63384;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --text-muted: #8888a0;
+    --gradient-1: linear-gradient(135deg, #5b4cdb, #0a9e9a);
+    --gradient-2: linear-gradient(135deg, #d63384, #d4850a);
+    --gradient-3: linear-gradient(135deg, #0a9e9a, #2ecc71);
+    --android-green: #2ea44f;
+    --ios-blue: #0066cc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 18px;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── Slide System ── */
+  .deck {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    z-index: 1;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 80px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(60px);
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0.5s;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0s;
+  }
+
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  /* ── Progress Bar ── */
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: var(--gradient-1);
+    z-index: 1000;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Slide Counter ── */
+  .slide-counter {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    z-index: 1000;
+    letter-spacing: 2px;
+  }
+
+  /* ── Navigation Hint ── */
+  .nav-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 32px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  p, li {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 700px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .gradient-text {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-2 {
+    background: var(--gradient-2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .accent { color: var(--accent-light); }
+  .green { color: var(--green); }
+  .orange { color: var(--orange); }
+
+  /* ── Code ── */
+  code, .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+  }
+
+  .code-block {
+    background: #1e1e2e;
+    border: 1px solid #2a2a40;
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #e0e0f0;
+    width: 100%;
+    max-width: 800px;
+    overflow-x: auto;
+  }
+
+  .code-block .comment { color: #6c6c90; }
+  .code-block .keyword { color: #a78bfa; }
+  .code-block .string { color: #5eead4; }
+  .code-block .fn { color: #fbbf24; }
+
+  /* ── Cards ── */
+  .card-grid {
+    display: grid;
+    gap: 16px;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 14px;
+    padding: 22px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border-color: rgba(91, 76, 219, 0.3);
+  }
+
+  .card .icon {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .card h3 {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .card p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── Pill / Tags ── */
+  .pill {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 4px;
+  }
+
+  .pill.purple { background: rgba(91,76,219,0.1); color: var(--accent); border: 1px solid rgba(91,76,219,0.25); }
+  .pill.green { background: rgba(10,158,154,0.08); color: var(--green); border: 1px solid rgba(10,158,154,0.2); }
+  .pill.orange { background: rgba(212,133,10,0.08); color: var(--orange); border: 1px solid rgba(212,133,10,0.2); }
+  .pill.pink { background: rgba(214,51,132,0.08); color: var(--pink); border: 1px solid rgba(214,51,132,0.2); }
+
+  /* ── Lists ── */
+  .feature-list {
+    list-style: none;
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .feature-list li {
+    padding: 8px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .feature-list li:last-child { border-bottom: none; }
+
+  .feature-list .bullet {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    border-radius: 50%;
+    background: var(--gradient-1);
+    margin-top: 8px;
+  }
+
+  /* ── Architecture Diagram ── */
+  .arch-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .arch-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .arch-box {
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-align: center;
+    min-width: 130px;
+    transition: transform 0.3s ease;
+  }
+
+  .arch-box:hover { transform: scale(1.05); }
+
+  .arch-box.llm { background: rgba(91,76,219,0.08); border: 1px solid rgba(91,76,219,0.25); color: var(--accent); }
+  .arch-box.mcp { background: rgba(10,158,154,0.08); border: 1px solid rgba(10,158,154,0.25); color: var(--green); }
+  .arch-box.driver { background: rgba(212,133,10,0.08); border: 1px solid rgba(212,133,10,0.25); color: var(--orange); }
+  .arch-box.device { background: rgba(214,51,132,0.08); border: 1px solid rgba(214,51,132,0.25); color: var(--pink); }
+  .arch-box.tool { background: var(--bg-card); border: 1px solid rgba(0,0,0,0.08); color: var(--text-secondary); font-size: 0.8rem; min-width: 110px; padding: 10px 16px; }
+
+  .arch-arrow {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  /* ── Comparison Table ── */
+  .comparison {
+    width: 100%;
+    max-width: 820px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.1);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .comparison thead tr {
+    background: rgba(91, 76, 219, 0.06);
+  }
+
+  .comparison th {
+    padding: 14px 24px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .comparison th:first-child {
+    text-align: left;
+    width: 50%;
+  }
+
+  .comparison td {
+    padding: 11px 24px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  .comparison td:first-child {
+    text-align: left;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .comparison tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .comparison tbody tr:nth-child(even) {
+    background: rgba(0,0,0,0.015);
+  }
+
+  .comparison tr:hover td { background: rgba(91,76,219,0.04); }
+
+  .check { color: var(--green); font-weight: bold; font-size: 1.15rem; }
+  .cross { color: var(--red); opacity: 0.5; font-size: 1.15rem; }
+
+  /* ── Stats Row ── */
+  .stats-row {
+    display: flex;
+    gap: 48px;
+    margin-top: 28px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat .number {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat .label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── Section Label ── */
+  .section-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent-light);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  /* ── Glowing Orb Background ── */
+  .glow-bg {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .glow-bg.purple { background: #5b4cdb; }
+  .glow-bg.teal { background: #0a9e9a; }
+
+  /* ── Three.js Canvas ── */
+  #three-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* ── Title Slide Specific ── */
+  .title-slide { text-align: center; position: relative; }
+  .title-slide .glow-bg.purple { top: -200px; left: -100px; }
+  .title-slide .glow-bg.teal { bottom: -200px; right: -100px; }
+
+  .speaker-info {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .speaker-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .speaker-title {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Flow diagram ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .flow-step {
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: var(--bg-card);
+    border: 1px solid rgba(0,0,0,0.08);
+    color: var(--text-primary);
+  }
+
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+  }
+
+  /* ── Two Column Layout ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+    align-items: start;
+  }
+
+  .col h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+  }
+
+  .col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .col li {
+    font-size: 0.9rem;
+    padding-left: 18px;
+    position: relative;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .col li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-light);
+  }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 6px;
+  }
+
+  .badge.outline {
+    border: 1px solid rgba(0,0,0,0.12);
+    color: var(--text-secondary);
+  }
+
+  /* ── Horizontal Rule ── */
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-1);
+    border-radius: 2px;
+    margin: 14px 0;
+  }
+
+  /* ── Tool Category Block ── */
+  .tool-category {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+
+  .tool-category h4 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tool-category .tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tool-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: rgba(91,76,219,0.08);
+    border: 1px solid rgba(91,76,219,0.18);
+    color: var(--accent);
+  }
+
+  .tool-tag.green-tag {
+    background: rgba(10,158,154,0.08);
+    border-color: rgba(10,158,154,0.18);
+    color: var(--green);
+  }
+
+  .tool-tag.orange-tag {
+    background: rgba(212,133,10,0.08);
+    border-color: rgba(212,133,10,0.18);
+    color: var(--orange);
+  }
+
+  .tool-tag.pink-tag {
+    background: rgba(214,51,132,0.08);
+    border-color: rgba(214,51,132,0.18);
+    color: var(--pink);
+  }
+
+  /* ── Timeline ── */
+  .timeline {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    padding-left: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--green));
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 10px 0;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-primary);
+  }
+
+  .timeline-item h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .timeline-item p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Centered content helper ── */
+  .centered { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+  /* ── Emoji icon sizing ── */
+  .icon-lg { font-size: 3rem; margin-bottom: 16px; }
+
+  /* ── Animations ── */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .float { animation: float 3s ease-in-out infinite; }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+    50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 60px rgba(108,92,231,0.1); }
+  }
+
+  /* ── Staggered entrance for cards ── */
+  .slide.active .card { animation: cardIn 0.6s ease backwards; }
+  .slide.active .card:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .card:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .card:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .card:nth-child(4) { animation-delay: 0.4s; }
+  .slide.active .card:nth-child(5) { animation-delay: 0.5s; }
+  .slide.active .card:nth-child(6) { animation-delay: 0.6s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ── Staggered entrance for timeline items ── */
+  .slide.active .timeline-item { animation: slideIn 0.5s ease backwards; }
+  .slide.active .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+  .slide.active .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+  .slide.active .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Staggered entrance for flow steps ── */
+  .slide.active .flow-step { animation: popIn 0.4s ease backwards; }
+  .slide.active .flow-step:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .flow-step:nth-child(2) { animation-delay: 0.15s; }
+  .slide.active .flow-step:nth-child(3) { animation-delay: 0.25s; }
+  .slide.active .flow-step:nth-child(4) { animation-delay: 0.35s; }
+  .slide.active .flow-step:nth-child(5) { animation-delay: 0.45s; }
+  .slide.active .flow-step:nth-child(6) { animation-delay: 0.55s; }
+  .slide.active .flow-step:nth-child(7) { animation-delay: 0.65s; }
+  .slide.active .flow-step:nth-child(8) { animation-delay: 0.75s; }
+  .slide.active .flow-step:nth-child(9) { animation-delay: 0.85s; }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── Heading entrance ── */
+  .slide.active h2 { animation: fadeUp 0.5s ease backwards; }
+  .slide.active .divider { animation: growWidth 0.6s ease 0.2s backwards; }
+  .slide.active .section-label { animation: fadeUp 0.4s ease backwards; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes growWidth {
+    from { width: 0; }
+    to { width: 60px; }
+  }
+
+  /* ── Glassmorphism for cards ── */
+  .card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(244, 244, 250, 0.8);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  /* ── Code block shadow ── */
+  .code-block {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  /* ── Stats number counter animation ── */
+  .slide.active .stat .number { animation: countPop 0.6s ease backwards; }
+  .slide.active .stat:nth-child(1) .number { animation-delay: 0.2s; }
+  .slide.active .stat:nth-child(2) .number { animation-delay: 0.35s; }
+  .slide.active .stat:nth-child(3) .number { animation-delay: 0.5s; }
+
+  @keyframes countPop {
+    from { opacity: 0; transform: scale(0.5); }
+    50% { transform: scale(1.1); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── Pill entrance ── */
+  .slide.active .pill { animation: popIn 0.3s ease backwards; }
+
+  /* ── Comparison table row animation ── */
+  .slide.active .comparison tr { animation: fadeUp 0.4s ease backwards; }
+  .slide.active .comparison tr:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .comparison tr:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active .comparison tr:nth-child(3) { animation-delay: 0.15s; }
+  .slide.active .comparison tr:nth-child(4) { animation-delay: 0.2s; }
+  .slide.active .comparison tr:nth-child(5) { animation-delay: 0.25s; }
+  .slide.active .comparison tr:nth-child(6) { animation-delay: 0.3s; }
+  .slide.active .comparison tr:nth-child(7) { animation-delay: 0.35s; }
+  .slide.active .comparison tr:nth-child(8) { animation-delay: 0.4s; }
+
+  /* ── Demo slide animations ── */
+  @keyframes demoPulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.08); opacity: 1; }
+  }
+  @keyframes ripple {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes blink {
+    50% { border-color: transparent; }
+  }
+  .demo-icon {
+    font-size: 5rem;
+    animation: demoPulse 2s ease-in-out infinite;
+    display: inline-block;
+    position: relative;
+  }
+  .demo-ripple {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 80px; height: 80px;
+    margin: -40px 0 0 -40px;
+    border-radius: 50%;
+    border: 3px solid var(--purple);
+    animation: ripple 2s ease-out infinite;
+    pointer-events: none;
+  }
+  .demo-ripple:nth-child(2) { animation-delay: 0.6s; }
+  .demo-ripple:nth-child(3) { animation-delay: 1.2s; }
+  .demo-typing {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid var(--purple);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    animation: typing 3s steps(40) 0.5s forwards, blink 0.7s step-end infinite;
+    width: 0;
+    max-width: max-content;
+  }
+  .slide.active .demo-typing { animation: typing 3s steps(40) 0.5s forwards, blink 0.7s step-end infinite; }
+  .demo-choice-container {
+    display: flex; gap: 24px; margin-top: 40px; justify-content: center; flex-wrap: wrap;
+  }
+  .demo-choice {
+    padding: 20px 40px;
+    border-radius: 16px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 12px;
+    border: 2px solid rgba(0,0,0,0.08);
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    color: var(--text-primary);
+  }
+  .demo-choice:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(91,76,219,0.2);
+    border-color: var(--purple);
+  }
+  .demo-choice .choice-icon { font-size: 2rem; }
+  .demo-choice .choice-label { display: flex; flex-direction: column; align-items: flex-start; }
+  .demo-choice .choice-sub { font-size: 0.85rem; font-weight: 400; color: var(--text-muted); }
+
+  /* ── Big number highlight ── */
+  .big-number {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    html { font-size: 16px; }
+    .slide { padding: 36px 28px; }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.6rem; }
+    .card-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+    .card-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .stats-row { gap: 24px; }
+    .stat .number { font-size: 2rem; }
+  }
+
+  /* ── Keyboard shortcuts popup ── */
+  .shortcuts-popup {
+    display: none;
+    position: fixed;
+    bottom: 60px;
+    right: 32px;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    z-index: 2000;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  kbd {
+    background: rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="three-bg"></canvas>
+<div class="progress" id="progress"></div>
+<div class="slide-counter" id="slideCounter"></div>
+<div class="nav-hint">Arrow keys or click to navigate &middot; Press <kbd>?</kbd> for shortcuts</div>
+
+<div class="shortcuts-popup" id="shortcuts">
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> Navigate &nbsp;&middot;&nbsp;
+  <kbd>Home</kbd> First &nbsp;&middot;&nbsp;
+  <kbd>End</kbd> Last &nbsp;&middot;&nbsp;
+  <kbd>F</kbd> Fullscreen
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 1 — TITLE                             ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">TechXpresso</div>
+    <h1 style="font-size: 2.8rem; margin-bottom: 8px;">Appium MCP Local Agent</h1>
+    <h2 style="font-size: 2rem;"><span class="gradient-text">Your AI Co-Pilot That Takes Action</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle">
+      From code suggestions to real execution — an open-source, local-first agent
+      that automates mobile testing through natural language.
+    </p>
+    <div class="stats-row" style="margin-top: 32px;">
+      <div class="stat"><div class="number gradient-text" style="font-size: 2.8rem;">41</div><div class="label">MCP Tools</div></div>
+      <div class="stat"><div class="number gradient-text" style="font-size: 2.8rem;">2</div><div class="label">Platforms</div></div>
+      <div class="stat"><div class="number gradient-text" style="font-size: 2.8rem;">100%</div><div class="label">Open Source</div></div>
+    </div>
+    <div class="speaker-info" style="margin-top: 28px;">
+      <div class="speaker-name" style="font-size: 1.2rem;">Sai Krishna</div>
+      <div class="speaker-title">Core Maintainer — Appium &amp; Appium MCP</div>
+    </div>
+    <div style="margin-top: 32px; display: flex; align-items: center; justify-content: center; gap: 40px;">
+      <img src="https://assets.testmuai.com/resources/images/logos/logo.svg" alt="TestMuAI" style="height: 44px; opacity: 0.85;">
+      <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" style="height: 44px; opacity: 0.85;">
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 2 — SPEAKER INTRO                     ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Speaker</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 80px; flex-wrap: wrap;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/src/assets/images/SaiProdile.webp" alt="Sai Krishna"
+             style="width: 320px; height: 320px; border-radius: 50%; border: 4px solid rgba(91,76,219,0.3); margin-bottom: 28px; object-fit: cover; box-shadow: 0 8px 40px rgba(91,76,219,0.2);">
+        <h2 style="font-size: 3.2rem; margin: 0;"><span class="gradient-text">Sai Krishna</span></h2>
+        <div class="divider"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; margin-top: 14px;">
+          <div style="font-size: 1.5rem; color: var(--text-secondary); font-weight: 500;">Core Maintainer — Appium</div>
+          <div style="font-size: 1.2rem; color: var(--text-secondary); font-weight: 500;">Author — <em>Appium Insights</em> (Apress)</div>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+          <span class="pill orange">saikrishna.tech</span>
+        </div>
+        <div style="margin-top: 24px; display: flex; align-items: center; gap: 32px;">
+          <img src="https://assets.testmuai.com/resources/images/logos/logo.svg" alt="TestMuAI" style="height: 40px; opacity: 0.85;">
+          <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" style="height: 40px; opacity: 0.85;">
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+        <img src="qr-code.png" alt="QR Code"
+             style="width: 300px; height: 300px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); border: 2px solid rgba(0,0,0,0.06);">
+        <div style="font-size: 1.1rem; color: var(--text-muted); font-weight: 500;">Scan to connect</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 3 — THE PROBLEM                       ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">The Problem</div>
+    <h2>AI Coding Assistants Today:<br><span class="gradient-text-2">Lots of Suggestions, Zero Action</span></h2>
+    <div class="divider"></div>
+    <div class="card-grid cols-3" style="margin-top: 24px;">
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x1F4AC;</span>
+        <h3>Generate Code</h3>
+        <p>LLMs write Appium test scripts, but you still copy, paste, debug, and run them yourself.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x2601;&#xFE0F;</span>
+        <h3>Cloud Dependent</h3>
+        <p>Most AI tools lock you into proprietary systems with no local device access.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x1F512;</span>
+        <h3>No Device Control</h3>
+        <p>They can't tap buttons, read screens, scroll, swipe, or interact with real apps.</p>
+      </div>
+    </div>
+    <p style="margin-top: 32px; font-size: 1.1rem; color: var(--accent-light); font-weight: 500;">
+      What if your AI assistant could actually <em>do</em> the work?
+    </p>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 3 — THE PARADIGM SHIFT                ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">The Paradigm Shift</div>
+    <h2>From <span style="text-decoration: line-through; opacity:0.4;">Suggestion Engine</span><br>to <span class="gradient-text">Action-Oriented Assistant</span></h2>
+    <div class="divider"></div>
+    <table class="comparison" style="margin-top: 16px;">
+      <thead>
+        <tr>
+          <th style="width: 50%;">Capability</th>
+          <th style="width: 25%; color: var(--text-muted);">Traditional AI</th>
+          <th style="width: 25%; color: var(--green); background: rgba(10,158,154,0.06);">Appium MCP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Generate test code</td><td class="check">&#x2713;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+        <tr><td>Execute on real devices</td><td class="cross">&#x2717;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+        <tr><td>Find &amp; interact with elements</td><td class="cross">&#x2717;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+        <tr><td>Take &amp; analyze screenshots</td><td class="cross">&#x2717;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+        <tr><td>Debug failures in real-time</td><td class="cross">&#x2717;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+        <tr><td>Manage app lifecycle</td><td class="cross">&#x2717;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+        <tr><td>Runs locally, works offline</td><td class="cross">&#x2717;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+        <tr><td>LLM agnostic</td><td class="cross">&#x2717;</td><td class="check" style="background: rgba(10,158,154,0.04);">&#x2713;</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 4 — WHAT IS MCP?                      ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Foundation</div>
+    <h2>What is the <span class="gradient-text">Model Context Protocol</span>?</h2>
+    <div class="divider"></div>
+    <p style="max-width: 700px; margin-bottom: 28px;">
+      MCP is an open standard that lets AI models call external tools with structured inputs and outputs — like a universal API for AI agents.
+    </p>
+    <div class="flow">
+      <div class="flow-step" style="border-color: rgba(91,76,219,0.3);">&#x1F9E0; LLM Client</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="border-color: rgba(10,158,154,0.3);">&#x1F50C; MCP Protocol</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="border-color: rgba(212,133,10,0.3);">&#x1F6E0;&#xFE0F; Appium MCP Server</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="border-color: rgba(214,51,132,0.3);">&#x1F4F1; Device</div>
+    </div>
+    <div class="card-grid cols-2" style="margin-top: 20px; max-width: 750px;">
+      <div class="card">
+        <h3>Stdio Transport</h3>
+        <p>Direct process communication — zero network overhead, instant responses.</p>
+      </div>
+      <div class="card">
+        <h3>HTTP Stream Transport</h3>
+        <p>Over-HTTP with SSE — perfect for remote and web-based integrations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 5 — ARCHITECTURE                      ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Architecture</div>
+    <h2>How It All <span class="gradient-text">Connects</span></h2>
+    <div class="divider"></div>
+    <div class="arch-diagram">
+      <div class="arch-row">
+        <div class="arch-box llm">Claude</div>
+        <div class="arch-box llm">ChatGPT</div>
+        <div class="arch-box llm">Gemini</div>
+        <div class="arch-box llm">Cursor / Any LLM</div>
+      </div>
+      <div class="arch-arrow">&#x2193; MCP Protocol (stdio / httpStream)</div>
+      <div class="arch-row">
+        <div class="arch-box mcp" style="min-width: 500px; font-size: 1.1rem;">
+          &#x2728; Appium MCP Server &nbsp;&middot;&nbsp; <span class="mono" style="font-size:0.8rem;">41 Tools</span>
+        </div>
+      </div>
+      <div class="arch-arrow">&#x2193; WebDriver Protocol</div>
+      <div class="arch-row">
+        <div class="arch-box driver">UiAutomator2 Driver</div>
+        <div class="arch-box driver">XCUITest Driver</div>
+        <div class="arch-box driver">Remote Server</div>
+      </div>
+      <div class="arch-arrow">&#x2193;</div>
+      <div class="arch-row">
+        <div class="arch-box device">&#x1F4F1; Android Devices</div>
+        <div class="arch-box device">&#x1F34E; iOS Simulators &amp; Devices</div>
+        <div class="arch-box device">&#x2601;&#xFE0F; Cloud Devices</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 10 — WEBVIEW / HYBRID                  ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Hybrid App Support</div>
+    <h2>Native + WebView = <span class="gradient-text">Full Coverage</span></h2>
+    <div class="divider"></div>
+    <div class="flow" style="margin: 24px 0;">
+      <div class="flow-step">NATIVE_APP</div>
+      <div class="flow-arrow">&#x21C4;</div>
+      <div class="flow-step">WEBVIEW_chrome</div>
+      <div class="flow-arrow">&#x21C4;</div>
+      <div class="flow-step">WEBVIEW_&lt;app&gt;</div>
+    </div>
+    <div class="card-grid cols-2" style="max-width: 750px;">
+      <div class="card">
+        <h3>&#x1F310; Context Discovery</h3>
+        <p><code>get_contexts</code> lists all available contexts — native and every webview.</p>
+      </div>
+      <div class="card">
+        <h3>&#x1F504; Seamless Switching</h3>
+        <p><code>switch_context</code> flips between native and web contexts in one call.</p>
+      </div>
+    </div>
+    <p style="margin-top: 20px; font-size:0.95rem;">
+      Test hybrid apps end-to-end: native navigation &rarr; webview interaction &rarr; back to native.
+    </p>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 12 — LLM AGNOSTIC                     ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Universal Compatibility</div>
+    <h2>Works with <span class="gradient-text">Any LLM</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 600px; margin-bottom: 28px;">
+      Built on the open MCP standard — connect to whichever AI model fits your workflow.
+    </p>
+    <div class="card-grid cols-4" style="max-width: 900px;">
+      <div class="card" style="text-align:center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F7E3;</span>
+        <h3>Claude</h3>
+        <p>Claude Desktop or API</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F7E2;</span>
+        <h3>ChatGPT</h3>
+        <p>Via MCP-compatible clients</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F535;</span>
+        <h3>Gemini</h3>
+        <p>Google's Gemini + MCP</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F7E1;</span>
+        <h3>Cursor &amp; More</h3>
+        <p>Any MCP-compliant IDE</p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top: 20px; max-width: 500px; text-align: left; padding: 16px 22px; font-size: 0.8rem;">
+      <span class="comment">// One-line install</span><br>
+      <span class="keyword">npx</span> <span class="string">appium-mcp</span><br><br>
+      <span class="comment">// Or global install</span><br>
+      <span class="keyword">npm</span> install -g <span class="string">appium-mcp</span>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 14 — GESTURES DEEP DIVE                ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Advanced Gestures</div>
+    <h2>Beyond Tap — <span class="gradient-text">Full Gesture Support</span></h2>
+    <div class="divider"></div>
+    <div class="card-grid cols-3" style="max-width: 950px;">
+      <div class="card" style="text-align:center; padding: 18px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F446;</span>
+        <h3>Tap &amp; Double Tap</h3>
+        <p>On any element or coordinate</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 18px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F91A;</span>
+        <h3>Long Press</h3>
+        <p>Configurable duration for context menus</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 18px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F4F2;</span>
+        <h3>Scroll &amp; Swipe</h3>
+        <p>Directional scroll, scroll-to-element, swipe</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 18px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x270B;</span>
+        <h3>Drag &amp; Drop</h3>
+        <p>Element-to-element or coordinate-based</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 18px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F50D;</span>
+        <h3>Scroll to Element</h3>
+        <p>Auto-scroll until target is visible</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 18px;">
+        <span class="icon" style="font-size: 1.5rem; margin-bottom: 8px;">&#x1F514;</span>
+        <h3>System Actions</h3>
+        <p>Alerts, notifications, lock/unlock</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 15 — APP MANAGEMENT                    ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">App Lifecycle</div>
+    <h2>Complete <span class="gradient-text">App Management</span></h2>
+    <div class="divider"></div>
+    <div class="flow" style="margin-bottom: 20px;">
+      <div class="flow-step">Install</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Activate</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Interact</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Terminate</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">Uninstall</div>
+    </div>
+    <div class="card-grid cols-2" style="max-width: 850px;">
+      <div class="card" style="padding: 18px;">
+        <h3>&#x1F4E5; Install &amp; Uninstall</h3>
+        <p>Install from APK/IPA. Uninstall by package name. Check if installed.</p>
+      </div>
+      <div class="card" style="padding: 18px;">
+        <h3>&#x1F680; Activate &amp; Terminate</h3>
+        <p>Launch to foreground, terminate background apps, list all apps.</p>
+      </div>
+      <div class="card" style="padding: 18px;">
+        <h3>&#x1F517; Deep Links</h3>
+        <p>Open deep link URLs — test custom URL schemes with any handler.</p>
+      </div>
+      <div class="card" style="padding: 18px;">
+        <h3>&#x1F4CB; App Inventory</h3>
+        <p>List installed apps, check status — useful for test setup.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE — LIVE DEMO                              ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div style="position: relative; display: inline-block; margin-bottom: 16px;">
+      <div class="demo-icon">&#x1F680;</div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+    </div>
+    <h2 style="font-size: 3.8rem; margin-bottom: 8px;"><span class="gradient-text">Demo Time</span></h2>
+    <div class="divider"></div>
+    <div style="margin-top: 28px; padding: 16px 32px; background: rgba(0,0,0,0.03); border-radius: 12px; display: inline-block;">
+      <div class="demo-typing">"Open Settings app and toggle Wi-Fi off"</div>
+    </div>
+    <div class="demo-choice-container">
+      <div class="demo-choice">
+        <span class="choice-icon">&#x1F534;</span>
+        <div class="choice-label">
+          <span>Live Demo</span>
+          <span class="choice-sub">Real device, real time</span>
+        </div>
+      </div>
+      <div class="demo-choice">
+        <span class="choice-icon">&#x25B6;&#xFE0F;</span>
+        <div class="choice-label">
+          <span>Recording</span>
+          <span class="choice-sub">Pre-recorded walkthrough</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 20 — PHILOSOPHY                        ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Philosophy</div>
+    <h2>Our <span class="gradient-text">Core Principles</span></h2>
+    <div class="divider"></div>
+    <div class="card-grid cols-3" style="max-width: 900px;">
+      <div class="card" style="text-align:center; border-top: 3px solid var(--accent);">
+        <span class="icon">&#x1F3E0;</span>
+        <h3>Local-First</h3>
+        <p>Your data stays on your machine. No cloud dependency. Full offline capability. You own everything.</p>
+      </div>
+      <div class="card" style="text-align:center; border-top: 3px solid var(--green);">
+        <span class="icon">&#x1F6E0;&#xFE0F;</span>
+        <h3>Developer-First</h3>
+        <p>Built by developers, for developers. TypeScript, modular architecture, easy to extend and customize.</p>
+      </div>
+      <div class="card" style="text-align:center; border-top: 3px solid var(--orange);">
+        <span class="icon">&#x1F310;</span>
+        <h3>Open Source</h3>
+        <p>Apache 2.0 licensed. Transparent, community-driven, no vendor lock-in. Contributions welcome.</p>
+      </div>
+    </div>
+    <div style="margin-top: 20px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; max-width: 900px;">
+      <span class="pill green" style="font-size: 0.85rem;">No proprietary APIs</span>
+      <span class="pill purple" style="font-size: 0.85rem;">No subscription fees</span>
+      <span class="pill orange" style="font-size: 0.85rem;">Zero telemetry</span>
+      <span class="pill pink" style="font-size: 0.85rem;">No vendor lock-in</span>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 22 — COMMUNITY & ROADMAP               ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div class="section-label">Community</div>
+    <h2>Join the <span class="gradient-text">Movement</span></h2>
+    <div class="divider"></div>
+    <div class="card-grid cols-2" style="max-width: 800px;">
+      <div class="card">
+        <h3>&#x1F4BB; Contribute</h3>
+        <p>Well-documented CONTRIBUTING.md, modular codebase, and friendly maintainers. Add tools, fix bugs, improve docs.</p>
+      </div>
+      <div class="card">
+        <h3>&#x1F680; What's Next</h3>
+        <p>AI-powered element finding with vision models, more language targets for test generation, and community-built tool packs.</p>
+      </div>
+    </div>
+    <div style="margin-top: 32px;">
+      <div class="code-block" style="max-width: 500px; text-align: center;">
+        <span class="keyword">github.com</span>/<span class="string">appium/appium-mcp</span>
+      </div>
+    </div>
+    <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+      <span class="pill purple">Star the repo</span>
+      <span class="pill green">File issues</span>
+      <span class="pill orange">Submit PRs</span>
+      <span class="pill pink">Build tools</span>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 23 — THANK YOU                         ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <h1 style="font-size: 3.2rem; margin-bottom: 4px;"><span class="gradient-text">Thank You!</span></h1>
+    <div class="divider"></div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 80px; flex-wrap: wrap; margin-top: 24px;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/src/assets/images/SaiProdile.webp" alt="Sai Krishna"
+             style="width: 240px; height: 240px; border-radius: 50%; border: 4px solid rgba(91,76,219,0.3); margin-bottom: 20px; object-fit: cover; box-shadow: 0 8px 40px rgba(91,76,219,0.2);">
+        <h2 style="font-size: 2.4rem; margin: 0;"><span class="gradient-text">Sai Krishna</span></h2>
+        <div class="divider"></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; margin-top: 12px;">
+          <div style="font-size: 1.3rem; color: var(--text-secondary); font-weight: 500;">Core Maintainer — Appium</div>
+          <div style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 500;">Author — <em>Appium Insights</em> (Apress)</div>
+        </div>
+        <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+          <span class="pill orange">saikrishna.tech</span>
+        </div>
+        <div style="margin-top: 20px; display: flex; align-items: center; gap: 32px;">
+          <img src="https://assets.testmuai.com/resources/images/logos/logo.svg" alt="TestMuAI" style="height: 40px; opacity: 0.85;">
+          <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" style="height: 40px; opacity: 0.85;">
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+        <img src="qr-code.png" alt="QR Code"
+             style="width: 240px; height: 240px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); border: 2px solid rgba(0,0,0,0.06);">
+        <div style="font-size: 1rem; color: var(--text-muted); font-weight: 500;">Scan to connect</div>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top: 24px; max-width: 500px; text-align: center; font-size: 1rem;">
+      <span class="keyword">github.com</span>/<span class="string">appium/appium-mcp</span>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── Three.js Particle Background ──
+(function initThreeBackground() {
+  const canvas = document.getElementById('three-bg');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setClearColor(0x000000, 0);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 50;
+
+  // ── Particle Field ──
+  const PARTICLE_COUNT = 1200;
+  const positions = new Float32Array(PARTICLE_COUNT * 3);
+  const colors = new Float32Array(PARTICLE_COUNT * 3);
+  const sizes = new Float32Array(PARTICLE_COUNT);
+  const velocities = new Float32Array(PARTICLE_COUNT * 3);
+
+  const palette = [
+    new THREE.Color(0x5b4cdb),
+    new THREE.Color(0x0a9e9a),
+    new THREE.Color(0xd63384),
+    new THREE.Color(0xd4850a),
+    new THREE.Color(0x8b7cf6),
+  ];
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const i3 = i * 3;
+    positions[i3] = (Math.random() - 0.5) * 120;
+    positions[i3 + 1] = (Math.random() - 0.5) * 80;
+    positions[i3 + 2] = (Math.random() - 0.5) * 60;
+
+    const c = palette[Math.floor(Math.random() * palette.length)];
+    colors[i3] = c.r;
+    colors[i3 + 1] = c.g;
+    colors[i3 + 2] = c.b;
+
+    sizes[i] = Math.random() * 2.5 + 0.5;
+
+    velocities[i3] = (Math.random() - 0.5) * 0.02;
+    velocities[i3 + 1] = (Math.random() - 0.5) * 0.02;
+    velocities[i3 + 2] = (Math.random() - 0.5) * 0.01;
+  }
+
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  particleGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+  const particleMat = new THREE.ShaderMaterial({
+    vertexShader: `
+      attribute float size;
+      attribute vec3 color;
+      varying vec3 vColor;
+      varying float vAlpha;
+      void main() {
+        vColor = color;
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * (200.0 / -mvPos.z);
+        gl_Position = projectionMatrix * mvPos;
+        vAlpha = smoothstep(80.0, 20.0, -mvPos.z);
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vAlpha;
+      void main() {
+        float d = length(gl_PointCoord - 0.5);
+        if (d > 0.5) discard;
+        float glow = exp(-d * 6.0);
+        gl_FragColor = vec4(vColor, glow * vAlpha * 0.35);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.NormalBlending,
+  });
+
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  // ── Floating Geometric Wireframes ──
+  const geoGroup = new THREE.Group();
+  scene.add(geoGroup);
+
+  const wireMaterial = (color, opacity) =>
+    new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity });
+
+  const shapes = [
+    { geo: new THREE.IcosahedronGeometry(4, 1), pos: [-50, 20, -40], color: 0x6c5ce7, speed: 0.003 },
+    { geo: new THREE.OctahedronGeometry(3, 0), pos: [52, -18, -35], color: 0x00cec9, speed: 0.004 },
+    { geo: new THREE.TorusGeometry(3, 0.8, 8, 16), pos: [-48, -22, -45], color: 0xfd79a8, speed: 0.002 },
+    { geo: new THREE.TetrahedronGeometry(3.5, 0), pos: [48, 22, -38], color: 0xf39c12, speed: 0.005 },
+    { geo: new THREE.DodecahedronGeometry(2.5, 0), pos: [0, -30, -42], color: 0xa29bfe, speed: 0.003 },
+    { geo: new THREE.TorusKnotGeometry(2, 0.5, 48, 8), pos: [-20, 28, -48], color: 0x00cec9, speed: 0.002 },
+  ];
+
+  const meshes = shapes.map(s => {
+    const mesh = new THREE.Mesh(s.geo, wireMaterial(s.color, 0.10));
+    mesh.position.set(...s.pos);
+    mesh.userData = { speed: s.speed, floatOffset: Math.random() * Math.PI * 2 };
+    geoGroup.add(mesh);
+    return mesh;
+  });
+
+  // ── Connection Lines ──
+  const lineGeo = new THREE.BufferGeometry();
+  const linePositions = new Float32Array(200 * 6);
+  lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x5b4cdb, transparent: true, opacity: 0.06 });
+  const lines = new THREE.LineSegments(lineGeo, lineMat);
+  scene.add(lines);
+
+  // ── Slide-reactive state ──
+  let targetRotY = 0;
+  let targetRotX = 0;
+  let burstTimer = 0;
+
+  window.threeSlideChange = function(slideIndex, total) {
+    const pct = slideIndex / (total - 1);
+    targetRotY = pct * Math.PI * 0.4 - Math.PI * 0.2;
+    targetRotX = Math.sin(pct * Math.PI) * 0.1;
+    burstTimer = 30;
+
+    // Shift palette emphasis per slide
+    const hue = pct * 0.8;
+    meshes.forEach((m, i) => {
+      const c = new THREE.Color().setHSL((hue + i * 0.12) % 1, 0.7, 0.55);
+      m.material.color = c;
+    });
+  };
+
+  // ── Mouse parallax ──
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  // ── Resize ──
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // ── Animation Loop ──
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    const dt = clock.getDelta();
+
+    // Particle drift
+    const pos = particleGeo.attributes.position.array;
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const i3 = i * 3;
+      pos[i3] += velocities[i3] + Math.sin(t * 0.5 + i) * 0.003;
+      pos[i3 + 1] += velocities[i3 + 1] + Math.cos(t * 0.3 + i) * 0.003;
+      pos[i3 + 2] += velocities[i3 + 2];
+
+      // Burst effect on slide change
+      if (burstTimer > 0) {
+        pos[i3] += (Math.random() - 0.5) * 0.15;
+        pos[i3 + 1] += (Math.random() - 0.5) * 0.15;
+      }
+
+      // Wrap around
+      if (pos[i3] > 60) pos[i3] = -60;
+      if (pos[i3] < -60) pos[i3] = 60;
+      if (pos[i3 + 1] > 40) pos[i3 + 1] = -40;
+      if (pos[i3 + 1] < -40) pos[i3 + 1] = 40;
+    }
+    particleGeo.attributes.position.needsUpdate = true;
+    if (burstTimer > 0) burstTimer--;
+
+    // Connection lines between nearby particles
+    let lineIdx = 0;
+    const lPos = lineGeo.attributes.position.array;
+    for (let i = 0; i < Math.min(PARTICLE_COUNT, 150); i++) {
+      for (let j = i + 1; j < Math.min(PARTICLE_COUNT, 150); j++) {
+        if (lineIdx >= 200) break;
+        const i3 = i * 3, j3 = j * 3;
+        const dx = pos[i3] - pos[j3], dy = pos[i3+1] - pos[j3+1], dz = pos[i3+2] - pos[j3+2];
+        const dist = dx*dx + dy*dy + dz*dz;
+        if (dist < 200) {
+          const li = lineIdx * 6;
+          lPos[li] = pos[i3]; lPos[li+1] = pos[i3+1]; lPos[li+2] = pos[i3+2];
+          lPos[li+3] = pos[j3]; lPos[li+4] = pos[j3+1]; lPos[li+5] = pos[j3+2];
+          lineIdx++;
+        }
+      }
+      if (lineIdx >= 200) break;
+    }
+    // Zero out unused lines
+    for (let i = lineIdx * 6; i < 200 * 6; i++) lPos[i] = 0;
+    lineGeo.attributes.position.needsUpdate = true;
+    lineGeo.setDrawRange(0, lineIdx * 2);
+
+    // Rotate wireframe shapes
+    meshes.forEach(m => {
+      m.rotation.x += m.userData.speed;
+      m.rotation.y += m.userData.speed * 0.7;
+      m.position.y += Math.sin(t * 0.5 + m.userData.floatOffset) * 0.01;
+    });
+
+    // Camera smooth follow
+    camera.rotation.y += (targetRotY + mouseX * 0.05 - camera.rotation.y) * 0.02;
+    camera.rotation.x += (targetRotX - mouseY * 0.03 - camera.rotation.x) * 0.02;
+    particles.rotation.y = t * 0.015;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+})();
+</script>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('slideCounter');
+  const shortcuts = document.getElementById('shortcuts');
+  let current = 0;
+  const total = slides.length;
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current) return;
+    const prev = slides[current];
+    const next = slides[index];
+
+    prev.classList.remove('active');
+    if (index > current) {
+      prev.classList.add('exit-left');
+      setTimeout(() => prev.classList.remove('exit-left'), 500);
+    }
+
+    current = index;
+    next.classList.add('active');
+
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = `${current + 1} / ${total}`;
+    window.location.hash = current + 1;
+
+    // Trigger Three.js background reaction
+    if (window.threeSlideChange) window.threeSlideChange(current, total);
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  // Init
+  const hash = parseInt(window.location.hash.slice(1)) - 1;
+  current = (hash >= 0 && hash < total) ? hash : 0;
+  slides[current].classList.add('active');
+  progress.style.width = ((current + 1) / total * 100) + '%';
+  counter.textContent = `${current + 1} / ${total}`;
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    switch(e.key) {
+      case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(total - 1); break;
+      case 'f': case 'F':
+        if (!e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+          document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+        }
+        break;
+      case '?':
+        shortcuts.style.display = shortcuts.style.display === 'block' ? 'none' : 'block';
+        break;
+    }
+  });
+
+  // Click navigation
+  document.addEventListener('click', e => {
+    if (e.target.closest('a, button, code, .code-block')) return;
+    const x = e.clientX / window.innerWidth;
+    x > 0.5 ? next() : prev();
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+  });
+})();
+</script>
+
+</body>
+</html>

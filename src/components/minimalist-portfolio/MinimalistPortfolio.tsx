@@ -5,6 +5,7 @@ import Hero from './Hero';
 import About from './About';
 import Videos from './Videos';
 import Workshops from './Workshops';
+import Presentations from './Presentations';
 import OpenSource from './OpenSource';
 import Book from './Book';
 import SpeakerMap from './SpeakerMap';
@@ -21,6 +22,7 @@ const MinimalistPortfolio: React.FC = () => {
     home: <Hero onGetInTouch={() => changeSection('about')} onNavigateToBook={() => changeSection('book')} />,
     about: <About />,
     videos: <Videos />,
+    presentations: <Presentations />,
     workshops: <Workshops />,
     opensource: <OpenSource />,
     speakermap: <SpeakerMap />,
@@ -31,6 +33,7 @@ const MinimalistPortfolio: React.FC = () => {
     { id: 'home', name: 'Home' },
     { id: 'about', name: 'About' },
     { id: 'videos', name: 'Videos' },
+    { id: 'presentations', name: 'Presentations' },
     { id: 'workshops', name: 'Workshops' },
     { id: 'opensource', name: 'Open Source' },
     { id: 'speakermap', name: 'Speaker Map' },
