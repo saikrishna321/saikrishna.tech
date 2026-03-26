@@ -14,4 +14,10 @@ export const presentations: Presentation[] = [
     event: 'TechXpresso',
     description: 'Your AI Co-Pilot That Takes Action — from code suggestions to real execution.',
   },
+  {
+    id: '2',
+    title: 'Building an Autonomous Mobile Agent with LLMs and the Model Context Protocol',
+    url: '/presentation-appclaw.html',
+    description: 'AppClaw: an AI-powered mobile QA agent that autonomously controls Android & iOS devices through natural language goals.',
+  },
 ]
