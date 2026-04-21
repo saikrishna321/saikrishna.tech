@@ -119,24 +119,6 @@ function Hero() {
                   onMouseEnter={(e) => (e.currentTarget.style.transform = 'translate(-4px,-4px)')}
                   onMouseLeave={(e) => (e.currentTarget.style.transform = 'translate(0,0)')}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 14,
-                    left: 14,
-                    fontFamily: T.mono,
-                    fontSize: 9,
-                    color: T.accent,
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    zIndex: 2,
-                    background: T.bg,
-                    padding: '4px 8px',
-                    border: `1px solid ${T.rule}`,
-                  }}
-                >
-                  fig. 01 · sai
-                </div>
               </div>
               <BookBannerCompact />
             </div>

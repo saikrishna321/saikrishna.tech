@@ -13,7 +13,6 @@ export function Footer() {
           `© ${year}`,
           'bengaluru',
           'open to talks',
-          'inter tight + jetbrains mono',
           'built 2026',
         ]}
       />
