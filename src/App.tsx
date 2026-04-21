@@ -1,24 +1,46 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import ModernPortfolio from './components/ModernPortfolio'
-import MinimalistPortfolio from './components/minimalist-portfolio/MinimalistPortfolio'
-import Videos from './screens/Videos'
-import { Analytics } from '@vercel/analytics/react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { GlobalStyles, ScrollBar } from './components/Shared';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 
-function App() {
-  return (
-    <div className='min-h-screen'>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MinimalistPortfolio />} />
-          <Route path="/legacy" element={<ModernPortfolio />} />
-          <Route path="/videos-legacy" element={<Videos />} />
-          <Route path="/techxpresso" element={<Navigate to="/presentation-techxpresso.html" replace />} />
-        </Routes>
-      </Router>
-      <Analytics mode={'production'} />
-    </div>
-  )
+import Home from './pages/Home';
+import About from './pages/About';
+import Work from './pages/Work';
+import Talks from './pages/Talks';
+import Presentations from './pages/Presentations';
+import Writing from './pages/Writing';
+import Workshops from './pages/Workshops';
+import Videos from './pages/Videos';
+import Contact from './pages/Contact';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <GlobalStyles />
+      <ScrollBar />
+      <ScrollToTop />
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/work" element={<Work />} />
+        <Route path="/talks" element={<Talks />} />
+        <Route path="/presentations" element={<Presentations />} />
+        <Route path="/writing" element={<Writing />} />
+        <Route path="/workshops" element={<Workshops />} />
+        <Route path="/videos" element={<Videos />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
+}
