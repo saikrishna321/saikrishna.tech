@@ -275,6 +275,27 @@ export const WRITING: Writing[] = [
   { title: 'Custom Audits Using Lighthouse', kind: 'Essay', year: '2020', blurb: 'Writing Lighthouse audits for app-specific quality metrics.', source: 'TestProject' },
 ];
 
+export const BOOK = {
+  title: 'Appium Insights',
+  subtitle: 'Strategies for Successful Mobile Automation',
+  author: 'Sai Krishna',
+  publisher: 'Apress',
+  year: '2024',
+  amazonUrl: 'https://www.amazon.in/Appium-Insights-Strategies-Successful-Automation/dp/B0FBRGBDBW',
+  springerUrl: 'https://link.springer.com/book/10.1007/979-8-8688-1703-8',
+  oreillyUrl: 'https://www.oreilly.com/library/view/appium-insights-strategies/9798868817038/',
+  coverImage: 'https://m.media-amazon.com/images/I/51w3vvzqGWL._SL1180_.jpg',
+  blurb:
+    'Written for engineers who already know Appium works and want it to stop surprising them. Architecture, patterns, and the anti-patterns I had to un-ship — the mobile slice of a broader automation practice.',
+  learnings: [
+    'Master Appium architecture and understand how it communicates with devices',
+    'Build robust test automation frameworks for Android and iOS platforms',
+    'Implement advanced strategies for handling flaky tests and improving reliability',
+    'Design scalable mobile testing infrastructure for CI/CD pipelines',
+    'Apply real-world patterns for parallel execution and device farm integration',
+  ],
+} as const;
+
 export type Presentation = {
   id: string;
   title: string;

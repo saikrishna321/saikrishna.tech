@@ -4,7 +4,6 @@ import { T } from '../theme';
 import { PROJECTS, Project } from '../data';
 import { Wrap } from '../components/Shared';
 import { PageHead } from '../components/PageHead';
-import { ContribGraph } from '../components/ContribGraph';
 
 const CATEGORIES: ReadonlyArray<{
   key: Project['category'];
@@ -397,7 +396,6 @@ export default function Work() {
       <WhatIDo />
       <Featured />
       <Catalog />
-      <ContribGraph />
       <EndCTA />
     </>
   );

@@ -10,6 +10,7 @@ import Work from './pages/Work';
 import Talks from './pages/Talks';
 import Presentations from './pages/Presentations';
 import Writing from './pages/Writing';
+import Book from './pages/Book';
 import Workshops from './pages/Workshops';
 import Videos from './pages/Videos';
 import Contact from './pages/Contact';
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/talks" element={<Talks />} />
         <Route path="/presentations" element={<Presentations />} />
         <Route path="/writing" element={<Writing />} />
+        <Route path="/book" element={<Book />} />
         <Route path="/workshops" element={<Workshops />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/contact" element={<Contact />} />

@@ -19,6 +19,7 @@ export const NAV: ReadonlyArray<readonly [string, string]> = [
   ['Talks', '/talks'],
   ['Presentations', '/presentations'],
   ['Writing', '/writing'],
+  ['Book', '/book'],
   ['Workshops', '/workshops'],
   ['Videos', '/videos'],
   ['Contact', '/contact'],

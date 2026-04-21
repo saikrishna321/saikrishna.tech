@@ -158,6 +158,9 @@ export default function Videos() {
     }).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   }, [searchTerm, selectedTag]);
 
+  const longform = filtered.filter((v) => !isShort(v));
+  const shorts = filtered.filter((v) => isShort(v));
+
   return (
     <>
       <PageHead
@@ -251,16 +254,10 @@ export default function Videos() {
         </Wrap>
       </section>
 
-      <section style={{ padding: '48px 0 40px' }}>
-        <Wrap>
-          {filtered.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 28 }}>
-              {filtered.map((v, i) => (
-                <VideoTile key={v.id} v={v} i={i} />
-              ))}
-            </div>
-          ) : (
-            <div style={{ padding: '80px 0', textAlign: 'center' }}>
+      {filtered.length === 0 ? (
+        <section style={{ padding: '80px 0' }}>
+          <Wrap>
+            <div style={{ textAlign: 'center' }}>
               <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
                 No videos found
               </div>
@@ -286,9 +283,63 @@ export default function Videos() {
                 Clear filters
               </button>
             </div>
+          </Wrap>
+        </section>
+      ) : (
+        <>
+          {longform.length > 0 && (
+            <section style={{ padding: '48px 0 40px' }}>
+              <Wrap>
+                <SectionHead
+                  label="Long-form"
+                  title="Talks, tutorials & deep-dives."
+                  count={longform.length}
+                />
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 28 }}>
+                  {longform.map((v, i) => (
+                    <VideoTile key={v.id} v={v} i={i} />
+                  ))}
+                </div>
+              </Wrap>
+            </section>
           )}
-        </Wrap>
-      </section>
+
+          {shorts.length > 0 && (
+            <section style={{ padding: '48px 0 40px', borderTop: `1px solid ${T.rule}` }}>
+              <Wrap>
+                <SectionHead
+                  label="Shorts"
+                  title="Quick clips — under a minute."
+                  count={shorts.length}
+                />
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 20 }}>
+                  {shorts.map((v, i) => (
+                    <VideoTile key={v.id} v={v} i={i} />
+                  ))}
+                </div>
+              </Wrap>
+            </section>
+          )}
+        </>
+      )}
     </>
+  );
+}
+
+function SectionHead({ label, title, count }: { label: string; title: string; count: number }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
+      <div>
+        <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+          {label}
+        </div>
+        <h2 style={{ fontSize: 28, letterSpacing: -0.6, fontWeight: 500, margin: '8px 0 0', lineHeight: 1.1 }}>
+          {title}
+        </h2>
+      </div>
+      <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+        {count} {count === 1 ? 'item' : 'items'}
+      </div>
+    </div>
   );
 }

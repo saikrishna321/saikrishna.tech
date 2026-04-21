@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { T } from '../theme';
 import { SAI } from '../data';
 import { Wrap, FadeIn, StatusDot, SentenceCycler, Frame } from '../components/Shared';
@@ -89,6 +90,10 @@ function Hero() {
               >
                 A <SentenceCycler accent={T.accent} frames={FRAMES} />
               </div>
+            </FadeIn>
+
+            <FadeIn delay={340}>
+              <SocialLinks />
             </FadeIn>
           </div>
 
@@ -243,12 +248,96 @@ function Tally() {
 }
 
 
-function BookBannerCompact() {
+function SocialLink({
+  href,
+  label,
+  icon,
+}: {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+}) {
   return (
     <a
-      href="https://www.amazon.com/s?k=appium+insights+sai+krishna"
-      target="_blank"
+      href={href}
+      target={href.startsWith('mailto:') ? undefined : '_blank'}
       rel="noreferrer"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 10,
+        padding: '10px 16px',
+        border: `1px solid ${T.rule}`,
+        color: T.subdued,
+        textDecoration: 'none',
+        fontFamily: T.mono,
+        fontSize: 11,
+        letterSpacing: '0.18em',
+        textTransform: 'uppercase',
+        transition: 'all .2s',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = T.accent;
+        e.currentTarget.style.color = T.accent;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = T.rule;
+        e.currentTarget.style.color = T.subdued;
+      }}
+    >
+      {icon}
+      {label}
+    </a>
+  );
+}
+
+function SocialLinks() {
+  return (
+    <div style={{ marginTop: 28, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <SocialLink
+        href={SAI.socials.github}
+        label="GitHub"
+        icon={
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 .5C5.73.5.99 5.24.99 11.51c0 4.85 3.14 8.96 7.49 10.42.55.1.75-.24.75-.53 0-.26-.01-1.12-.02-2.03-3.05.66-3.69-1.29-3.69-1.29-.5-1.27-1.22-1.61-1.22-1.61-1-.69.08-.68.08-.68 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.58 1.19 3.21.91.1-.71.38-1.19.69-1.47-2.44-.28-5-1.22-5-5.43 0-1.2.43-2.18 1.12-2.95-.11-.28-.48-1.39.11-2.9 0 0 .92-.29 3.02 1.12A10.5 10.5 0 0112 6.29c.93.01 1.86.12 2.73.36 2.1-1.41 3.02-1.12 3.02-1.12.6 1.51.22 2.62.11 2.9.69.77 1.12 1.75 1.12 2.95 0 4.22-2.57 5.14-5.01 5.42.39.33.74.99.74 2v2.96c0 .29.2.64.76.53 4.35-1.46 7.48-5.57 7.48-10.42C23.01 5.24 18.27.5 12 .5z" />
+          </svg>
+        }
+      />
+      <SocialLink
+        href={SAI.socials.linkedin}
+        label="LinkedIn"
+        icon={
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.63-1.86 3.36-1.86 3.6 0 4.26 2.37 4.26 5.45v6.3zM5.34 7.44a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .78 0 1.74v20.52C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z" />
+          </svg>
+        }
+      />
+      <SocialLink
+        href={SAI.socials.twitter}
+        label="Twitter"
+        icon={
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        }
+      />
+      <SocialLink
+        href={SAI.socials.email}
+        label="Email"
+        icon={
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        }
+      />
+    </div>
+  );
+}
+
+function BookBannerCompact() {
+  return (
+    <Link
+      to="/book"
       style={{
         display: 'grid',
         gridTemplateColumns: '80px 1fr',
@@ -318,10 +407,10 @@ function BookBannerCompact() {
             marginTop: 8,
           }}
         >
-          Order on Amazon →
+          View the book →
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
