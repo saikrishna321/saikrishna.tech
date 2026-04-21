@@ -229,18 +229,24 @@ export function Marquee({
 
 export type Frame = { role: string; tail: ReactNode };
 
+function articleFor(word: string): string {
+  return /^[aeiou]/i.test(word) ? 'An' : 'A';
+}
+
 export function SentenceCycler({
   frames,
   accent,
   mono = false,
   caretChar = '▋',
-  holdMs = 2600,
+  holdMs = 4000,
+  showArticle = false,
 }: {
   frames: Frame[];
   accent: string;
   mono?: boolean;
   caretChar?: string;
   holdMs?: number;
+  showArticle?: boolean;
 }) {
   const [i, setI] = useState(0);
   const [text, setText] = useState('');
@@ -254,11 +260,11 @@ export function SentenceCycler({
       if (text.length < word.length) {
         to = setTimeout(
           () => setText(word.slice(0, text.length + 1)),
-          55 + Math.random() * 40
+          80 + Math.random() * 50
         );
       } else {
         setTailOn(true);
-        to = setTimeout(() => setPhase('hold'), 60);
+        to = setTimeout(() => setPhase('hold'), 80);
       }
     } else if (phase === 'hold') {
       to = setTimeout(() => {
@@ -267,7 +273,7 @@ export function SentenceCycler({
       }, holdMs);
     } else {
       if (text.length > 0)
-        to = setTimeout(() => setText(word.slice(0, text.length - 1)), 26);
+        to = setTimeout(() => setText(word.slice(0, text.length - 1)), 40);
       else {
         setPhase('type');
         setI((i + 1) % frames.length);
@@ -278,8 +284,10 @@ export function SentenceCycler({
   }, [text, phase, i, frames, holdMs]);
 
   const tail = frames[i].tail;
+  const article = showArticle ? articleFor(frames[i].role) : null;
   return (
     <>
+      {article && <span>{article} </span>}
       <span
         style={{
           fontFamily: mono

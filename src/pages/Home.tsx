@@ -90,7 +90,7 @@ function Hero() {
                   minHeight: mobile ? 80 : 120,
                 }}
               >
-                A <SentenceCycler accent={T.accent} frames={FRAMES} />
+                <SentenceCycler accent={T.accent} frames={FRAMES} showArticle />
               </div>
             </FadeIn>
 
