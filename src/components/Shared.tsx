@@ -1,11 +1,33 @@
 import {
   CSSProperties,
   ReactNode,
+  useCallback,
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react';
 import { T } from '../theme';
+
+const MQ_MOBILE = '(max-width: 768px)';
+
+function subscribeMQ(mq: MediaQueryList) {
+  return (cb: () => void) => {
+    mq.addEventListener('change', cb);
+    return () => mq.removeEventListener('change', cb);
+  };
+}
+
+const mqMobile = typeof window !== 'undefined' ? window.matchMedia(MQ_MOBILE) : null;
+const subMobile = mqMobile ? subscribeMQ(mqMobile) : () => () => {};
+
+export function useIsMobile(): boolean {
+  return useSyncExternalStore(
+    subMobile,
+    () => mqMobile?.matches ?? false,
+    () => false,
+  );
+}
 
 export function Wrap({
   children,
@@ -14,8 +36,9 @@ export function Wrap({
   children: ReactNode;
   style?: CSSProperties;
 }) {
+  const mobile = useIsMobile();
   return (
-    <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', ...style }}>
+    <div style={{ maxWidth: 1280, margin: '0 auto', padding: mobile ? '0 20px' : '0 48px', ...style }}>
       {children}
     </div>
   );

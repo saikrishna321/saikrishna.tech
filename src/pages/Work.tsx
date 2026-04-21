@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { T } from '../theme';
 import { PROJECTS, Project } from '../data';
-import { Wrap } from '../components/Shared';
+import { Wrap, useIsMobile } from '../components/Shared';
 import { PageHead } from '../components/PageHead';
 
 const CATEGORIES: ReadonlyArray<{
@@ -19,8 +19,9 @@ const CATEGORIES: ReadonlyArray<{
 const FEATURED_KEY = 'Appium Device Farm';
 
 function WhatIDo() {
+  const mobile = useIsMobile();
   return (
-    <section style={{ padding: '80px 0 90px', borderBottom: `1px solid ${T.rule}`, position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: mobile ? '48px 0 60px' : '80px 0 90px', borderBottom: `1px solid ${T.rule}`, position: 'relative', overflow: 'hidden' }}>
       <div
         style={{
           position: 'absolute',
@@ -36,34 +37,36 @@ function WhatIDo() {
         }}
       />
       <Wrap>
-        <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: 64, alignItems: 'start' }}>
+        <div style={{ display: mobile ? 'flex' : 'grid', flexDirection: 'column', gridTemplateColumns: '240px 1fr', gap: mobile ? 24 : 64, alignItems: 'start' }}>
           <div>
             <div style={{ fontFamily: T.mono, fontSize: 11, color: T.accent, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 20 }}>
               What I do
             </div>
-            <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.14em', textTransform: 'uppercase', lineHeight: 2 }}>
-              AI Agents<br />Evaluation<br />Automation<br />Infra
-            </div>
+            {!mobile && (
+              <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.14em', textTransform: 'uppercase', lineHeight: 2 }}>
+                AI Agents<br />Evaluation<br />Automation<br />Infra
+              </div>
+            )}
           </div>
           <div>
-            <h2 style={{ fontSize: 'clamp(48px, 6vw, 76px)', letterSpacing: -1.6, fontWeight: 500, margin: 0, lineHeight: 1.02 }}>
+            <h2 style={{ fontSize: 'clamp(32px, 6vw, 76px)', letterSpacing: mobile ? -0.8 : -1.6, fontWeight: 500, margin: 0, lineHeight: 1.02 }}>
               I build <span style={{ color: T.accent }}>AI agents</span> that test software,<br />
               and the <span style={{ color: T.accent }}>evals</span> that tell you if they're lying.
             </h2>
-            <p style={{ fontSize: 19, color: T.subdued, lineHeight: 1.65, margin: '28px 0 0', maxWidth: 760 }}>
+            <p style={{ fontSize: mobile ? 16 : 19, color: T.subdued, lineHeight: 1.65, margin: '28px 0 0', maxWidth: 760 }}>
               My day job is building autonomous test agents — systems that can read a goal in plain English, drive a real device or browser, and come back with a verdict. The harder half isn't the agent. It's the <span style={{ color: T.fg }}>evaluation harness</span> around it: reproducible test beds, deterministic scoring, drift detection, and benchmarks that survive model upgrades.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, marginTop: 44, background: T.rule, border: `1px solid ${T.rule}` }}>
+            <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: 1, marginTop: mobile ? 32 : 44, background: T.rule, border: `1px solid ${T.rule}` }}>
               {([
                 ['Agent systems', 'Tool-using agents for mobile + web test automation. MCP, WebDriverAgent, custom action graphs.'],
                 ['Eval harnesses', 'Deterministic test beds, ground-truth datasets, scoring rubrics. The scaffolding that makes "agent accuracy" a real number.'],
                 ['Automation infra', 'Device farms, CI runners, orchestration — the production plumbing that agents actually run on.'],
               ] as const).map(([t, d], i) => (
-                <div key={t} style={{ background: T.bg, padding: 24 }}>
+                <div key={t} style={{ background: T.bg, padding: mobile ? 20 : 24 }}>
                   <div style={{ fontFamily: T.mono, fontSize: 10, color: T.accent, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
                     0{i + 1}
                   </div>
-                  <div style={{ fontSize: 18, letterSpacing: -0.3, color: T.fg, margin: '10px 0 8px' }}>{t}</div>
+                  <div style={{ fontSize: mobile ? 16 : 18, letterSpacing: -0.3, color: T.fg, margin: '10px 0 8px' }}>{t}</div>
                   <div style={{ fontSize: 13, color: T.subdued, lineHeight: 1.55 }}>{d}</div>
                 </div>
               ))}
@@ -77,13 +80,14 @@ function WhatIDo() {
 
 
 function Featured() {
+  const mobile = useIsMobile();
   const p = PROJECTS.find((x) => x.title === FEATURED_KEY);
   const [hover, setHover] = useState(false);
   if (!p) return null;
   return (
     <section
       style={{
-        padding: '80px 0 100px',
+        padding: mobile ? '48px 0 60px' : '80px 0 100px',
         borderTop: `1px solid ${T.rule}`,
         borderBottom: `1px solid ${T.rule}`,
         position: 'relative',
@@ -108,11 +112,11 @@ function Featured() {
         <div style={{ fontFamily: T.mono, fontSize: 11, color: T.accent, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 24 }}>
           ◆ Featured open-source project
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: 72, alignItems: 'start' }}>
+        <div style={{ display: mobile ? 'flex' : 'grid', flexDirection: 'column', gridTemplateColumns: '1fr 420px', gap: mobile ? 32 : 72, alignItems: 'start' }}>
           <div>
-            <h2 style={{ fontSize: 'clamp(48px, 6vw, 72px)', lineHeight: 0.95, letterSpacing: -1.6, margin: 0, fontWeight: 500 }}>{p.title}</h2>
-            <p style={{ fontSize: 20, lineHeight: 1.5, color: T.subdued, letterSpacing: -0.2, margin: '24px 0 0', maxWidth: 640 }}>{p.blurb}</p>
-            <p style={{ fontSize: 15, lineHeight: 1.65, color: T.muted, margin: '16px 0 0', maxWidth: 640 }}>
+            <h2 style={{ fontSize: 'clamp(36px, 6vw, 72px)', lineHeight: 0.95, letterSpacing: mobile ? -0.8 : -1.6, margin: 0, fontWeight: 500 }}>{p.title}</h2>
+            <p style={{ fontSize: mobile ? 17 : 20, lineHeight: 1.5, color: T.subdued, letterSpacing: -0.2, margin: '24px 0 0', maxWidth: 640 }}>{p.blurb}</p>
+            <p style={{ fontSize: mobile ? 14 : 15, lineHeight: 1.65, color: T.muted, margin: '16px 0 0', maxWidth: 640 }}>
               Originally scratched an itch at ThoughtWorks — running 20 Android devices against a single CI job without Selenium Grid. Six years later, it's the plugin other companies' device clouds quietly build on top of.
             </p>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 24 }}>
@@ -159,7 +163,7 @@ function Featured() {
               View on GitHub <span style={{ fontSize: 16 }}>→</span>
             </a>
           </div>
-          <div style={{ border: `1px solid ${T.rule}`, padding: 28, background: 'rgba(236,232,221,0.02)' }}>
+          <div style={{ border: `1px solid ${T.rule}`, padding: mobile ? 20 : 28, background: 'rgba(236,232,221,0.02)', width: mobile ? '100%' : undefined }}>
             <div style={{ fontFamily: T.mono, fontSize: 10, color: T.muted, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 20 }}>
               Spec · at a glance
             </div>
@@ -264,16 +268,17 @@ function ProjectCard({ p, i }: { p: Project; i: number }) {
 }
 
 function Catalog() {
+  const mobile = useIsMobile();
   const [filter, setFilter] = useState<'all' | Project['category']>('all');
   const rest = PROJECTS.filter((p) => p.title !== FEATURED_KEY);
   const visible = filter === 'all' ? rest : rest.filter((p) => p.category === filter);
   return (
-    <section style={{ padding: '80px 0 40px' }}>
+    <section style={{ padding: mobile ? '48px 0 24px' : '80px 0 40px' }}>
       <Wrap>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.2em', textTransform: 'uppercase' }}>The catalog</div>
-            <h2 style={{ fontSize: 42, letterSpacing: -1, fontWeight: 500, margin: '12px 0 0' }}>The rest, sorted by intent.</h2>
+            <h2 style={{ fontSize: mobile ? 28 : 42, letterSpacing: -1, fontWeight: 500, margin: '12px 0 0' }}>The rest, sorted by intent.</h2>
           </div>
           <div style={{ fontFamily: T.mono, fontSize: 12, color: T.muted }}>
             {visible.length} of {rest.length}
@@ -313,16 +318,16 @@ function Catalog() {
             if (!items.length) return null;
             return (
               <div key={cat.key} style={{ marginBottom: 56 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: 40, marginBottom: 24, alignItems: 'baseline' }}>
+                <div style={{ display: mobile ? 'flex' : 'grid', flexDirection: 'column', gridTemplateColumns: '240px 1fr', gap: mobile ? 8 : 40, marginBottom: 24, alignItems: 'baseline' }}>
                   <div>
                     <div style={{ fontFamily: T.mono, fontSize: 10, color: T.accent, letterSpacing: '0.2em', textTransform: 'uppercase' }}>{cat.label}</div>
                     <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, marginTop: 6 }}>
                       {items.length} {items.length === 1 ? 'project' : 'projects'}
                     </div>
                   </div>
-                  <div style={{ fontSize: 15, color: T.subdued, lineHeight: 1.6, borderTop: `1px solid ${T.rule}`, paddingTop: 12 }}>{cat.desc}</div>
+                  <div style={{ fontSize: 15, color: T.subdued, lineHeight: 1.6, borderTop: mobile ? 'none' : `1px solid ${T.rule}`, paddingTop: mobile ? 0 : 12 }}>{cat.desc}</div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(items.length, 2)}, 1fr)`, gap: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : `repeat(${Math.min(items.length, 2)}, 1fr)`, gap: 16 }}>
                   {items.map((p, i) => (
                     <ProjectCard key={p.title} p={p} i={i + 1} />
                   ))}
@@ -331,7 +336,7 @@ function Catalog() {
             );
           })
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)', gap: 16 }}>
             {visible.map((p, i) => (
               <ProjectCard key={p.title} p={p} i={i + 1} />
             ))}
@@ -343,16 +348,17 @@ function Catalog() {
 }
 
 function EndCTA() {
+  const mobile = useIsMobile();
   return (
-    <section style={{ padding: '100px 0 40px', borderTop: `1px solid ${T.rule}` }}>
+    <section style={{ padding: mobile ? '60px 0 24px' : '100px 0 40px', borderTop: `1px solid ${T.rule}` }}>
       <Wrap>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'center' }}>
+        <div style={{ display: mobile ? 'flex' : 'grid', flexDirection: 'column', gridTemplateColumns: '1fr auto', gap: mobile ? 24 : 40, alignItems: mobile ? 'flex-start' : 'center' }}>
           <div>
             <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Up next</div>
-            <h3 style={{ fontSize: 48, letterSpacing: -1.2, fontWeight: 500, margin: '16px 0 0', maxWidth: 760, lineHeight: 1.05 }}>
+            <h3 style={{ fontSize: mobile ? 32 : 48, letterSpacing: -1.2, fontWeight: 500, margin: '16px 0 0', maxWidth: 760, lineHeight: 1.05 }}>
               Curious how these get <span style={{ color: T.accent }}>into production</span>?
             </h3>
-            <p style={{ fontSize: 17, color: T.subdued, margin: '18px 0 0', maxWidth: 620, lineHeight: 1.6 }}>
+            <p style={{ fontSize: mobile ? 15 : 17, color: T.subdued, margin: '18px 0 0', maxWidth: 620, lineHeight: 1.6 }}>
               I've turned most of this work into conference talks — post-mortems, architecture walk-throughs, and the occasional strong opinion.
             </p>
           </div>

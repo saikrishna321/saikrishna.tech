@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { T } from '../theme';
 import { WORKSHOPS, Workshop } from '../data';
-import { Wrap } from '../components/Shared';
+import { Wrap, useIsMobile } from '../components/Shared';
 import { PageHead } from '../components/PageHead';
 
 const TRACKS: ReadonlyArray<{ key: 'all' | Workshop['track']; label: string; desc: string }> = [
@@ -108,6 +108,7 @@ function WorkshopCard({ w, i }: { w: Workshop; i: number }) {
 }
 
 export default function Workshops() {
+  const mobile = useIsMobile();
   const visible = WORKSHOPS;
 
   return (
@@ -159,7 +160,7 @@ export default function Workshops() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+              gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fill, minmax(360px, 1fr))',
               gap: 2,
               background: T.rule,
               border: `1px solid ${T.rule}`,
@@ -172,19 +173,20 @@ export default function Workshops() {
 
           <div
             style={{
-              marginTop: 64,
-              padding: 32,
+              marginTop: mobile ? 40 : 64,
+              padding: mobile ? 20 : 32,
               border: `1px solid ${T.rule}`,
-              display: 'grid',
+              display: mobile ? 'flex' : 'grid',
+              flexDirection: 'column',
               gridTemplateColumns: '1fr auto',
-              gap: 40,
-              alignItems: 'center',
+              gap: mobile ? 20 : 40,
+              alignItems: mobile ? 'flex-start' : 'center',
             }}
           >
             <div>
               <div style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Custom</div>
-              <h3 style={{ fontSize: 28, margin: '10px 0 8px', letterSpacing: -0.5, fontWeight: 500 }}>Need something tailored?</h3>
-              <p style={{ fontSize: 15, color: T.subdued, margin: 0, maxWidth: 620, lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: mobile ? 22 : 28, margin: '10px 0 8px', letterSpacing: -0.5, fontWeight: 500 }}>Need something tailored?</h3>
+              <p style={{ fontSize: mobile ? 14 : 15, color: T.subdued, margin: 0, maxWidth: 620, lineHeight: 1.6 }}>
                 AI agent design, eval harnesses for your app, plugin internals, device-lab setup, or mixing Playwright + Appium in one CI pipeline — happy to put something together for your team.
               </p>
             </div>

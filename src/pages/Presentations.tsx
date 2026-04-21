@@ -31,7 +31,7 @@ export default function Presentations() {
             <div style={{ fontFamily: T.mono, fontSize: 12, color: T.muted }}>{PRESENTATIONS.length} decks</div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(380px, 100%), 1fr))', gap: 16 }}>
             {PRESENTATIONS.map((p, i) => (
               <a
                 key={p.id}

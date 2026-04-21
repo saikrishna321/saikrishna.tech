@@ -1,11 +1,12 @@
 import { T } from '../theme';
-import { Marquee } from './Shared';
+import { Marquee, useIsMobile } from './Shared';
 import { SAI } from '../data';
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const mobile = useIsMobile();
   return (
-    <footer style={{ marginTop: 120, borderTop: `1px solid ${T.rule}` }}>
+    <footer style={{ marginTop: mobile ? 60 : 120, borderTop: `1px solid ${T.rule}` }}>
       <Marquee
         items={[
           'signal · saikrishna.tech',
@@ -20,15 +21,16 @@ export function Footer() {
         style={{
           maxWidth: 1280,
           margin: '0 auto',
-          padding: '32px 48px 40px',
-          display: 'grid',
+          padding: mobile ? '24px 20px 32px' : '32px 48px 40px',
+          display: mobile ? 'flex' : 'grid',
+          flexDirection: 'column',
           gridTemplateColumns: '1fr auto',
-          gap: 40,
-          alignItems: 'end',
+          gap: mobile ? 24 : 40,
+          alignItems: mobile ? 'flex-start' : 'end',
         }}
       >
         <div>
-          <div style={{ fontSize: 40, fontWeight: 500, letterSpacing: -1, color: T.fg, lineHeight: 1 }}>
+          <div style={{ fontSize: mobile ? 28 : 40, fontWeight: 500, letterSpacing: -1, color: T.fg, lineHeight: 1 }}>
             Sai Krishna
           </div>
           <div
@@ -53,6 +55,7 @@ export function Footer() {
             color: T.muted,
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
+            flexWrap: 'wrap',
           }}
         >
           <a href={SAI.socials.github} target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
@@ -71,7 +74,7 @@ export function Footer() {
       </div>
       <div
         style={{
-          padding: '0 48px 24px',
+          padding: mobile ? '0 20px 20px' : '0 48px 24px',
           fontFamily: T.mono,
           fontSize: 10,
           color: T.muted,

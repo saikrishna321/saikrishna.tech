@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { T } from '../theme';
-import { Wrap } from './Shared';
+import { Wrap, useIsMobile } from './Shared';
 
 export function PageHead({
   num,
@@ -13,8 +13,9 @@ export function PageHead({
   title: ReactNode;
   lead?: ReactNode;
 }) {
+  const mobile = useIsMobile();
   return (
-    <div style={{ padding: '96px 0 56px', borderBottom: `1px solid ${T.rule}` }}>
+    <div style={{ padding: mobile ? '56px 0 36px' : '96px 0 56px', borderBottom: `1px solid ${T.rule}` }}>
       <Wrap>
         <div
           style={{
@@ -29,9 +30,9 @@ export function PageHead({
         </div>
         <h1
           style={{
-            fontSize: 'clamp(56px, 8vw, 104px)',
+            fontSize: 'clamp(36px, 8vw, 104px)',
             lineHeight: 0.95,
-            letterSpacing: -3,
+            letterSpacing: mobile ? -1.5 : -3,
             fontWeight: 500,
             margin: '20px 0 0',
             maxWidth: 1100,
@@ -42,7 +43,7 @@ export function PageHead({
         {lead && (
           <p
             style={{
-              fontSize: 20,
+              fontSize: mobile ? 16 : 20,
               lineHeight: 1.5,
               color: T.subdued,
               margin: '24px 0 0',

@@ -1,10 +1,11 @@
 import { ReactNode } from 'react';
 import { T } from '../theme';
 import { BOOK } from '../data';
-import { Wrap } from '../components/Shared';
+import { Wrap, useIsMobile } from '../components/Shared';
 import { PageHead } from '../components/PageHead';
 
 export default function Book() {
+  const mobile = useIsMobile();
   return (
     <>
       <PageHead
@@ -18,9 +19,9 @@ export default function Book() {
         lead="Published by Apress. One spine on a QA lead's shelf, somewhere between the Appium docs and the regret of using Thread.sleep."
       />
 
-      <section style={{ padding: '80px 0 100px' }}>
+      <section style={{ padding: mobile ? '48px 0 60px' : '80px 0 100px' }}>
         <Wrap>
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(240px, 320px) 1fr', gap: 64, alignItems: 'start' }}>
+          <div style={{ display: mobile ? 'flex' : 'grid', flexDirection: 'column', gridTemplateColumns: 'minmax(240px, 320px) 1fr', gap: mobile ? 32 : 64, alignItems: mobile ? 'center' : 'start' }}>
             <Cover />
             <Details />
           </div>
@@ -42,6 +43,8 @@ function Cover() {
         border: `1px solid ${T.accent}`,
         boxShadow: `14px 14px 0 0 ${T.accent}22`,
         transition: 'transform 400ms cubic-bezier(.2,.7,.2,1), box-shadow 400ms',
+        maxWidth: 320,
+        width: '100%',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translate(-4px, -4px)';
@@ -62,15 +65,16 @@ function Cover() {
 }
 
 function Details() {
+  const mobile = useIsMobile();
   return (
     <div>
       <div style={{ fontFamily: T.mono, fontSize: 11, color: T.accent, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12 }}>
         {BOOK.publisher} · {BOOK.year}
       </div>
-      <h2 style={{ fontSize: 'clamp(40px, 5vw, 56px)', letterSpacing: -1.2, fontWeight: 500, margin: 0, lineHeight: 1.05 }}>
+      <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: -1.2, fontWeight: 500, margin: 0, lineHeight: 1.05 }}>
         {BOOK.title}
       </h2>
-      <p style={{ fontSize: 22, color: T.subdued, letterSpacing: -0.3, margin: '16px 0 0', lineHeight: 1.35 }}>
+      <p style={{ fontSize: mobile ? 18 : 22, color: T.subdued, letterSpacing: -0.3, margin: '16px 0 0', lineHeight: 1.35 }}>
         {BOOK.subtitle}
       </p>
 
@@ -88,11 +92,11 @@ function Details() {
         By <span style={{ color: T.fg }}>{BOOK.author}</span> · Published by {BOOK.publisher}
       </div>
 
-      <p style={{ fontSize: 17, color: T.subdued, lineHeight: 1.65, margin: '28px 0 0', maxWidth: 680 }}>
+      <p style={{ fontSize: mobile ? 15 : 17, color: T.subdued, lineHeight: 1.65, margin: '28px 0 0', maxWidth: 680 }}>
         {BOOK.blurb}
       </p>
 
-      <div style={{ marginTop: 40, padding: 28, border: `1px solid ${T.rule}`, background: 'rgba(253,186,174,0.04)' }}>
+      <div style={{ marginTop: 40, padding: mobile ? 20 : 28, border: `1px solid ${T.rule}`, background: 'rgba(253,186,174,0.04)' }}>
         <div style={{ fontFamily: T.mono, fontSize: 10, color: T.accent, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 18 }}>
           What you'll learn
         </div>
@@ -110,7 +114,7 @@ function Details() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              <span style={{ fontSize: 15, color: T.subdued, lineHeight: 1.55 }}>{item}</span>
+              <span style={{ fontSize: mobile ? 14 : 15, color: T.subdued, lineHeight: 1.55 }}>{item}</span>
             </li>
           ))}
         </ul>

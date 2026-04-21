@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { T } from '../theme';
 import { SAI } from '../data';
-import { Wrap, FadeIn, StatusDot, SentenceCycler, Frame } from '../components/Shared';
+import { Wrap, FadeIn, StatusDot, SentenceCycler, Frame, useIsMobile } from '../components/Shared';
 import { ThreeHero } from '../components/ThreeHero';
 import { ContribGraph } from '../components/ContribGraph';
 
@@ -16,8 +16,9 @@ const FRAMES: Frame[] = [
 ];
 
 function Hero() {
+  const mobile = useIsMobile();
   return (
-    <section style={{ padding: '88px 0 100px', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: mobile ? '48px 0 60px' : '88px 0 100px', position: 'relative', overflow: 'hidden' }}>
       <ThreeHero />
 
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', opacity: 0.14 }}>
@@ -33,8 +34,8 @@ function Hero() {
           position: 'absolute',
           top: '-10%',
           right: '-10%',
-          width: 600,
-          height: 600,
+          width: mobile ? 300 : 600,
+          height: mobile ? 300 : 600,
           borderRadius: '50%',
           background: T.accent,
           filter: 'blur(200px)',
@@ -50,16 +51,17 @@ function Hero() {
 
         <div
           style={{
-            display: 'grid',
+            display: mobile ? 'flex' : 'grid',
+            flexDirection: 'column',
             gridTemplateColumns: '1fr 380px',
-            gap: 64,
+            gap: mobile ? 40 : 64,
             alignItems: 'start',
             marginTop: 24,
           }}
         >
           <div>
             <FadeIn delay={100}>
-              <h1 style={{ fontSize: 'clamp(88px, 13vw, 180px)', lineHeight: 0.88, fontWeight: 500, letterSpacing: -6, margin: 0 }}>
+              <h1 style={{ fontSize: 'clamp(56px, 13vw, 180px)', lineHeight: 0.88, fontWeight: 500, letterSpacing: mobile ? -3 : -6, margin: 0 }}>
                 Sai<br />
                 <span
                   style={{
@@ -79,13 +81,13 @@ function Hero() {
             <FadeIn delay={260}>
               <div
                 style={{
-                  marginTop: 32,
-                  fontSize: 28,
+                  marginTop: mobile ? 24 : 32,
+                  fontSize: mobile ? 20 : 28,
                   lineHeight: 1.25,
                   letterSpacing: -0.4,
                   color: T.subdued,
                   maxWidth: 720,
-                  minHeight: 120,
+                  minHeight: mobile ? 80 : 120,
                 }}
               >
                 A <SentenceCycler accent={T.accent} frames={FRAMES} />
@@ -98,15 +100,15 @@ function Hero() {
           </div>
 
           <FadeIn delay={220} y={24}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'flex-end' }}>
-              <div style={{ position: 'relative', width: 340, height: 420 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, alignItems: mobile ? 'flex-start' : 'flex-end' }}>
+              <div style={{ position: 'relative', width: mobile ? '100%' : 340, maxWidth: 340, height: mobile ? 320 : 420 }}>
                 <div style={{ position: 'absolute', inset: 0, border: `1px solid ${T.accent}`, transform: 'translate(14px,14px)', pointerEvents: 'none' }} />
                 <img
                   src="/assets/sai-hero.webp"
                   alt="Sai Krishna"
                   style={{
-                    width: 340,
-                    height: 420,
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'cover',
                     objectPosition: '50% 28%',
                     filter: 'contrast(1.05) saturate(0.9)',
@@ -143,7 +145,7 @@ function Hero() {
 
       </Wrap>
 
-      <ScrollHint />
+      {!mobile && <ScrollHint />}
     </section>
   );
 }
@@ -199,8 +201,9 @@ function ScrollHint() {
 }
 
 function Tally() {
+  const mobile = useIsMobile();
   return (
-    <section style={{ padding: '80px 0 100px', borderTop: `1px solid ${T.rule}` }}>
+    <section style={{ padding: mobile ? '48px 0 60px' : '80px 0 100px', borderTop: `1px solid ${T.rule}` }}>
       <Wrap>
         <FadeIn>
           <div style={{ maxWidth: 1080 }}>
@@ -220,10 +223,10 @@ function Tally() {
               <span>The tally — by the numbers</span>
               <span style={{ flex: 1, height: 1, background: T.rule }} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 32 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 24 : 32 }}>
               {SAI.stats.map((s) => (
                 <div key={s.v} style={{ borderTop: `1px solid ${T.rule}`, paddingTop: 12 }}>
-                  <div style={{ fontSize: 40, fontWeight: 500, letterSpacing: -1, color: T.fg }}>{s.k}</div>
+                  <div style={{ fontSize: mobile ? 32 : 40, fontWeight: 500, letterSpacing: -1, color: T.fg }}>{s.k}</div>
                   <div
                     style={{
                       fontFamily: T.mono,
@@ -335,6 +338,7 @@ function SocialLinks() {
 }
 
 function BookBannerCompact() {
+  const mobile = useIsMobile();
   return (
     <Link
       to="/book"
@@ -343,7 +347,8 @@ function BookBannerCompact() {
         gridTemplateColumns: '80px 1fr',
         gap: 18,
         alignItems: 'center',
-        width: 340,
+        width: mobile ? '100%' : 340,
+        maxWidth: 340,
         padding: '18px 20px',
         border: `1px solid ${T.rule}`,
         background: 'rgba(253,186,174,0.04)',
