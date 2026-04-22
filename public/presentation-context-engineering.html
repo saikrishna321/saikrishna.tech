@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond Prompts: How Context Engineering Transforms Test Automation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,600&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8f8f8;
+    --highlight: #de7356;
+    --highlight-glow: rgba(222, 115, 86, 0.35);
+    --text-primary: #111111;
+    --text-secondary: #4a4a4a;
+    --text-muted: #888888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 18px;
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    overscroll-behavior: none;
+  }
+
+  /* ── Slide System ── */
+  .deck {
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    padding: 48px 80px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(60px);
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0.5s;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0s;
+  }
+
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  /* ── Slide Counter ── */
+  .slide-counter {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    z-index: 1000;
+    letter-spacing: 2px;
+  }
+
+  /* ── Navigation Hint ── */
+  .nav-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 32px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(60px, 8vw, 120px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 900;
+    line-height: 0.93;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  p, li {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 700px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .gradient-text,
+  .gradient-text-2 {
+    color: var(--highlight);
+    font-style: italic;
+    font-weight: 400;
+    position: relative;
+    display: inline-block;
+  }
+  .gradient-text::after,
+  .gradient-text-2::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 6px;
+    height: 8px;
+    background: rgba(222, 115, 86, 0.25);
+    z-index: -1;
+  }
+
+  .accent { color: var(--highlight); }
+
+  /* ── Code ── */
+  code, .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+  }
+
+  .code-block {
+    background: #1a1a1a;
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #e0e0e0;
+    width: 100%;
+    max-width: 800px;
+    overflow-x: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    white-space: pre;
+  }
+
+  .code-block .comment { color: #888888; }
+  .code-block .keyword { color: var(--highlight); }
+  .code-block .string { color: #a8d8a8; }
+  .code-block .fn { color: var(--highlight); }
+  .code-block .type { color: #7eb8da; }
+
+  /* ── Cards ── */
+  .card-grid {
+    display: grid;
+    gap: 16px;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 14px;
+    padding: 22px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 8px 32px rgba(222,115,86,0.08);
+    border-color: rgba(222, 115, 86, 0.25);
+  }
+
+  .card .icon {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .card h3 {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .card p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .card .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--highlight);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* ── Pill / Tags ── */
+  .pill {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 4px;
+    background: rgba(222,115,86,0.2);
+    color: var(--highlight);
+    border: 1px solid rgba(222,115,86,0.45);
+  }
+
+  /* ── Comparison Table ── */
+  .comparison {
+    width: 100%;
+    max-width: 860px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.06);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .comparison thead tr {
+    background: rgba(222, 115, 86, 0.12);
+  }
+
+  .comparison th {
+    padding: 14px 24px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .comparison th:first-child {
+    text-align: left;
+    width: 50%;
+  }
+
+  .comparison td {
+    padding: 11px 24px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  .comparison td:first-child {
+    text-align: left;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .comparison tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .comparison tbody tr:nth-child(even) {
+    background: rgba(0,0,0,0.015);
+  }
+
+  .comparison tr:hover td { background: rgba(222,115,86,0.1); }
+
+  .check { color: var(--highlight); font-weight: bold; font-size: 1.15rem; }
+  .cross { color: var(--text-muted); opacity: 0.5; font-size: 1.15rem; }
+
+  /* ── Section Label ── */
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .section-label .num { color: var(--highlight); font-weight: 600; }
+
+  /* ── Divider ── */
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: var(--highlight);
+    border-radius: 2px;
+    margin: 14px 0;
+  }
+
+  /* ── Speaker Info ── */
+  .speaker-info {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .speaker-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .speaker-title {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Reveal steps (progressive disclosure) ── */
+  .reveal-step {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+  }
+  .reveal-step.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* ── Content-heavy slides ── */
+  .slide.slide--dense h2 {
+    font-size: clamp(28px, 3.5vw, 48px);
+  }
+
+  /* ── Two Column ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+    align-items: start;
+  }
+
+  /* ── Flow ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .flow-step {
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: var(--bg-card);
+    border: 1px solid rgba(0,0,0,0.08);
+    color: var(--text-primary);
+  }
+
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+  }
+
+  /* ── Stats ── */
+  .stats-row {
+    display: flex;
+    gap: 48px;
+    margin-top: 28px;
+  }
+
+  .stat { text-align: center; }
+
+  .stat .number {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat .label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── Context Stack Layers ── */
+  .arch-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+  }
+  .arch-layer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.88rem;
+    transition: all 0.25s ease;
+    position: relative;
+    z-index: 1;
+    margin: 4px 0;
+    border-left: 4px solid transparent;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .arch-layer:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    transform: translateX(4px);
+  }
+  .arch-layer .tag {
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    background: rgba(222,115,86,0.1);
+    border-radius: 6px;
+    color: var(--highlight);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+  .arch-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .arch-connector::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--highlight);
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+
+  /* ── Roadmap ── */
+  .timeline {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    padding-left: 40px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--highlight);
+    border-radius: 2px;
+  }
+  .timeline-item {
+    position: relative;
+    padding: 10px 0;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--highlight);
+    border: 2px solid var(--bg-primary);
+  }
+  .timeline-item h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+  .timeline-item p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Demo ── */
+  @keyframes demoPulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.08); opacity: 1; }
+  }
+  @keyframes ripple {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes blink {
+    50% { border-color: transparent; }
+  }
+  .demo-icon {
+    font-size: 5rem;
+    animation: demoPulse 2s ease-in-out infinite;
+    display: inline-block;
+    position: relative;
+  }
+  .demo-ripple {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 80px; height: 80px;
+    margin: -40px 0 0 -40px;
+    border-radius: 50%;
+    border: 3px solid var(--highlight);
+    animation: ripple 2s ease-out infinite;
+    pointer-events: none;
+  }
+  .demo-ripple:nth-child(2) { animation-delay: 0.6s; }
+  .demo-ripple:nth-child(3) { animation-delay: 1.2s; }
+  .demo-typing {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid var(--highlight);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    animation: typing 3s steps(40) 0.5s forwards, blink 0.7s step-end infinite;
+    width: 0;
+    max-width: max-content;
+  }
+
+  /* ── Animated Grid Background (sides only) ── */
+  /* inset:0 avoids 100vw/100vh overflow (scrollbar / mobile URL bar) expanding past the visual viewport */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove1 35s linear infinite;
+    mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%);
+    -webkit-mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%);
+  }
+  .grid-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(222, 115, 86, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(222, 115, 86, 0.12) 1px, transparent 1px);
+    background-size: 120px 120px;
+    animation: gridMove2 50s linear infinite reverse;
+    mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%);
+    -webkit-mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%);
+  }
+  @keyframes gridMove1 { 0% { background-position: 0 0; } 100% { background-position: 60px 60px; } }
+  @keyframes gridMove2 { 0% { background-position: 0 0; } 100% { background-position: 120px 120px; } }
+
+  /* ── Glow Orb ── */
+  .glow-bg {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.08;
+    pointer-events: none;
+    background: var(--highlight);
+  }
+
+  /* ── Animations ── */
+  .slide.active .card { animation: cardIn 0.6s ease backwards; }
+  .slide.active .card:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .card:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .card:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .card:nth-child(4) { animation-delay: 0.4s; }
+  .slide.active .card:nth-child(5) { animation-delay: 0.5s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .slide.active .arch-layer { animation: archFadeIn 0.4s ease forwards; opacity: 0; }
+  .slide.active .arch-layer:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .arch-layer:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active .arch-layer:nth-child(3) { animation-delay: 0.15s; }
+  .slide.active .arch-layer:nth-child(4) { animation-delay: 0.2s; }
+  .slide.active .arch-layer:nth-child(5) { animation-delay: 0.25s; }
+  .slide.active .arch-layer:nth-child(6) { animation-delay: 0.3s; }
+  .slide.active .arch-layer:nth-child(7) { animation-delay: 0.35s; }
+  .slide.active .arch-layer:nth-child(8) { animation-delay: 0.4s; }
+  @keyframes archFadeIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
+
+  .slide.active h2 { animation: fadeUp 0.5s ease backwards; }
+  .slide.active .divider { animation: growWidth 0.6s ease 0.2s backwards; }
+  .slide.active .section-label { animation: fadeUp 0.4s ease backwards; }
+
+  .slide.active .comparison tr { animation: fadeUp 0.4s ease backwards; }
+  .slide.active .comparison tr:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .comparison tr:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active .comparison tr:nth-child(3) { animation-delay: 0.15s; }
+  .slide.active .comparison tr:nth-child(4) { animation-delay: 0.2s; }
+  .slide.active .comparison tr:nth-child(5) { animation-delay: 0.25s; }
+
+  .slide.active .flow-step { animation: popIn 0.4s ease backwards; }
+  .slide.active .flow-step:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .flow-step:nth-child(2) { animation-delay: 0.15s; }
+  .slide.active .flow-step:nth-child(3) { animation-delay: 0.25s; }
+  .slide.active .flow-step:nth-child(4) { animation-delay: 0.35s; }
+  .slide.active .flow-step:nth-child(5) { animation-delay: 0.45s; }
+
+  .slide.active .timeline-item { animation: slideIn 0.5s ease backwards; }
+  .slide.active .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+
+  .slide.active .stat .number { animation: countPop 0.6s ease backwards; }
+  .slide.active .stat:nth-child(1) .number { animation-delay: 0.2s; }
+  .slide.active .stat:nth-child(2) .number { animation-delay: 0.35s; }
+  .slide.active .stat:nth-child(3) .number { animation-delay: 0.5s; }
+
+  .slide.active .pill { animation: popIn 0.3s ease backwards; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes growWidth { from { width: 0; } to { width: 60px; } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes countPop { from { opacity: 0; transform: scale(0.5); } 50% { transform: scale(1.1); } to { opacity: 1; transform: scale(1); } }
+
+  /* ── Centered helper ── */
+  .slide.centered {
+    justify-content: center;
+    align-content: center;
+  }
+  .centered { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    html { font-size: 16px; }
+    .slide { padding: 36px 28px; }
+    h1 { font-size: clamp(40px, 6vw, 60px); }
+    h2 { font-size: clamp(32px, 4.5vw, 48px); }
+    .card-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+    .card-grid.cols-5 { grid-template-columns: 1fr 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .stats-row { gap: 24px; }
+    .stat .number { font-size: 2rem; }
+  }
+
+  /* ── Shortcuts popup ── */
+  .shortcuts-popup {
+    display: none;
+    position: fixed;
+    bottom: 60px; right: 32px;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    z-index: 2000;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  kbd {
+    background: rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+  }
+
+  /* ── Thank you (closing slide) ── */
+  .thank-you-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 6vw, 86px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 0.93;
+    margin-bottom: 10px;
+  }
+  .thank-you-sub {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+    max-width: 520px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .thank-you-hosts {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 72px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .thank-you-host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 260px;
+  }
+  .thank-you-avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid rgba(222,115,86,0.45);
+    margin-bottom: 14px;
+    object-fit: cover;
+    box-shadow: 0 8px 32px rgba(222,115,86,0.22);
+  }
+  .thank-you-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--highlight);
+  }
+  .thank-you-role {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-top: 6px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .thank-you-pills {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .thank-you-qr {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    margin-top: 14px;
+    border: 2px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .thank-you-url {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .slide.active .thank-you-headline { animation: fadeUp 0.5s ease backwards; }
+  .slide.active .thank-you-sub { animation: fadeUp 0.45s ease 0.08s backwards; }
+  .slide.active .thank-you-hosts > .thank-you-host:nth-child(1) { animation: popIn 0.45s ease 0.12s backwards; }
+  .slide.active .thank-you-hosts > .thank-you-host:nth-child(2) { animation: popIn 0.45s ease 0.22s backwards; }
+
+  /* Title slide: keep vertically centered (short hero); avoids inherited top-only alignment feeling flat */
+  .slide.centered.slide--hero {
+    justify-content: center;
+    align-content: center;
+  }
+
+  /* Thank-you: top-align so tall content isn't clipped; breathing room above fixed counter */
+  .slide.centered.slide--thank-you {
+    justify-content: flex-start;
+    align-content: flex-start;
+    padding-bottom: max(80px, calc(env(safe-area-inset-bottom, 0px) + 72px));
+  }
+
+  /* Thank-you lives outside #deck; sit above .deck (z-index: 1) in paint order */
+  body > .slide.slide--thank-you {
+    z-index: 2;
+  }
+
+  @media (max-width: 1024px) {
+    .thank-you-headline { font-size: 2.4rem; }
+    .thank-you-hosts { gap: 40px; }
+  }
+
+  @media (max-height: 820px) {
+    .thank-you-headline { font-size: 2.35rem; margin-bottom: 6px; }
+    .thank-you-sub { margin-bottom: 16px; font-size: 0.95rem; }
+    .thank-you-avatar { width: 160px; height: 160px; }
+    .thank-you-qr { width: 130px; height: 130px; margin-top: 10px; }
+    .thank-you-name { font-size: 1.35rem; }
+    .thank-you-hosts { gap: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="slide-counter" id="slideCounter"></div>
+<div class="nav-hint">Arrow keys or click to navigate &middot; Press <kbd>?</kbd> for shortcuts</div>
+
+<div class="shortcuts-popup" id="shortcuts">
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> Navigate &nbsp;&middot;&nbsp;
+  <kbd>Home</kbd> First &nbsp;&middot;&nbsp;
+  <kbd>End</kbd> Last &nbsp;&middot;&nbsp;
+  <kbd>F</kbd> Fullscreen
+</div>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 8 — THANK YOU                         ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered slide--thank-you">
+    <div class="glow-bg" style="top: -180px; right: -80px;"></div>
+    <div class="glow-bg" style="bottom: -200px; left: -100px;"></div>
+    <h2 class="thank-you-headline">Thank <span class="gradient-text">you</span></h2>
+    <p style="font-size: 1.05rem; font-style: italic; color: var(--text-secondary); max-width: 640px; text-align: center; line-height: 1.6; margin-bottom: 6px;">
+      &ldquo;The best test automation doesn&rsquo;t just run tests &mdash; it <span class="accent" style="font-weight: 600;">remembers</span>, <span class="accent" style="font-weight: 600;">adapts</span>, and <span class="accent" style="font-weight: 600;">learns</span>.
+      That&rsquo;s context engineering.&rdquo;
+    </p>
+    <p class="thank-you-sub">Questions, slides, and links &mdash; scan a QR or find us online.</p>
+    <div class="divider"></div>
+    <div class="thank-you-hosts">
+      <div class="thank-you-host">
+        <img class="thank-you-avatar" src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/public/assets/sai-hero.webp" alt="Sai Krishna">
+        <h3 class="thank-you-name">Sai Krishna</h3>
+        <div class="thank-you-role">Director of Engineering<br>TestMu AI</div>
+        <div class="thank-you-pills">
+          <span class="pill">Appium Core</span>
+          <span class="pill">Author</span>
+        </div>
+        <img class="thank-you-qr" src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/refs/heads/main/public/qr-code.png" alt="QR code — saikrishna.tech">
+        <div class="thank-you-url">saikrishna.tech</div>
+      </div>
+      <div class="thank-you-host">
+        <img class="thank-you-avatar" src="https://srini.codes/assets/ProfilePic-ad434bf7.webp" alt="Srinivasan Sekar">
+        <h3 class="thank-you-name">Srinivasan Sekar</h3>
+        <div class="thank-you-role">Director of Engineering<br>TestMu AI</div>
+        <div class="thank-you-pills">
+          <span class="pill">Appium Core</span>
+          <span class="pill">Speaker</span>
+        </div>
+        <img class="thank-you-qr" src="/QR-sekar.png" alt="QR code — srini.codes">
+        <div class="thank-you-url">srini.codes</div>
+      </div>
+    </div>
+  </section>
+
+<div class="deck" id="deck">
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 1 — TITLE                             ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered slide--hero" style="position: relative;">
+    <div class="glow-bg" style="top: -200px; left: -100px;"></div>
+    <div class="glow-bg" style="bottom: -200px; right: -100px;"></div>
+    <h1 style="max-width: 900px;">
+      Beyond <span style="text-decoration: line-through; text-decoration-thickness: 4px; text-decoration-color: var(--highlight); opacity: 0.4; font-weight: 400;">Prompts</span><br>
+      <span class="gradient-text">Context Engineering</span><br>
+      <span style="font-size: 0.22em; font-weight: 400; font-family: 'Inter', sans-serif; color: var(--text-secondary); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 12px; display: block;">Transforms Test Automation</span>
+    </h1>
+    <div class="divider"></div>
+    <div style="display: flex; align-items: flex-start; justify-content: center; gap: 80px; flex-wrap: wrap; margin-top: 32px;">
+      <!-- Speaker 1: Sai Krishna -->
+      <div style="display: flex; flex-direction: column; align-items: center; min-width: 280px;">
+        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/public/assets/sai-hero.webp" alt="Sai Krishna"
+             style="width: 240px; height: 240px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 18px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
+        <h2 style="font-size: 2rem; margin: 0;"><span class="gradient-text">Sai Krishna</span></h2>
+        <div style="font-size: 1.05rem; color: var(--text-secondary); font-weight: 500; margin-top: 8px; text-align: center;">Director of Engineering<br>TestMu AI</div>
+        <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+          <span class="pill">Appium Core</span>
+          <span class="pill">Author</span>
+        </div>
+        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/refs/heads/main/public/qr-code.png" alt="QR Sai"
+             style="width: 180px; height: 180px; border-radius: 14px; margin-top: 18px; border: 2px solid rgba(0,0,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px;">saikrishna.tech</div>
+      </div>
+      <!-- Speaker 2: Sekar -->
+      <div style="display: flex; flex-direction: column; align-items: center; min-width: 280px;">
+        <img src="https://srini.codes/assets/ProfilePic-ad434bf7.webp" alt="Srinivasan Sekar"
+             style="width: 240px; height: 240px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 18px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
+        <h2 style="font-size: 2rem; margin: 0;"><span class="gradient-text">Srinivasan Sekar</span></h2>
+        <div style="font-size: 1.05rem; color: var(--text-secondary); font-weight: 500; margin-top: 8px; text-align: center;">Director of Engineering<br>TestMu AI</div>
+        <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+          <span class="pill">Appium Core</span>
+          <span class="pill">Speaker</span>
+        </div>
+        <img src="/QR-sekar.png" alt="QR Sekar"
+             style="width: 180px; height: 180px; border-radius: 14px; margin-top: 18px; border: 2px solid rgba(0,0,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px;">srini.codes</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 2 — THE PROMPT TRAP                    ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered" data-steps="1">
+    <h2>The <span class="gradient-text">Prompt Trap</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 680px; margin-bottom: 24px;">Everyone's first instinct: write a better prompt. But watch what actually happens.</p>
+    <div class="reveal-step" data-step="1">
+      <table class="comparison">
+        <thead><tr><th style="width: 40%;">What you ask</th><th>What actually happens</th></tr></thead>
+        <tbody>
+          <tr><td>"Test the login flow"</td><td style="text-align: left;">Doesn't know which app, which screen, what credentials</td></tr>
+          <tr><td>"Click the search button"</td><td style="text-align: left;">3 elements match "search" &mdash; picks the wrong one</td></tr>
+          <tr><td>"Verify order was placed"</td><td style="text-align: left;">Says "done" while still on the cart page</td></tr>
+          <tr><td>"Scroll to the product"</td><td style="text-align: left;">Scrolls endlessly &mdash; no idea when to stop</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 28px; font-size: 1.1rem; color: var(--highlight); font-weight: 500; max-width: 700px;">
+        A prompt without context is a test without assertions &mdash; it runs, it just doesn't mean anything.
+      </p>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 3 — WHAT IS CONTEXT ENGINEERING        ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <h2>What is <span class="gradient-text">Context Engineering</span>?</h2>
+    <div class="divider"></div>
+    <p style="max-width: 720px; margin-bottom: 32px; font-size: 1.1rem;">
+      Building systems that assemble the <span class="accent">right information</span>, in the <span class="accent">right format</span>, at the <span class="accent">right time</span> for an AI model to make good decisions.
+    </p>
+
+    <!-- Mapping: what you already know → context engineering equivalent -->
+    <table class="comparison" style="max-width: 880px;">
+      <thead>
+        <tr>
+          <th style="text-align: left; width: 30%;">What you already build</th>
+          <th style="text-align: center; width: 8%;">&nbsp;</th>
+          <th style="text-align: left; width: 30%;">Context engineering equivalent</th>
+          <th style="text-align: left; width: 32%;">What it gives the LLM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Page Objects</td>
+          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
+          <td style="color: var(--highlight); font-weight: 600;">App Guides</td>
+          <td style="color: var(--text-muted);">Structured knowledge about screens</td>
+        </tr>
+        <tr>
+          <td>Test Fixtures / beforeEach</td>
+          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
+          <td style="color: var(--highlight); font-weight: 600;">Injected State</td>
+          <td style="color: var(--text-muted);">What the agent knows before each step</td>
+        </tr>
+        <tr>
+          <td>Retry Logic</td>
+          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
+          <td style="color: var(--highlight); font-weight: 600;">Stuck Detection</td>
+          <td style="color: var(--text-muted);">Alternative strategies when looping</td>
+        </tr>
+        <tr>
+          <td>Test History / Flaky Detection</td>
+          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
+          <td style="color: var(--highlight); font-weight: 600;">Episodic Memory</td>
+          <td style="color: var(--text-muted);">Which paths succeeded, which selectors broke</td>
+        </tr>
+        <tr>
+          <td>Assertions</td>
+          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
+          <td style="color: var(--highlight); font-weight: 600;">Verification</td>
+          <td style="color: var(--text-muted);">Re-evaluate before declaring done</td>
+        </tr>
+        <tr>
+          <td>Reporter / Screenshots</td>
+          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
+          <td style="color: var(--highlight); font-weight: 600;">Feedback Loop</td>
+          <td style="color: var(--text-muted);">Post-action state captured &amp; reused</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top: 28px; font-size: 1.05rem; font-weight: 500; max-width: 700px;">
+      You've been doing this for years. The only thing that changed:<br>
+      your consumer went from a <span style="text-decoration: line-through; opacity: 0.4;">test runner</span> to an <span class="accent">LLM</span>.
+    </p>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 4 — THE 5 PATTERNS                     ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <h2>5 Patterns That <span class="gradient-text">Actually Work</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 620px; margin-bottom: 20px;">These work across any stack &mdash; Selenium, Playwright, Appium, API, or custom frameworks.</p>
+    <div class="card-grid cols-5" style="max-width: 1100px;">
+      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
+        <div class="card-num">Pattern 01</div>
+        <span class="icon">&#x1F5DC;&#xFE0F;</span>
+        <h3>Compress</h3>
+        <p>Don't dump 50KB of DOM. Score elements, keep top 80, flatten hierarchy.</p>
+      </div>
+      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
+        <div class="card-num">Pattern 02</div>
+        <span class="icon">&#x1F504;</span>
+        <h3>Diff</h3>
+        <p>After every action, show what <em>changed</em> &mdash; not the full state again.</p>
+      </div>
+      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
+        <div class="card-num">Pattern 03</div>
+        <span class="icon">&#x1F9E0;</span>
+        <h3>Remember</h3>
+        <p>Positive: "tap Search worked 5x." Negative: "old_btn failed &mdash; skip it."</p>
+      </div>
+      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
+        <div class="card-num">Pattern 04</div>
+        <span class="icon">&#x1F6E0;&#xFE0F;</span>
+        <h3>Recover</h3>
+        <p>Inject untried elements + alternative strategies. Let the model choose.</p>
+      </div>
+      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
+        <div class="card-num">Pattern 05</div>
+        <span class="icon">&#x2705;</span>
+        <h3>Verify</h3>
+        <p>When agent says "done" &mdash; take a fresh screenshot and ask again.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 5 — THE CONTEXT STACK                  ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <h2>The <span class="gradient-text">Context Stack</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 660px; margin-bottom: 20px;">Order matters &mdash; what the LLM reads first shapes every decision. Here's how AppClaw assembles context on every step.</p>
+    <div class="arch-flow">
+      <div class="arch-layer">
+        <span>Goal + Step Number</span>
+        <span class="tag">Always first</span>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-layer">
+        <span>Last Action Result</span>
+        <span class="tag">Feedback</span>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-layer">
+        <span>Screen Changes (Diff)</span>
+        <span class="tag">What changed</span>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-layer">
+        <span>Stuck Hint &amp; Recovery Strategy</span>
+        <span class="tag">If looping</span>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-layer">
+        <span>&#x26A0;&#xFE0F; Failed Selectors (Negative Cache)</span>
+        <span class="tag">Don't retry</span>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-layer">
+        <span>Past Experience (Episodic Memory)</span>
+        <span class="tag">What worked</span>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-layer">
+        <span>App Guide (Domain Knowledge)</span>
+        <span class="tag">Navigation</span>
+      </div>
+      <div class="arch-connector"></div>
+      <div class="arch-layer">
+        <span>Contextual Hints + Trimmed DOM</span>
+        <span class="tag">Screen state</span>
+      </div>
+    </div>
+    <p style="margin-top: 20px; font-size: 0.95rem; max-width: 700px;">
+      Each layer is <span class="accent">conditionally injected</span> &mdash; only what's relevant to <em>this</em> step makes it into the context window.
+    </p>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 6 — LEARNING ACROSS RUNS               ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <h2>Learning <span class="gradient-text">Across Runs</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 680px; margin-bottom: 24px;">Your test suite gets smarter with every execution &mdash; three layers of memory working together.</p>
+    <div class="card-grid cols-3" style="max-width: 1000px;">
+      <div class="card" style="border-top: 3px solid var(--highlight);">
+        <span class="icon">&#x1F6AB;</span>
+        <h3>Negative Cache</h3>
+        <p>Per-screen failure tracking. "find_and_click('Send') failed &mdash; out of bounds." Injected as warnings so the agent never retries broken selectors on the same screen.</p>
+      </div>
+      <div class="card" style="border-top: 3px solid var(--highlight);">
+        <span class="icon">&#x1F9E0;</span>
+        <h3>Episodic Memory</h3>
+        <p>Semantic fingerprinting matches screens across runs. Jaccard similarity on labels + goal keywords. Confidence decays over time &mdash; stale strategies fade out.</p>
+      </div>
+      <div class="card" style="border-top: 3px solid var(--highlight);">
+        <span class="icon">&#x1F4D6;</span>
+        <h3>App Guides</h3>
+        <p>Pre-built navigation knowledge: "YouTube search = magnifying glass top-right." Built-in for common apps, customizable via <code>.appclaw/guides/</code>.</p>
+      </div>
+    </div>
+    <div style="margin-top: 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;">
+      <div class="flow-step" style="opacity: 0.5;">Run 1 &mdash; Exploring</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step" style="opacity: 0.7;">Run 3 &mdash; Remembering</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step" style="border-color: var(--highlight); color: var(--highlight);">Run 5 &mdash; 3&times; Faster</div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 7 — FROM GOAL TO STEPS                 ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered slide--dense">
+    <h2>From Goal to <span class="gradient-text">Steps</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 680px; margin-bottom: 20px;">The AI plans like a senior QA &mdash; because you taught it how. Goal decomposition + stuck detection in action.</p>
+    <div class="two-col" style="max-width: 1100px;">
+      <div>
+        <h3 style="margin-bottom: 10px; font-size: 1.3rem;">Goal Decomposition</h3>
+        <div class="code-block" style="max-width: 100%; font-size: 0.82rem; padding: 20px 24px; line-height: 1.9;">
+<span class="comment">// User says:</span>
+<span class="string">"Order a pizza on DoorDash"</span>
+
+<span class="comment">// Agent decomposes into:</span>
+<span class="keyword">Step 01</span>  Launch DoorDash app
+<span class="keyword">Step 02</span>  Search for <span class="string">"pizza"</span>
+<span class="keyword">Step 03</span>  Select first restaurant
+<span class="keyword">Step 04</span>  Add item to cart
+<span class="keyword">Step 05</span>  Go to cart
+<span class="keyword">Step 06</span>  Fill delivery address  <span class="comment">&larr; sub-goal per field</span>
+<span class="keyword">Step 07</span>  Verify order summary
+<span class="keyword">Step 08</span>  Confirm placement
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom: 10px; font-size: 1.3rem;">Stuck Detection</h3>
+        <div class="code-block" style="max-width: 100%; font-size: 0.82rem; padding: 20px 24px; line-height: 1.8;">
+<span class="comment">// Agent detects it's stuck when:</span>
+<span class="keyword">&bull;</span> Same selector tried <span class="fn">3+</span> times
+<span class="keyword">&bull;</span> Screen fingerprint unchanged
+<span class="keyword">&bull;</span> Repeating <span class="fn">tap</span> &rarr; <span class="fn">fail</span> &rarr; <span class="fn">tap</span> loop
+
+<span class="comment">// Recovery strategy injected:</span>
+<span class="type">stuck_hint</span>: <span class="string">"Element not responding.</span>
+  <span class="string">Try: scroll to reveal, use</span>
+  <span class="string">coordinates, or dismiss overlay."</span>
+
+<span class="comment">// Goal-aware exemptions:</span>
+<span class="keyword">&bull;</span> Scrolling    <span class="comment">&larr; not stuck</span>
+<span class="keyword">&bull;</span> Data entry   <span class="comment">&larr; not stuck</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 8 — IN YOUR CODE                       ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered slide--dense">
+    <h2>What This Looks Like in <span class="gradient-text">Your Code</span></h2>
+    <div class="divider"></div>
+    <div class="two-col" style="max-width: 1050px; margin-top: 8px;">
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase;">Before &mdash; prompt only</div>
+        <div class="code-block" style="max-width: 100%; opacity: 0.55; font-size: 0.72rem; padding: 16px 18px; line-height: 1.65;">
+<span class="keyword">await</span> ai.<span class="fn">run</span>(<span class="string">"Log in and verify dashboard"</span>)
+
+<span class="comment">// Agent doesn't know:</span>
+<span class="comment">//   - Which app? Which screen?</span>
+<span class="comment">//   - What credentials?</span>
+<span class="comment">//   - What does "dashboard" look like?</span>
+<span class="comment">//   - What if SSO popup appears?</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--highlight); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase;">After &mdash; context engineered</div>
+        <div class="code-block" style="max-width: 100%; font-size: 0.72rem; padding: 16px 18px; line-height: 1.65;">
+<span class="keyword">await</span> ai.<span class="fn">run</span>({
+  <span class="type">goal</span>: <span class="string">"Log in and verify dashboard"</span>,
+  <span class="type">context</span>: {
+    <span class="type">screen</span>: <span class="keyword">await</span> <span class="fn">getCompressedDOM</span>(),  <span class="comment">// Compress</span>
+    <span class="type">diff</span>: <span class="fn">diffFrom</span>(prev),             <span class="comment">// Diff</span>
+    <span class="type">memory</span>: <span class="fn">getMemory</span>(<span class="string">'login'</span>),     <span class="comment">// Remember</span>
+    <span class="type">failed</span>: <span class="fn">getFailedSelectors</span>(),    <span class="comment">// Remember</span>
+    <span class="type">guide</span>: <span class="fn">loadGuide</span>(<span class="string">'login'</span>),      <span class="comment">// Recover</span>
+  },
+  <span class="type">verify</span>: <span class="keyword">true</span>,                      <span class="comment">// Verify</span>
+})
+        </div>
+      </div>
+    </div>
+    <p style="margin-top: 20px; font-size: 0.92rem; max-width: 700px;">
+      Not a library &mdash; it's a <span class="accent">pattern</span>. Build it in any language, any framework, any LLM provider.
+    </p>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 6 — CROSS-STACK                        ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <h2>Same Patterns, <span class="gradient-text">Every Layer</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 640px; margin-bottom: 24px;">Context engineering isn't just UI. The patterns are identical for API, backend, and cross-stack testing.</p>
+    <table class="comparison" style="max-width: 920px;">
+      <thead><tr><th style="width: 18%;">Pattern</th><th style="text-align: left;">Mobile / Web</th><th style="text-align: left;">API Testing</th></tr></thead>
+      <tbody>
+        <tr><td style="color: var(--highlight); font-weight: 600;">Compress</td><td style="text-align: left;">50KB DOM &rarr; 80 scored elements</td><td style="text-align: left;">500-endpoint spec &rarr; relevant domain slice</td></tr>
+        <tr><td style="color: var(--highlight); font-weight: 600;">Diff</td><td style="text-align: left;">"Dropdown appeared, spinner gone"</td><td style="text-align: left;">"Status changed active &rarr; inactive"</td></tr>
+        <tr><td style="color: var(--highlight); font-weight: 600;">Remember</td><td style="text-align: left;">"tap(Search) worked 5x here"</td><td style="text-align: left;">"POST /orders needs auth token refreshed first"</td></tr>
+        <tr><td style="color: var(--highlight); font-weight: 600;">Recover</td><td style="text-align: left;">Inject untried elements on screen</td><td style="text-align: left;">"409 Conflict? Try DELETE cleanup"</td></tr>
+        <tr><td style="color: var(--highlight); font-weight: 600;">Verify</td><td style="text-align: left;">Fresh screenshot &rarr; "goal met?"</td><td style="text-align: left;">GET /orders/{id} to confirm it exists</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 7 — DEMO                               ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <section class="slide centered">
+    <div style="position: relative; display: inline-block; margin-bottom: 12px;">
+      <div class="demo-icon">&#x1F4F1;</div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+    </div>
+    <h2><span class="gradient-text">All 5 Patterns, Live</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 640px; margin-bottom: 24px;">
+      AppClaw running on a real device with verbose context logging &mdash; watch every layer being assembled.
+    </p>
+    <div style="padding: 14px 28px; background: rgba(0,0,0,0.03); border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); display: inline-block;">
+      <div class="demo-typing">"Open YouTube, search Appium, verify TestMu AI appears"</div>
+    </div>
+    <div class="stats-row" style="margin-top: 32px;">
+      <div class="stat"><div class="number accent">50KB</div><div class="label">&rarr; 3KB DOM</div></div>
+      <div class="stat"><div class="number accent">5x</div><div class="label">Memory recall</div></div>
+      <div class="stat"><div class="number accent">2nd</div><div class="label">Verify pass</div></div>
+    </div>
+    <div style="margin-top: 24px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+      <span class="pill">Compress</span>
+      <span class="pill">Diff</span>
+      <span class="pill">Remember</span>
+      <span class="pill">Recover</span>
+      <span class="pill">Verify</span>
+    </div>
+  </section>
+</div>
+
+<script>
+(function() {
+  const slides = [
+    ...document.querySelectorAll('#deck .slide'),
+    ...document.querySelectorAll('body > .slide.slide--thank-you'),
+  ];
+  const counter = document.getElementById('slideCounter');
+  const shortcuts = document.getElementById('shortcuts');
+  let current = 0;
+  const total = slides.length;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  function resetScrollPosition() {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    slides.forEach(slide => { slide.scrollTop = 0; });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current) return;
+    const prevSlide = slides[current];
+    const nextSlide = slides[index];
+
+    // Reset sub-steps on the slide we're leaving
+    hideAllSteps(current);
+
+    prevSlide.classList.remove('active');
+    if (index > current) {
+      prevSlide.classList.add('exit-left');
+      setTimeout(() => prevSlide.classList.remove('exit-left'), 500);
+    }
+
+    current = index;
+    nextSlide.classList.add('active');
+    nextSlide.scrollTop = 0;
+
+    counter.textContent = `item ${current + 1} \u22ee ${total}`;
+    window.location.hash = current + 1;
+  }
+
+  // Track sub-step state per slide
+  const subSteps = {};
+
+  function getMaxStep(slide) {
+    return parseInt(slide.getAttribute('data-steps') || '0', 10);
+  }
+
+  function getCurrentSubStep(index) {
+    return subSteps[index] || 0;
+  }
+
+  function revealStep(slideIndex, step) {
+    const slide = slides[slideIndex];
+    const el = slide.querySelector('[data-step="' + step + '"]');
+    if (el) el.classList.add('visible');
+  }
+
+  function hideAllSteps(slideIndex) {
+    const slide = slides[slideIndex];
+    slide.querySelectorAll('.reveal-step').forEach(el => el.classList.remove('visible'));
+    subSteps[slideIndex] = 0;
+  }
+
+  function next() {
+    const maxStep = getMaxStep(slides[current]);
+    const curSub = getCurrentSubStep(current);
+    if (curSub < maxStep) {
+      subSteps[current] = curSub + 1;
+      revealStep(current, subSteps[current]);
+    } else {
+      goTo(current + 1);
+    }
+  }
+
+  function prev() {
+    const curSub = getCurrentSubStep(current);
+    if (curSub > 0) {
+      const slide = slides[current];
+      const el = slide.querySelector('[data-step="' + curSub + '"]');
+      if (el) el.classList.remove('visible');
+      subSteps[current] = curSub - 1;
+    } else {
+      goTo(current - 1);
+    }
+  }
+
+  // Init (clamp out-of-range hashes, e.g. old #10 after deck shortened)
+  const rawHash = parseInt(window.location.hash.slice(1), 10);
+  const hash = Number.isFinite(rawHash) ? rawHash - 1 : -1;
+  if (hash >= 0 && hash < total) current = hash;
+  else if (hash >= total) current = total - 1;
+  else current = 0;
+  slides[current].classList.add('active');
+  // Prevent browsers from restoring stale scroll on direct hash loads.
+  resetScrollPosition();
+  requestAnimationFrame(resetScrollPosition);
+  setTimeout(resetScrollPosition, 150);
+  counter.textContent = `item ${current + 1} \u22ee ${total}`;
+
+  window.addEventListener('load', resetScrollPosition);
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    switch(e.key) {
+      case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(total - 1); break;
+      case 'f': case 'F':
+        if (!e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+          document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+        }
+        break;
+      case '?':
+        shortcuts.style.display = shortcuts.style.display === 'block' ? 'none' : 'block';
+        break;
+    }
+  });
+
+  // Click navigation
+  document.addEventListener('click', e => {
+    if (e.target.closest('a, button, code, .code-block')) return;
+    const x = e.clientX / window.innerWidth;
+    x > 0.5 ? next() : prev();
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+  });
+})();
+</script>
+
+</body>
+</html>

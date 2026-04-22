@@ -307,6 +307,14 @@ export type Presentation = {
 
 export const PRESENTATIONS: Presentation[] = [
   {
+    id: 'context-engineering',
+    title: 'Beyond Prompts: How Context Engineering Transforms Test Automation',
+    url: '/presentation-context-engineering.html',
+    event: 'Conference Talk',
+    year: '2026',
+    description: 'Why prompts are the tip of the iceberg — 5 context engineering patterns every QA engineer can apply to mobile, web, and API automation today.',
+  },
+  {
     id: 'techxpresso',
     title: 'Appium MCP Local Agent — Your AI Co-Pilot That Takes Action',
     url: '/presentation-techxpresso.html',
