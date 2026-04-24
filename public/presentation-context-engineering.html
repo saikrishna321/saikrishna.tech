@@ -8,10 +8,10 @@
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,600&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #ffffff;
-    --bg-card: #ffffff;
-    --bg-card-hover: #f8f8f8;
+    --bg-primary: #FBF7F2;
+    --bg-secondary: #FBF7F2;
+    --bg-card: #FBF7F2;
+    --bg-card-hover: #f3efe9;
     --highlight: #de7356;
     --highlight-glow: rgba(222, 115, 86, 0.35);
     --text-primary: #111111;
@@ -89,6 +89,9 @@
     color: var(--text-muted);
     z-index: 1000;
     letter-spacing: 2px;
+    background: rgba(255,255,255,0.85);
+    padding: 2px 8px;
+    border-radius: 4px;
   }
 
   /* ── Navigation Hint ── */
@@ -100,6 +103,9 @@
     color: var(--text-muted);
     z-index: 1000;
     opacity: 0.6;
+    background: rgba(255,255,255,0.85);
+    padding: 2px 8px;
+    border-radius: 4px;
   }
 
   /* ── Typography ── */
@@ -971,300 +977,44 @@
   <!-- ╔══════════════════════════════════════════════╗ -->
   <!-- ║  SLIDE 3 — WHAT IS CONTEXT ENGINEERING        ║ -->
   <!-- ╚══════════════════════════════════════════════╝ -->
-  <section class="slide centered">
-    <h2>What is <span class="gradient-text">Context Engineering</span>?</h2>
-    <div class="divider"></div>
-    <p style="max-width: 720px; margin-bottom: 32px; font-size: 1.1rem;">
-      Building systems that assemble the <span class="accent">right information</span>, in the <span class="accent">right format</span>, at the <span class="accent">right time</span> for an AI model to make good decisions.
-    </p>
-
-    <!-- Mapping: what you already know → context engineering equivalent -->
-    <table class="comparison" style="max-width: 880px;">
-      <thead>
-        <tr>
-          <th style="text-align: left; width: 30%;">What you already build</th>
-          <th style="text-align: center; width: 8%;">&nbsp;</th>
-          <th style="text-align: left; width: 30%;">Context engineering equivalent</th>
-          <th style="text-align: left; width: 32%;">What it gives the LLM</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Page Objects</td>
-          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
-          <td style="color: var(--highlight); font-weight: 600;">App Guides</td>
-          <td style="color: var(--text-muted);">Structured knowledge about screens</td>
-        </tr>
-        <tr>
-          <td>Test Fixtures / beforeEach</td>
-          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
-          <td style="color: var(--highlight); font-weight: 600;">Injected State</td>
-          <td style="color: var(--text-muted);">What the agent knows before each step</td>
-        </tr>
-        <tr>
-          <td>Retry Logic</td>
-          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
-          <td style="color: var(--highlight); font-weight: 600;">Stuck Detection</td>
-          <td style="color: var(--text-muted);">Alternative strategies when looping</td>
-        </tr>
-        <tr>
-          <td>Test History / Flaky Detection</td>
-          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
-          <td style="color: var(--highlight); font-weight: 600;">Episodic Memory</td>
-          <td style="color: var(--text-muted);">Which paths succeeded, which selectors broke</td>
-        </tr>
-        <tr>
-          <td>Assertions</td>
-          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
-          <td style="color: var(--highlight); font-weight: 600;">Verification</td>
-          <td style="color: var(--text-muted);">Re-evaluate before declaring done</td>
-        </tr>
-        <tr>
-          <td>Reporter / Screenshots</td>
-          <td style="text-align: center; color: var(--highlight); font-size: 1.1rem;">&rarr;</td>
-          <td style="color: var(--highlight); font-weight: 600;">Feedback Loop</td>
-          <td style="color: var(--text-muted);">Post-action state captured &amp; reused</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p style="margin-top: 28px; font-size: 1.05rem; font-weight: 500; max-width: 700px;">
-      You've been doing this for years. The only thing that changed:<br>
-      your consumer went from a <span style="text-decoration: line-through; opacity: 0.4;">test runner</span> to an <span class="accent">LLM</span>.
-    </p>
+  <section class="slide centered" style="padding: 0;">
+    <iframe src="context-engineering-standalone.html" style="width: 100%; height: 100%; border: none; position: absolute; inset: 0;" loading="lazy"></iframe>
   </section>
 
-  <!-- ╔══════════════════════════════════════════════╗ -->
-  <!-- ║  SLIDE 4 — THE 5 PATTERNS                     ║ -->
-  <!-- ╚══════════════════════════════════════════════╝ -->
-  <section class="slide centered">
-    <h2>5 Patterns That <span class="gradient-text">Actually Work</span></h2>
-    <div class="divider"></div>
-    <p style="max-width: 620px; margin-bottom: 20px;">These work across any stack &mdash; Selenium, Playwright, Appium, API, or custom frameworks.</p>
-    <div class="card-grid cols-5" style="max-width: 1100px;">
-      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
-        <div class="card-num">Pattern 01</div>
-        <span class="icon">&#x1F5DC;&#xFE0F;</span>
-        <h3>Compress</h3>
-        <p>Don't dump 50KB of DOM. Score elements, keep top 80, flatten hierarchy.</p>
-      </div>
-      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
-        <div class="card-num">Pattern 02</div>
-        <span class="icon">&#x1F504;</span>
-        <h3>Diff</h3>
-        <p>After every action, show what <em>changed</em> &mdash; not the full state again.</p>
-      </div>
-      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
-        <div class="card-num">Pattern 03</div>
-        <span class="icon">&#x1F9E0;</span>
-        <h3>Remember</h3>
-        <p>Positive: "tap Search worked 5x." Negative: "old_btn failed &mdash; skip it."</p>
-      </div>
-      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
-        <div class="card-num">Pattern 04</div>
-        <span class="icon">&#x1F6E0;&#xFE0F;</span>
-        <h3>Recover</h3>
-        <p>Inject untried elements + alternative strategies. Let the model choose.</p>
-      </div>
-      <div class="card" style="text-align: center; border-top: 3px solid var(--highlight);">
-        <div class="card-num">Pattern 05</div>
-        <span class="icon">&#x2705;</span>
-        <h3>Verify</h3>
-        <p>When agent says "done" &mdash; take a fresh screenshot and ask again.</p>
-      </div>
-    </div>
-  </section>
 
   <!-- ╔══════════════════════════════════════════════╗ -->
-  <!-- ║  SLIDE 5 — THE CONTEXT STACK                  ║ -->
+  <!-- ║  SLIDE 5 — 5 PATTERNS THAT ACTUALLY WORK      ║ -->
   <!-- ╚══════════════════════════════════════════════╝ -->
-  <section class="slide centered">
-    <h2>The <span class="gradient-text">Context Stack</span></h2>
-    <div class="divider"></div>
-    <p style="max-width: 660px; margin-bottom: 20px;">Order matters &mdash; what the LLM reads first shapes every decision. Here's how AppClaw assembles context on every step.</p>
-    <div class="arch-flow">
-      <div class="arch-layer">
-        <span>Goal + Step Number</span>
-        <span class="tag">Always first</span>
-      </div>
-      <div class="arch-connector"></div>
-      <div class="arch-layer">
-        <span>Last Action Result</span>
-        <span class="tag">Feedback</span>
-      </div>
-      <div class="arch-connector"></div>
-      <div class="arch-layer">
-        <span>Screen Changes (Diff)</span>
-        <span class="tag">What changed</span>
-      </div>
-      <div class="arch-connector"></div>
-      <div class="arch-layer">
-        <span>Stuck Hint &amp; Recovery Strategy</span>
-        <span class="tag">If looping</span>
-      </div>
-      <div class="arch-connector"></div>
-      <div class="arch-layer">
-        <span>&#x26A0;&#xFE0F; Failed Selectors (Negative Cache)</span>
-        <span class="tag">Don't retry</span>
-      </div>
-      <div class="arch-connector"></div>
-      <div class="arch-layer">
-        <span>Past Experience (Episodic Memory)</span>
-        <span class="tag">What worked</span>
-      </div>
-      <div class="arch-connector"></div>
-      <div class="arch-layer">
-        <span>App Guide (Domain Knowledge)</span>
-        <span class="tag">Navigation</span>
-      </div>
-      <div class="arch-connector"></div>
-      <div class="arch-layer">
-        <span>Contextual Hints + Trimmed DOM</span>
-        <span class="tag">Screen state</span>
-      </div>
-    </div>
-    <p style="margin-top: 20px; font-size: 0.95rem; max-width: 700px;">
-      Each layer is <span class="accent">conditionally injected</span> &mdash; only what's relevant to <em>this</em> step makes it into the context window.
-    </p>
+  <section class="slide centered" style="padding: 0;">
+    <iframe src="5-patterns-standalone.html" style="width: 100%; height: 100%; border: none; position: absolute; inset: 0;" loading="lazy"></iframe>
   </section>
 
   <!-- ╔══════════════════════════════════════════════╗ -->
   <!-- ║  SLIDE 6 — LEARNING ACROSS RUNS               ║ -->
   <!-- ╚══════════════════════════════════════════════╝ -->
-  <section class="slide centered">
-    <h2>Learning <span class="gradient-text">Across Runs</span></h2>
-    <div class="divider"></div>
-    <p style="max-width: 680px; margin-bottom: 24px;">Your test suite gets smarter with every execution &mdash; three layers of memory working together.</p>
-    <div class="card-grid cols-3" style="max-width: 1000px;">
-      <div class="card" style="border-top: 3px solid var(--highlight);">
-        <span class="icon">&#x1F6AB;</span>
-        <h3>Negative Cache</h3>
-        <p>Per-screen failure tracking. "find_and_click('Send') failed &mdash; out of bounds." Injected as warnings so the agent never retries broken selectors on the same screen.</p>
-      </div>
-      <div class="card" style="border-top: 3px solid var(--highlight);">
-        <span class="icon">&#x1F9E0;</span>
-        <h3>Episodic Memory</h3>
-        <p>Semantic fingerprinting matches screens across runs. Jaccard similarity on labels + goal keywords. Confidence decays over time &mdash; stale strategies fade out.</p>
-      </div>
-      <div class="card" style="border-top: 3px solid var(--highlight);">
-        <span class="icon">&#x1F4D6;</span>
-        <h3>App Guides</h3>
-        <p>Pre-built navigation knowledge: "YouTube search = magnifying glass top-right." Built-in for common apps, customizable via <code>.appclaw/guides/</code>.</p>
-      </div>
-    </div>
-    <div style="margin-top: 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;">
-      <div class="flow-step" style="opacity: 0.5;">Run 1 &mdash; Exploring</div>
-      <span class="flow-arrow">&rarr;</span>
-      <div class="flow-step" style="opacity: 0.7;">Run 3 &mdash; Remembering</div>
-      <span class="flow-arrow">&rarr;</span>
-      <div class="flow-step" style="border-color: var(--highlight); color: var(--highlight);">Run 5 &mdash; 3&times; Faster</div>
-    </div>
+  <section class="slide centered" style="padding: 0;">
+    <iframe src="learning-across-runs-standalone.html" style="width: 100%; height: 100%; border: none; position: absolute; inset: 0;" loading="lazy"></iframe>
   </section>
 
   <!-- ╔══════════════════════════════════════════════╗ -->
   <!-- ║  SLIDE 7 — FROM GOAL TO STEPS                 ║ -->
   <!-- ╚══════════════════════════════════════════════╝ -->
-  <section class="slide centered slide--dense">
-    <h2>From Goal to <span class="gradient-text">Steps</span></h2>
-    <div class="divider"></div>
-    <p style="max-width: 680px; margin-bottom: 20px;">The AI plans like a senior QA &mdash; because you taught it how. Goal decomposition + stuck detection in action.</p>
-    <div class="two-col" style="max-width: 1100px;">
-      <div>
-        <h3 style="margin-bottom: 10px; font-size: 1.3rem;">Goal Decomposition</h3>
-        <div class="code-block" style="max-width: 100%; font-size: 0.82rem; padding: 20px 24px; line-height: 1.9;">
-<span class="comment">// User says:</span>
-<span class="string">"Order a pizza on DoorDash"</span>
-
-<span class="comment">// Agent decomposes into:</span>
-<span class="keyword">Step 01</span>  Launch DoorDash app
-<span class="keyword">Step 02</span>  Search for <span class="string">"pizza"</span>
-<span class="keyword">Step 03</span>  Select first restaurant
-<span class="keyword">Step 04</span>  Add item to cart
-<span class="keyword">Step 05</span>  Go to cart
-<span class="keyword">Step 06</span>  Fill delivery address  <span class="comment">&larr; sub-goal per field</span>
-<span class="keyword">Step 07</span>  Verify order summary
-<span class="keyword">Step 08</span>  Confirm placement
-        </div>
-      </div>
-      <div>
-        <h3 style="margin-bottom: 10px; font-size: 1.3rem;">Stuck Detection</h3>
-        <div class="code-block" style="max-width: 100%; font-size: 0.82rem; padding: 20px 24px; line-height: 1.8;">
-<span class="comment">// Agent detects it's stuck when:</span>
-<span class="keyword">&bull;</span> Same selector tried <span class="fn">3+</span> times
-<span class="keyword">&bull;</span> Screen fingerprint unchanged
-<span class="keyword">&bull;</span> Repeating <span class="fn">tap</span> &rarr; <span class="fn">fail</span> &rarr; <span class="fn">tap</span> loop
-
-<span class="comment">// Recovery strategy injected:</span>
-<span class="type">stuck_hint</span>: <span class="string">"Element not responding.</span>
-  <span class="string">Try: scroll to reveal, use</span>
-  <span class="string">coordinates, or dismiss overlay."</span>
-
-<span class="comment">// Goal-aware exemptions:</span>
-<span class="keyword">&bull;</span> Scrolling    <span class="comment">&larr; not stuck</span>
-<span class="keyword">&bull;</span> Data entry   <span class="comment">&larr; not stuck</span>
-        </div>
-      </div>
-    </div>
+  <section class="slide centered" style="padding: 0;">
+    <iframe src="from-goal-to-steps-standalone.html" style="width: 100%; height: 100%; border: none; position: absolute; inset: 0;" loading="lazy"></iframe>
   </section>
 
   <!-- ╔══════════════════════════════════════════════╗ -->
   <!-- ║  SLIDE 8 — IN YOUR CODE                       ║ -->
   <!-- ╚══════════════════════════════════════════════╝ -->
-  <section class="slide centered slide--dense">
-    <h2>What This Looks Like in <span class="gradient-text">Your Code</span></h2>
-    <div class="divider"></div>
-    <div class="two-col" style="max-width: 1050px; margin-top: 8px;">
-      <div>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase;">Before &mdash; prompt only</div>
-        <div class="code-block" style="max-width: 100%; opacity: 0.55; font-size: 0.72rem; padding: 16px 18px; line-height: 1.65;">
-<span class="keyword">await</span> ai.<span class="fn">run</span>(<span class="string">"Log in and verify dashboard"</span>)
-
-<span class="comment">// Agent doesn't know:</span>
-<span class="comment">//   - Which app? Which screen?</span>
-<span class="comment">//   - What credentials?</span>
-<span class="comment">//   - What does "dashboard" look like?</span>
-<span class="comment">//   - What if SSO popup appears?</span>
-        </div>
-      </div>
-      <div>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--highlight); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase;">After &mdash; context engineered</div>
-        <div class="code-block" style="max-width: 100%; font-size: 0.72rem; padding: 16px 18px; line-height: 1.65;">
-<span class="keyword">await</span> ai.<span class="fn">run</span>({
-  <span class="type">goal</span>: <span class="string">"Log in and verify dashboard"</span>,
-  <span class="type">context</span>: {
-    <span class="type">screen</span>: <span class="keyword">await</span> <span class="fn">getCompressedDOM</span>(),  <span class="comment">// Compress</span>
-    <span class="type">diff</span>: <span class="fn">diffFrom</span>(prev),             <span class="comment">// Diff</span>
-    <span class="type">memory</span>: <span class="fn">getMemory</span>(<span class="string">'login'</span>),     <span class="comment">// Remember</span>
-    <span class="type">failed</span>: <span class="fn">getFailedSelectors</span>(),    <span class="comment">// Remember</span>
-    <span class="type">guide</span>: <span class="fn">loadGuide</span>(<span class="string">'login'</span>),      <span class="comment">// Recover</span>
-  },
-  <span class="type">verify</span>: <span class="keyword">true</span>,                      <span class="comment">// Verify</span>
-})
-        </div>
-      </div>
-    </div>
-    <p style="margin-top: 20px; font-size: 0.92rem; max-width: 700px;">
-      Not a library &mdash; it's a <span class="accent">pattern</span>. Build it in any language, any framework, any LLM provider.
-    </p>
+  <section class="slide centered" style="padding: 0;">
+    <iframe src="what-this-looks-like-standalone.html" style="width: 100%; height: 100%; border: none; position: absolute; inset: 0;" loading="lazy"></iframe>
   </section>
 
   <!-- ╔══════════════════════════════════════════════╗ -->
   <!-- ║  SLIDE 6 — CROSS-STACK                        ║ -->
   <!-- ╚══════════════════════════════════════════════╝ -->
-  <section class="slide centered">
-    <h2>Same Patterns, <span class="gradient-text">Every Layer</span></h2>
-    <div class="divider"></div>
-    <p style="max-width: 640px; margin-bottom: 24px;">Context engineering isn't just UI. The patterns are identical for API, backend, and cross-stack testing.</p>
-    <table class="comparison" style="max-width: 920px;">
-      <thead><tr><th style="width: 18%;">Pattern</th><th style="text-align: left;">Mobile / Web</th><th style="text-align: left;">API Testing</th></tr></thead>
-      <tbody>
-        <tr><td style="color: var(--highlight); font-weight: 600;">Compress</td><td style="text-align: left;">50KB DOM &rarr; 80 scored elements</td><td style="text-align: left;">500-endpoint spec &rarr; relevant domain slice</td></tr>
-        <tr><td style="color: var(--highlight); font-weight: 600;">Diff</td><td style="text-align: left;">"Dropdown appeared, spinner gone"</td><td style="text-align: left;">"Status changed active &rarr; inactive"</td></tr>
-        <tr><td style="color: var(--highlight); font-weight: 600;">Remember</td><td style="text-align: left;">"tap(Search) worked 5x here"</td><td style="text-align: left;">"POST /orders needs auth token refreshed first"</td></tr>
-        <tr><td style="color: var(--highlight); font-weight: 600;">Recover</td><td style="text-align: left;">Inject untried elements on screen</td><td style="text-align: left;">"409 Conflict? Try DELETE cleanup"</td></tr>
-        <tr><td style="color: var(--highlight); font-weight: 600;">Verify</td><td style="text-align: left;">Fresh screenshot &rarr; "goal met?"</td><td style="text-align: left;">GET /orders/{id} to confirm it exists</td></tr>
-      </tbody>
-    </table>
+  <section class="slide centered" style="padding: 0;">
+    <iframe src="same-patterns-every-layer-standalone.html" style="width: 100%; height: 100%; border: none; position: absolute; inset: 0;" loading="lazy"></iframe>
   </section>
 
   <!-- ╔══════════════════════════════════════════════╗ -->
