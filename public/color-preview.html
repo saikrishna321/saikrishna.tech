@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accent Color Preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'JetBrains Mono',monospace;background:#f5f5f5;padding:40px}
+  h1{font-family:'Fraunces',serif;text-align:center;margin-bottom:40px;font-size:28px;color:#141414}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:32px}
+  .preview{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.08)}
+  .preview-header{padding:16px 24px;color:#fff;font-size:13px;letter-spacing:.1em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+  .preview-header .hex{font-size:11px;opacity:.8}
+  .preview-body{padding:24px;background:#fff;position:relative}
+  .preview-body::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(0,0,0,0.035) 29px,rgba(0,0,0,0.035) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(0,0,0,0.035) 29px,rgba(0,0,0,0.035) 30px);pointer-events:none}
+  .preview-body>*{position:relative;z-index:1}
+  .preview h2{font-family:'Fraunces',serif;font-size:32px;font-weight:600;margin-bottom:4px}
+  .preview h2 .it{font-style:italic}
+  .preview .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .preview .eyebrow .bar{width:24px;height:2px;display:inline-block}
+  .preview .cards{display:flex;gap:12px;margin:16px 0}
+  .preview .card{flex:1;background:#fff;border-radius:6px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-top:4px solid}
+  .preview .card h4{font-family:'Fraunces',serif;font-size:14px;font-weight:600;margin-bottom:6px}
+  .preview .card p{font-size:10px;color:#9A928B;line-height:1.4}
+  .preview .dots{display:flex;gap:4px;margin-top:8px}
+  .preview .dot-f{width:7px;height:7px;border-radius:50%;opacity:.85}
+  .preview .dot-e{width:7px;height:7px;border-radius:50%;background:#e0e0e0;opacity:.5}
+  .preview .pills{display:flex;gap:8px;margin-top:14px}
+  .preview .pill{font-size:10px;padding:5px 14px;border-radius:20px;border:1px solid;letter-spacing:.06em}
+  .preview .flowchart{margin-top:14px;display:flex;flex-direction:column;align-items:center}
+  .preview .fc-block{width:100%;padding:10px 16px;border-radius:6px;border:1px solid;text-align:center}
+  .preview .fc-block .label{font-family:'Fraunces',serif;font-size:14px;font-weight:600}
+  .preview .fc-arrow{display:flex;flex-direction:column;align-items:center}
+  .preview .fc-line{width:2px;height:16px}
+  .preview .fc-head{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent}
+  .preview .mark-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px}
+  .pick-btn{display:block;width:100%;padding:14px;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:opacity .2s}
+  .pick-btn:hover{opacity:.85}
+</style>
+</head>
+<body>
+
+<h1>Pick your accent color</h1>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const colors = [
+  // Pastel colors
+  { name: 'Dusty Rose', hex: '#C0756B', soft: 'rgba(192,117,107,0.08)', line: 'rgba(192,117,107,0.15)' },
+  { name: 'Sage Green', hex: '#7A9E7E', soft: 'rgba(122,158,126,0.08)', line: 'rgba(122,158,126,0.15)' },
+  { name: 'Soft Lavender', hex: '#8B7EC8', soft: 'rgba(139,126,200,0.08)', line: 'rgba(139,126,200,0.15)' },
+  { name: 'Warm Mauve', hex: '#A0728A', soft: 'rgba(160,114,138,0.08)', line: 'rgba(160,114,138,0.15)' },
+  { name: 'Muted Terracotta', hex: '#C4896E', soft: 'rgba(196,137,110,0.08)', line: 'rgba(196,137,110,0.15)' },
+  { name: 'Ocean Mist', hex: '#6B9DAD', soft: 'rgba(107,157,173,0.08)', line: 'rgba(107,157,173,0.15)' },
+  { name: 'Dusty Plum', hex: '#8E6F8E', soft: 'rgba(142,111,142,0.08)', line: 'rgba(142,111,142,0.15)' },
+  { name: 'Soft Coral', hex: '#E0887A', soft: 'rgba(224,136,122,0.08)', line: 'rgba(224,136,122,0.15)' },
+  // Pink pastels
+  { name: 'Blush Pink', hex: '#D4838F', soft: 'rgba(212,131,143,0.08)', line: 'rgba(212,131,143,0.15)' },
+  { name: 'Rose Quartz', hex: '#C9929B', soft: 'rgba(201,146,155,0.08)', line: 'rgba(201,146,155,0.15)' },
+  { name: 'Bubblegum', hex: '#E8A0B4', soft: 'rgba(232,160,180,0.08)', line: 'rgba(232,160,180,0.15)' },
+  { name: 'Flamingo', hex: '#DB7093', soft: 'rgba(219,112,147,0.08)', line: 'rgba(219,112,147,0.15)' },
+  { name: 'Peony', hex: '#C77D99', soft: 'rgba(199,125,153,0.08)', line: 'rgba(199,125,153,0.15)' },
+  // Blues from before
+  { name: 'Deep Navy', hex: '#1B3A6B', soft: 'rgba(27,58,107,0.08)', line: 'rgba(27,58,107,0.15)' },
+  { name: 'Royal Blue', hex: '#2D5BCC', soft: 'rgba(45,91,204,0.08)', line: 'rgba(45,91,204,0.15)' },
+  { name: 'Slate Blue', hex: '#4A6FA5', soft: 'rgba(74,111,165,0.08)', line: 'rgba(74,111,165,0.15)' },
+  { name: 'Electric Blue', hex: '#0066FF', soft: 'rgba(0,102,255,0.08)', line: 'rgba(0,102,255,0.15)' },
+  { name: 'Teal Blue', hex: '#1A7A8A', soft: 'rgba(26,122,138,0.08)', line: 'rgba(26,122,138,0.15)' },
+];
+
+const grid = document.getElementById('grid');
+
+colors.forEach(c => {
+  const div = document.createElement('div');
+  div.className = 'preview';
+  div.innerHTML = `
+    <div class="preview-header" style="background:${c.hex}">
+      <span>${c.name}</span>
+      <span class="hex">${c.hex}</span>
+    </div>
+    <div class="preview-body">
+      <div class="eyebrow" style="color:${c.hex}">
+        <span class="bar" style="background:${c.hex}"></span>Mobile testing today
+      </div>
+      <h2>The pain<br><span class="it" style="color:${c.hex}">is real</span></h2>
+
+      <div class="cards">
+        <div class="card" style="border-top-color:${c.hex}">
+          <h4>Brittle</h4>
+          <p>Complex XPath, accessibility IDs that change</p>
+          <div class="dots">
+            <span class="dot-f" style="background:${c.hex}"></span>
+            <span class="dot-f" style="background:${c.hex}"></span>
+            <span class="dot-f" style="background:${c.hex}"></span>
+            <span class="dot-f" style="background:${c.hex}"></span>
+            <span class="dot-e"></span>
+          </div>
+        </div>
+        <div class="card" style="border-top-color:${c.hex}">
+          <h4>Slow</h4>
+          <p>Weeks to write automation</p>
+          <div class="dots">
+            <span class="dot-f" style="background:${c.hex}"></span>
+            <span class="dot-e"></span>
+            <span class="dot-e"></span>
+            <span class="dot-e"></span>
+            <span class="dot-e"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pills">
+        <span class="pill" style="border-color:${c.hex};color:${c.hex}">Appium Core</span>
+        <span class="pill" style="border-color:${c.hex};color:${c.hex}">Author</span>
+      </div>
+
+      <div class="flowchart">
+        <div class="fc-block" style="border-color:${c.line}">
+          <div class="label">Any LLM</div>
+        </div>
+        <div class="fc-arrow">
+          <div class="fc-line" style="background:${c.hex};opacity:.35"></div>
+          <div class="fc-head" style="border-top:6px solid ${c.hex};opacity:.35"></div>
+        </div>
+        <div class="fc-block" style="border-color:${c.hex};background:${c.soft}">
+          <div class="label" style="color:${c.hex}">AppClaw</div>
+        </div>
+      </div>
+    </div>
+    <button class="pick-btn" style="background:${c.hex}" onclick="alert('You picked: ${c.name} (${c.hex})')">
+      Pick ${c.name}
+    </button>
+  `;
+  grid.appendChild(div);
+});
+</script>
+
+</body>
+</html>
