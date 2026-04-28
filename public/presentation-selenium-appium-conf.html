@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridging AI and Mobile Testing: Appium Meets MCP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8f8f8;
+    --highlight: #de7356;
+    --highlight-glow: rgba(222, 115, 86, 0.35);
+    --text-primary: #111111;
+    --text-secondary: #4a4a4a;
+    --text-muted: #888888;
+    --blue: #4A90D9;
+    --green: #5CB85C;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; font-size: 18px; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .deck { height: 100vh; width: 100vw; position: relative; z-index: 1; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 48px 80px; opacity: 0; visibility: hidden; transform: translateX(60px);
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0.5s;
+    overflow-y: auto; overflow-x: hidden;
+  }
+  .slide.active { opacity: 1; visibility: visible; transform: translateX(0); transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0s; }
+  .slide.exit-left { opacity: 0; transform: translateX(-60px); }
+
+  .progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--highlight); z-index: 1000; transition: width 0.4s ease; }
+  .slide-counter { position: fixed; bottom: 24px; right: 32px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); z-index: 1000; letter-spacing: 2px; }
+  .nav-hint { position: fixed; bottom: 24px; left: 32px; font-size: 0.7rem; color: var(--text-muted); z-index: 1000; opacity: 0.6; }
+
+  h1 { font-size: 3rem; font-weight: 800; line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 20px; }
+  h2 { font-size: 2.2rem; font-weight: 700; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+  h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
+  p, li { font-size: 1.05rem; line-height: 1.6; color: var(--text-secondary); }
+  .subtitle { font-size: 1.2rem; color: var(--text-secondary); font-weight: 400; max-width: 700px; text-align: center; line-height: 1.5; }
+  .gradient-text, .gradient-text-2 { color: var(--highlight); }
+  .accent { color: var(--highlight); }
+
+  code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+  .code-block {
+    background: #1a1a1a; border: 1px solid #333333; border-radius: 12px; padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.7; color: #e0e0e0;
+    width: 100%; max-width: 800px; overflow-x: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+  .code-block .comment { color: #888888; }
+  .code-block .keyword { color: var(--highlight); }
+  .code-block .string { color: #c0c0c0; }
+  .code-block .fn { color: #8cc4ff; }
+  .code-block .param { color: #ffd580; }
+
+  .card-grid { display: grid; gap: 16px; width: 100%; max-width: 1100px; }
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .card-grid.cols-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+
+  .card {
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.06); border-radius: 14px; padding: 22px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 8px 32px rgba(222,115,86,0.08); border-color: rgba(222,115,86,0.25); }
+  .card .icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+  .card h3 { font-size: 1.05rem; color: var(--text-primary); margin-bottom: 6px; }
+  .card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+
+  .pill { display: inline-block; padding: 6px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 500; margin: 4px; background: rgba(222,115,86,0.2); color: var(--highlight); border: 1px solid rgba(222,115,86,0.45); }
+
+  .divider { width: 60px; height: 3px; background: var(--highlight); border-radius: 2px; margin: 14px 0; }
+  .centered { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+  /* ── Title Slide ── */
+  .slide-title-only {
+    justify-content: center;
+    padding: 80px;
+    background-color: #ffffff;
+  }
+  .title-slide-heading {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ED7D31;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    text-align: center;
+    max-width: 900px;
+  }
+
+  /* ── Architecture ── */
+  .arch-flow { display: flex; flex-direction: column; align-items: stretch; width: 100%; max-width: 620px; position: relative; }
+  .arch-layer { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 18px 28px; border-radius: 14px; font-weight: 600; font-size: 0.9rem; transition: all 0.25s ease; position: relative; z-index: 1; margin: 6px 0; border-left: 4px solid transparent; }
+  .arch-layer:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .arch-layer.llm { background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.06); border-left-color: rgba(222,115,86,0.5); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .arch-layer.agent { background: linear-gradient(135deg, rgba(222,115,86,0.12), rgba(222,115,86,0.06)); border: 2px solid rgba(222,115,86,0.35); border-left-color: var(--highlight); font-size: 1.05rem; padding: 22px 32px; box-shadow: 0 4px 20px rgba(222,115,86,0.12); }
+  .arch-layer.mcp { background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.06); border-left-color: rgba(222,115,86,0.4); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .arch-layer.device { background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.06); border-left-color: rgba(222,115,86,0.4); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .arch-layer .chip { padding: 6px 14px; background: rgba(222,115,86,0.08); border: 1px solid rgba(222,115,86,0.2); border-radius: 8px; font-size: 0.82rem; font-weight: 500; color: var(--text-primary); }
+  .arch-layer .tag { font-size: 0.68rem; font-weight: 600; margin-left: auto; padding: 8px 18px; background: rgba(0,0,0,0.04); border-radius: 6px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; }
+  .arch-layer.agent .tag { background: rgba(222,115,86,0.15); color: var(--highlight); }
+  .arch-connector { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 0; position: relative; z-index: 1; }
+  .arch-connector::before { content: ''; width: 6px; height: 6px; background: var(--highlight); border-radius: 50%; opacity: 0.4; flex-shrink: 0; }
+  .arch-connector-label { font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5px; }
+
+  .stats-row { display: flex; gap: 48px; margin-top: 28px; }
+  .stat { text-align: center; }
+  .stat .number { font-size: 3rem; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+  .stat .label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  .loop-diagram { display: flex; align-items: center; justify-content: center; gap: 0; margin: 24px 0; }
+  .loop-step { padding: 16px 24px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; text-align: center; background: rgba(255,255,255,0.95); border: 2px solid rgba(222,115,86,0.3); box-shadow: 0 2px 12px rgba(0,0,0,0.04); min-width: 140px; transition: transform 0.3s ease; }
+  .loop-step:hover { transform: scale(1.05); }
+  .loop-step.highlight { background: linear-gradient(135deg, rgba(222,115,86,0.12), rgba(222,115,86,0.06)); border-color: var(--highlight); }
+  .loop-arrow { font-size: 1.4rem; color: var(--highlight); padding: 0 8px; }
+
+  .check { color: var(--highlight); font-weight: bold; font-size: 1.15rem; }
+  .cross { color: var(--text-muted); opacity: 0.5; font-size: 1.15rem; }
+
+  /* ── Grid Background ── */
+  .grid-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; background-image: linear-gradient(to right, rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.08) 1px, transparent 1px); background-size: 60px 60px; animation: gridMove1 35s linear infinite; mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%); -webkit-mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%); }
+  .grid-bg::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(222,115,86,0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(222,115,86,0.12) 1px, transparent 1px); background-size: 120px 120px; animation: gridMove2 50s linear infinite reverse; mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%); -webkit-mask-image: linear-gradient(to right, black 0%, transparent 15%, transparent 85%, black 100%); }
+  @keyframes gridMove1 { 0% { background-position: 0 0; } 100% { background-position: 60px 60px; } }
+  @keyframes gridMove2 { 0% { background-position: 0 0; } 100% { background-position: 120px 120px; } }
+
+  /* ── Animations ── */
+  .slide.active .card { animation: cardIn 0.6s ease backwards; }
+  .slide.active .card:nth-child(1) { animation-delay: 0.1s; }
+  .slide.active .card:nth-child(2) { animation-delay: 0.2s; }
+  .slide.active .card:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .card:nth-child(4) { animation-delay: 0.4s; }
+  .slide.active .card:nth-child(5) { animation-delay: 0.5s; }
+  .slide.active .card:nth-child(6) { animation-delay: 0.6s; }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  .slide.active h2 { animation: fadeUp 0.5s ease backwards; }
+  .slide.active .divider { animation: growWidth 0.6s ease 0.2s backwards; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes growWidth { from { width: 0; } to { width: 60px; } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+  .slide.active .pill { animation: popIn 0.3s ease backwards; }
+  .slide.active .stat .number { animation: countPop 0.6s ease backwards; }
+  .slide.active .stat:nth-child(1) .number { animation-delay: 0.2s; }
+  .slide.active .stat:nth-child(2) .number { animation-delay: 0.35s; }
+  .slide.active .stat:nth-child(3) .number { animation-delay: 0.5s; }
+  @keyframes countPop { from { opacity: 0; transform: scale(0.5); } 50% { transform: scale(1.1); } to { opacity: 1; transform: scale(1); } }
+  .slide.active .arch-layer { animation: archFadeIn 0.4s ease forwards; }
+  .slide.active .arch-layer:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .arch-layer:nth-child(3) { animation-delay: 0.1s; }
+  .slide.active .arch-layer:nth-child(5) { animation-delay: 0.15s; }
+  .slide.active .arch-layer:nth-child(7) { animation-delay: 0.2s; }
+  .slide.active .arch-layer:nth-child(9) { animation-delay: 0.25s; }
+  @keyframes archFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Demo */
+  @keyframes demoPulse { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.08); opacity: 1; } }
+  @keyframes ripple { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+  @keyframes typing { from { width: 0; } to { width: 100%; } }
+  @keyframes blink { 50% { border-color: transparent; } }
+  .demo-icon { font-size: 5rem; animation: demoPulse 2s ease-in-out infinite; display: inline-block; position: relative; }
+  .demo-ripple { position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 50%; border: 3px solid var(--highlight); animation: ripple 2s ease-out infinite; pointer-events: none; }
+  .demo-ripple:nth-child(2) { animation-delay: 0.6s; }
+  .demo-ripple:nth-child(3) { animation-delay: 1.2s; }
+  .demo-typing { display: inline-block; overflow: hidden; white-space: nowrap; border-right: 3px solid var(--highlight); font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; color: var(--text-secondary); animation: typing 3s steps(40) 0.5s forwards, blink 0.7s step-end infinite; width: 0; max-width: max-content; }
+  .slide.active .demo-typing { animation: typing 3s steps(40) 0.5s forwards, blink 0.7s step-end infinite; }
+
+  /* ── MCP-to-MCP Diagram ── */
+  .mcp-comm { display: flex; align-items: center; justify-content: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+  .mcp-box { padding: 20px 28px; border-radius: 14px; font-weight: 600; font-size: 0.95rem; text-align: center; min-width: 180px; transition: transform 0.3s ease; }
+  .mcp-box:hover { transform: scale(1.03); }
+  .mcp-box.ai { background: rgba(255,255,255,0.95); border: 2px solid rgba(0,0,0,0.08); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .mcp-box.appium-mcp { background: linear-gradient(135deg, rgba(222,115,86,0.12), rgba(222,115,86,0.06)); border: 2px solid rgba(222,115,86,0.35); box-shadow: 0 4px 20px rgba(222,115,86,0.12); }
+  .mcp-box.wda-mcp { background: linear-gradient(135deg, rgba(74,144,217,0.12), rgba(74,144,217,0.06)); border: 2px solid rgba(74,144,217,0.35); box-shadow: 0 4px 20px rgba(74,144,217,0.12); }
+  .mcp-box.device-box { background: rgba(255,255,255,0.95); border: 2px solid rgba(0,0,0,0.08); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .mcp-arrow { font-size: 1.4rem; color: var(--highlight); padding: 0 12px; }
+  .mcp-arrow.blue { color: var(--blue); }
+  .mcp-box-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; font-weight: 500; }
+
+  /* ── Comparison Table ── */
+  .comparison-table { width: 100%; max-width: 900px; border-collapse: collapse; font-size: 0.88rem; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+  .comparison-table thead tr { background: var(--highlight); color: #fff; }
+  .comparison-table th { padding: 14px 16px; text-align: left; font-size: 0.78rem; letter-spacing: 1px; font-weight: 700; }
+  .comparison-table td { padding: 13px 16px; color: var(--text-secondary); }
+  .comparison-table tr:nth-child(even) { background: rgba(222,115,86,0.04); }
+  .comparison-table tr { border-bottom: 1px solid rgba(0,0,0,0.08); }
+
+  /* Journey timeline */
+  .journey-timeline { display: flex; flex-direction: column; gap: 0; max-width: 700px; width: 100%; margin-top: 16px; }
+  .journey-step { display: flex; align-items: flex-start; gap: 16px; position: relative; padding-bottom: 20px; }
+  .journey-step:last-child { padding-bottom: 0; }
+  .journey-step::before { content: ''; position: absolute; left: 18px; top: 38px; bottom: 0; width: 2px; background: rgba(222,115,86,0.25); }
+  .journey-step:last-child::before { display: none; }
+  .journey-dot { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, rgba(222,115,86,0.15), rgba(222,115,86,0.05)); border: 2px solid rgba(222,115,86,0.4); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: var(--highlight); flex-shrink: 0; }
+  .journey-content { flex: 1; }
+  .journey-content .nl-cmd { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--highlight); font-weight: 500; margin-bottom: 4px; }
+  .journey-content .nl-result { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    html { font-size: 16px; }
+    .slide { padding: 36px 28px; }
+    h1 { font-size: 2rem; } h2 { font-size: 1.6rem; }
+    .card-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+    .card-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .card-grid.cols-5 { grid-template-columns: 1fr 1fr 1fr; }
+    .stats-row { gap: 24px; }
+    .stat .number { font-size: 2rem; }
+    .loop-diagram, .mcp-comm { flex-wrap: wrap; }
+  }
+
+  .shortcuts-popup { display: none; position: fixed; bottom: 60px; right: 32px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 16px 20px; z-index: 2000; font-size: 0.8rem; color: var(--text-secondary); line-height: 2; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  kbd { background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; padding: 2px 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="progress" id="progress"></div>
+<div class="slide-counter" id="slideCounter"></div>
+<div class="nav-hint">Arrow keys or click to navigate &middot; Press <kbd>?</kbd> for shortcuts</div>
+<div class="shortcuts-popup" id="shortcuts">
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> Navigate &nbsp;&middot;&nbsp;
+  <kbd>Home</kbd> First &nbsp;&middot;&nbsp;
+  <kbd>End</kbd> Last &nbsp;&middot;&nbsp;
+  <kbd>F</kbd> Fullscreen
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 1 — TITLE                                                  -->
+  <!-- ================================================================ -->
+  <section class="slide centered slide-title-only">
+    <h1 class="title-slide-heading">Bridging AI and Mobile Testing:<br>Appium Meets Model Context Protocol</h1>
+    <div class="divider" style="margin: 20px 0;"></div>
+    <p class="subtitle" style="font-size: 1.1rem; margin-bottom: 24px;">The future of test automation is conversational.</p>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+      <span class="pill">Selenium Appium Conference 2026</span>
+      <span class="pill">Sala Baja &middot; Thu 14:50</span>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 2 — SPEAKER INTRO                                          -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <div style="display: flex; align-items: flex-start; justify-content: center; gap: 80px; flex-wrap: wrap;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/public/assets/sai-hero.webp" alt="Sai Krishna" style="width: 280px; height: 280px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 20px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
+        <h2 style="font-size: 2.4rem; margin: 0;"><span class="gradient-text">Sai Krishna</span></h2>
+        <div class="divider"></div>
+        <div style="font-size: 1.05rem; color: var(--text-secondary); font-weight: 500;">Core Maintainer &mdash; Appium</div>
+        <div style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 500;">Author &mdash; <em>Appium Insights</em> (Apress)</div>
+        <div style="margin-top: 10px;"><span class="pill">saikrishna.tech</span></div>
+        <img src="qr-code.png" alt="QR Code" style="width: 180px; height: 180px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 2px solid rgba(0,0,0,0.06); margin-top: 16px;">
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="https://srini.codes/assets/ProfilePic-ad434bf7.webp" alt="Srinivasan Sekar" style="width: 280px; height: 280px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 20px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
+        <h2 style="font-size: 2.4rem; margin: 0;"><span class="gradient-text">Srinivasan Sekar</span></h2>
+        <div class="divider"></div>
+        <div style="font-size: 1.05rem; color: var(--text-secondary); font-weight: 500;">Core Maintainer &mdash; Appium &amp; Appium MCP</div>
+        <div style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 500;">Author &mdash; <em>MCP Standard</em></div>
+        <div style="margin-top: 10px;"><span class="pill">srini.codes</span></div>
+        <img src="QR-sekar.png" alt="QR Code" style="width: 180px; height: 180px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 2px solid rgba(0,0,0,0.06); margin-top: 16px;">
+      </div>
+    </div>
+    <div style="margin-top: 20px; display: flex; align-items: center; gap: 32px;">
+      <img src="https://assets.testmuai.com/resources/images/logos/logo.svg" alt="TestMuAI" style="height: 40px; opacity: 0.85;">
+      <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" style="height: 40px; opacity: 0.85; filter: grayscale(100%) brightness(0.7);">
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 3 — MOBILE TESTING PAIN POINTS                             -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h2>Mobile Testing Today:<br><span class="gradient-text-2">The Pain is Real</span></h2>
+    <div class="divider"></div>
+    <div class="card-grid cols-3" style="margin-top: 24px;">
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x1F50D;</span>
+        <h3>Brittle Locators</h3>
+        <p>Complex XPath, accessibility IDs that change with every release. One UI tweak breaks 50 tests.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x23F3;</span>
+        <h3>Scripting Overhead</h3>
+        <p>Weeks to write automation scripts. Hours to maintain them. The backlog grows faster than the coverage.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x1F4F1;</span>
+        <h3>iOS Device Nightmare</h3>
+        <p>Provisioning profiles, signing certificates, WebDriverAgent builds &mdash; hours lost before a single test runs.</p>
+      </div>
+    </div>
+    <div class="card-grid cols-2" style="margin-top: 16px; max-width: 740px;">
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x1F9EA;</span>
+        <h3>Exploratory vs. Automation</h3>
+        <p>Manual exploratory testing finds bugs, but the knowledge stays in your head. Nothing is reusable.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span class="icon">&#x1F4B8;</span>
+        <h3>High Cost of Maintenance</h3>
+        <p>Test suites become liabilities. Teams spend more time fixing tests than writing new features.</p>
+      </div>
+    </div>
+    <p style="margin-top: 28px; font-size: 1.1rem; color: var(--highlight); font-weight: 500;">
+      What if the gap between <em>describing</em> a test and <em>running</em> it was zero?
+    </p>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 4 — WHAT IS MCP                                            -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h2>Model Context Protocol:<br><span class="gradient-text">The USB-C for AI</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 24px; font-size: 0.95rem;">
+      MCP is an open standard that lets AI assistants safely communicate with external tools through a unified protocol.
+    </p>
+    <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1050px;">
+      <!-- MCP Architecture Diagram -->
+      <div class="arch-flow" style="max-width: 420px;">
+        <div class="arch-layer llm">
+          <span class="chip">Claude</span><span class="chip">GPT-4</span><span class="chip">Gemini</span>
+          <span class="tag">AI Client</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">MCP Protocol (JSON-RPC)</span></div>
+        <div class="arch-layer agent">
+          <span>MCP Server</span>
+          <span class="tag">Tools + Resources</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">Native API</span></div>
+        <div class="arch-layer device">
+          <span class="chip">Database</span><span class="chip">API</span><span class="chip">Device</span>
+          <span class="tag">External System</span>
+        </div>
+      </div>
+      <!-- Why MCP -->
+      <div style="display: flex; flex-direction: column; gap: 12px; min-width: 300px; max-width: 420px;">
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem;">Standardized Interface</h3>
+          <p style="font-size: 0.8rem;">One protocol for all AI-to-tool communication. Build once, use with any AI assistant.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem;">Safe &amp; Controlled</h3>
+          <p style="font-size: 0.8rem;">Tools declare capabilities. AI can only call what's exposed. No hallucinated API calls.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem;">Composable</h3>
+          <p style="font-size: 0.8rem;">MCP servers can call other MCP servers. Build complex workflows from simple pieces.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem;">Open Source</h3>
+          <p style="font-size: 0.8rem;">No vendor lock-in. Growing ecosystem of servers, clients, and community tools.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 5 — MEET MCP-APPIUM                                        -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h2>Meet <span class="gradient-text">mcp-appium</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 20px; font-size: 0.95rem;">
+      An open-source MCP server that exposes Appium as <em>intent-based tools</em> &mdash; not raw commands, but high-level testing actions the AI can reason about.
+    </p>
+    <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1100px;">
+      <!-- Architecture -->
+      <div class="arch-flow" style="max-width: 440px;">
+        <div class="arch-layer llm">
+          <span class="chip">Claude</span><span class="chip">Cursor</span><span class="chip">VS Code</span>
+          <span class="tag">AI Client</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">MCP &mdash; Intent-Based Tools</span></div>
+        <div class="arch-layer agent">
+          <span>mcp-appium</span>
+          <span class="tag">MCP Server</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">WebDriver Protocol</span></div>
+        <div class="arch-layer mcp">
+          <span class="chip">Appium Server</span>
+          <span class="tag">Automation Engine</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">Platform Drivers</span></div>
+        <div class="arch-layer device">
+          <span class="chip">Android</span><span class="chip">iOS</span><span class="chip">Emulators</span><span class="chip">Real Devices</span>
+          <span class="tag">Targets</span>
+        </div>
+      </div>
+      <!-- Intent-based + Vision -->
+      <div style="display: flex; flex-direction: column; gap: 14px; min-width: 300px; max-width: 440px;">
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem; color: var(--highlight);">Intent-Based, Not Command-Based</h3>
+          <p style="font-size: 0.8rem;">Tools are designed around <em>testing intents</em> like "find and interact with the login form" &mdash; not raw WebDriver commands like <code>findElement</code> + <code>click</code>. The AI composes multiple low-level actions from a single high-level intent.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem; color: var(--highlight);">Vision-Based Interaction</h3>
+          <p style="font-size: 0.8rem;">No accessibility IDs? No problem. mcp-appium supports <strong>vision mode</strong> &mdash; it captures screenshots and uses the AI's visual understanding to identify and interact with elements, just like a human tester would.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem; color: var(--highlight);">Dual Strategy: DOM + Vision</h3>
+          <p style="font-size: 0.8rem;">Use structured page source when available, fall back to visual recognition when not. Best of both worlds &mdash; precision when possible, resilience always.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 20px;">
+      <span class="pill">Intent-Based Tools</span>
+      <span class="pill">Vision Mode</span>
+      <span class="pill">Session Management</span>
+      <span class="pill">Smart Element Finding</span>
+      <span class="pill">Gestures &amp; Actions</span>
+      <span class="pill">Code Generation</span>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 6 — SOLVING COMMUNITY PAIN POINTS                          -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h2>Solving Real <span class="gradient-text">Community Pain Points</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 20px; font-size: 0.95rem;">
+      These aren't theoretical problems &mdash; they're the issues the Appium community hits every single day.
+    </p>
+    <div class="card-grid cols-3" style="margin-top: 8px; max-width: 1100px;">
+      <div class="card" style="text-align: left; padding: 20px; border-top: 4px solid var(--highlight);">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F34E;</span>
+        <h3 style="font-size: 1rem;">iOS Device Setup &mdash; WDA</h3>
+        <p style="font-size: 0.82rem;">Provisioning profiles, signing certificates, building WebDriverAgent &mdash; the #1 source of frustration. mcp-webdriveragent automates the entire flow through MCP-to-MCP communication. Hours become a single command.</p>
+      </div>
+      <div class="card" style="text-align: left; padding: 20px; border-top: 4px solid var(--highlight);">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F4DA;</span>
+        <h3 style="font-size: 1rem;">Documentation is an Ocean</h3>
+        <p style="font-size: 0.82rem;">Appium docs are vast &mdash; capabilities, drivers, plugins, APIs across multiple platforms. mcp-appium uses <strong>RAG</strong> over the entire documentation, so the AI retrieves the exact answer you need instead of you drowning in pages.</p>
+      </div>
+      <div class="card" style="text-align: left; padding: 20px; border-top: 4px solid var(--highlight);">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F446;</span>
+        <h3 style="font-size: 1rem;">Stable Gesture Building</h3>
+        <p style="font-size: 0.82rem;">Swipe, long-press, pinch-to-zoom &mdash; gestures are notoriously hard to get right and differ across devices. mcp-appium exposes intent-based gesture tools that produce reliable, device-adaptive actions every time.</p>
+      </div>
+      <div class="card" style="text-align: left; padding: 20px; border-top: 4px solid var(--highlight);">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F4DD;</span>
+        <h3 style="font-size: 1rem;">Code Generation</h3>
+        <p style="font-size: 0.82rem;">Stop writing boilerplate. Explore your app through conversation and mcp-appium generates production-ready, maintainable test scripts from your journey &mdash; complete with proper locators, waits, and assertions.</p>
+      </div>
+      <div class="card" style="text-align: left; padding: 20px; border-top: 4px solid var(--highlight);">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F41E;</span>
+        <h3 style="font-size: 1rem;">Debugging &mdash; Why Did It Fail?</h3>
+        <p style="font-size: 0.82rem;">A test fails and you get a cryptic stack trace. Ask the AI <em>"why did this test fail?"</em> and it analyzes the session logs, screenshots, page source, and error context to pinpoint the root cause and suggest a fix.</p>
+      </div>
+      <div class="card" style="text-align: left; padding: 20px; border-top: 4px solid var(--highlight);">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F441;</span>
+        <h3 style="font-size: 1rem;">Vision-Based Element Detection</h3>
+        <p style="font-size: 0.82rem;">No accessibility IDs? No problem. mcp-appium captures screenshots and uses the AI's visual understanding to identify buttons, inputs, text, and icons &mdash; just like a human tester looking at the screen. Works on any app, any framework, zero markup required.</p>
+      </div>
+    </div>
+    <p style="margin-top: 24px; font-size: 0.95rem; color: var(--text-muted); font-style: italic;">
+      Built by Appium maintainers, for the Appium community.
+    </p>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 7 — DEMO TIME                                              -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <div style="position: relative; display: inline-block; margin-bottom: 16px;">
+      <div class="demo-icon">&#x1F680;</div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+    </div>
+    <h2 style="font-size: 3.4rem; margin-bottom: 8px;"><span class="gradient-text">Demo Time</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 28px; font-size: 1.05rem;">
+      Let's see mcp-appium solve each of these pain points &mdash; live.
+    </p>
+    <div class="card-grid cols-3" style="max-width: 950px;">
+      <div class="card" style="text-align: center; padding: 18px;">
+        <span style="font-size: 1.8rem;">&#x1F34E;</span>
+        <h3 style="font-size: 0.9rem;">iOS Device Setup</h3>
+        <p style="font-size: 0.78rem;">WDA provisioning via MCP-to-MCP</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 18px;">
+        <span style="font-size: 1.8rem;">&#x1F4DA;</span>
+        <h3 style="font-size: 0.9rem;">RAG Documentation</h3>
+        <p style="font-size: 0.78rem;">Ask anything about Appium</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 18px;">
+        <span style="font-size: 1.8rem;">&#x1F446;</span>
+        <h3 style="font-size: 0.9rem;">Stable Gestures</h3>
+        <p style="font-size: 0.78rem;">Swipe, scroll, long-press</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 18px;">
+        <span style="font-size: 1.8rem;">&#x1F4DD;</span>
+        <h3 style="font-size: 0.9rem;">Code Generation</h3>
+        <p style="font-size: 0.78rem;">Explore &rarr; production scripts</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 18px;">
+        <span style="font-size: 1.8rem;">&#x1F41E;</span>
+        <h3 style="font-size: 0.9rem;">Debugging</h3>
+        <p style="font-size: 0.78rem;">"Why did this test fail?"</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 18px;">
+        <span style="font-size: 1.8rem;">&#x1F441;</span>
+        <h3 style="font-size: 0.9rem;">Vision Detection</h3>
+        <p style="font-size: 0.78rem;">No IDs? See like a human</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- DEEP DIVE SLIDES — One per pain point (for later reference)      -->
+  <!-- ================================================================ -->
+
+  <!-- SLIDE 8 — DEEP DIVE: iOS Device Setup -->
+  <section class="slide centered">
+    <h2><span class="gradient-text">1.</span> iOS Device Setup &mdash; WDA</h2>
+    <div class="divider"></div>
+    <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1050px;">
+      <div style="min-width: 280px; max-width: 400px;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">The Traditional Way</h3>
+        <div class="card" style="border-left: 4px solid var(--text-muted); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="cross">&#x2717;</span> Register Apple Developer account<br>
+            <span class="cross">&#x2717;</span> Create provisioning profile<br>
+            <span class="cross">&#x2717;</span> Generate signing certificate<br>
+            <span class="cross">&#x2717;</span> Clone WebDriverAgent<br>
+            <span class="cross">&#x2717;</span> Configure Xcode project<br>
+            <span class="cross">&#x2717;</span> Build &amp; deploy to device<br>
+            <span class="cross">&#x2717;</span> Debug code signing errors<br>
+            <span class="cross">&#x2717;</span> Repeat for every new device
+          </p>
+          <div style="margin-top: 12px; padding: 10px; background: rgba(0,0,0,0.04); border-radius: 8px; text-align: center;">
+            <span style="font-size: 1.8rem; font-weight: 800; color: var(--text-muted);">2-4 hours</span>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">per device, if everything goes right</div>
+          </div>
+        </div>
+      </div>
+      <div style="min-width: 280px; max-width: 520px;">
+        <h3 style="font-size: 0.9rem; color: var(--highlight); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">The MCP Way</h3>
+        <div class="mcp-comm" style="margin: 0 0 16px 0;">
+          <div class="mcp-box ai">
+            <div>AI Assistant</div>
+            <div class="mcp-box-label">Claude / Cursor</div>
+          </div>
+          <div class="mcp-arrow">&#x27A1;</div>
+          <div class="mcp-box appium-mcp">
+            <div style="color: var(--highlight);">mcp-appium</div>
+            <div class="mcp-box-label">Test Execution</div>
+          </div>
+          <div class="mcp-arrow">&#x27A1;</div>
+          <div class="mcp-box wda-mcp">
+            <div style="color: var(--blue);">mcp-wda</div>
+            <div class="mcp-box-label">Device Setup</div>
+          </div>
+          <div class="mcp-arrow blue">&#x27A1;</div>
+          <div class="mcp-box device-box">
+            <div>iPhone</div>
+            <div class="mcp-box-label">Real Device</div>
+          </div>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--highlight); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="check">&#x2713;</span> <strong>"Set up iOS testing on my device"</strong><br>
+            <span class="check">&#x2713;</span> mcp-appium delegates to mcp-webdriveragent<br>
+            <span class="check">&#x2713;</span> Automatic provisioning &amp; signing<br>
+            <span class="check">&#x2713;</span> WDA built, installed, and running<br>
+            <span class="check">&#x2713;</span> Session ready for testing
+          </p>
+          <div style="margin-top: 12px; padding: 10px; background: rgba(222,115,86,0.08); border-radius: 8px; text-align: center;">
+            <span style="font-size: 1.8rem; font-weight: 800; color: var(--highlight);">~2 minutes</span>
+            <div style="font-size: 0.75rem; color: var(--highlight);">fully automated, every time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9 — DEEP DIVE: RAG Documentation -->
+  <section class="slide centered">
+    <h2><span class="gradient-text">2.</span> Appium Docs &mdash; RAG Powered</h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 24px; font-size: 0.95rem;">
+      Appium's documentation spans drivers, plugins, capabilities, APIs across iOS, Android, and more.<br>mcp-appium uses <strong>Retrieval-Augmented Generation</strong> to make it instantly searchable.
+    </p>
+    <div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1000px;">
+      <div style="min-width: 300px; max-width: 460px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Without RAG</h3>
+        <div class="card" style="border-left: 4px solid var(--text-muted); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="cross">&#x2717;</span> Search through hundreds of doc pages<br>
+            <span class="cross">&#x2717;</span> Cross-reference driver-specific capabilities<br>
+            <span class="cross">&#x2717;</span> Outdated Stack Overflow answers<br>
+            <span class="cross">&#x2717;</span> Trial and error with capability names<br>
+            <span class="cross">&#x2717;</span> Context-switch between docs and IDE
+          </p>
+        </div>
+      </div>
+      <div style="min-width: 300px; max-width: 460px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--highlight); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">With mcp-appium RAG</h3>
+        <div class="card" style="border-left: 4px solid var(--highlight); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="check">&#x2713;</span> <strong>"What capabilities do I need for iOS 17?"</strong><br>
+            <span class="check">&#x2713;</span> AI retrieves exact docs, returns the answer<br>
+            <span class="check">&#x2713;</span> Always up-to-date with latest Appium version<br>
+            <span class="check">&#x2713;</span> Context-aware &mdash; knows your current session<br>
+            <span class="check">&#x2713;</span> Stays in your workflow, no tab-switching
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="code-block" style="max-width: 700px; margin-top: 20px; font-size: 0.78rem; line-height: 1.7;">
+<span class="comment">// Just ask in natural language:</span>
+<span class="string">"How do I set up XCUITest driver for a real device?"</span>
+<span class="string">"What's the capability for disabling animations on Android?"</span>
+<span class="string">"Show me how to configure Appium for parallel testing"</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 10 — DEEP DIVE: Stable Gestures -->
+  <section class="slide centered">
+    <h2><span class="gradient-text">3.</span> Stable Gesture Building</h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 24px; font-size: 0.95rem;">
+      Gestures break across devices, screen sizes, and OS versions.<br>mcp-appium's intent-based gesture tools handle the complexity for you.
+    </p>
+    <div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1000px;">
+      <div style="min-width: 300px; max-width: 440px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">The Hard Way</h3>
+        <div class="code-block" style="font-size: 0.73rem; line-height: 1.7; max-width: 100%;">
+<span class="comment">// Manual W3C Actions &mdash; brittle</span>
+<span class="keyword">const</span> action = driver.<span class="fn">action</span>(<span class="string">'pointer'</span>);
+action.<span class="fn">move</span>({ x: 500, y: 1200 });  <span class="comment">// hardcoded!</span>
+action.<span class="fn">press</span>();
+action.<span class="fn">move</span>({ x: 500, y: 400 });   <span class="comment">// breaks on</span>
+action.<span class="fn">release</span>();                    <span class="comment">// diff screens</span>
+<span class="keyword">await</span> driver.<span class="fn">performActions</span>([action]);
+        </div>
+      </div>
+      <div style="min-width: 300px; max-width: 440px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--highlight); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">The Intent Way</h3>
+        <div class="code-block" style="font-size: 0.73rem; line-height: 1.7; max-width: 100%;">
+<span class="comment">// Just tell mcp-appium what you want:</span>
+<span class="string">"Swipe up on the product list"</span>
+<span class="string">"Long press on the first item"</span>
+<span class="string">"Scroll down until I see the checkout button"</span>
+<span class="string">"Pinch to zoom on the map"</span>
+
+<span class="comment">// mcp-appium calculates coordinates,</span>
+<span class="comment">// adapts to screen size, handles timing</span>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 24px;">
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 150px;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: var(--highlight);">Adaptive</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Adjusts to screen size</div>
+      </div>
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 150px;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: var(--highlight);">Reliable</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">No hardcoded coordinates</div>
+      </div>
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 150px;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: var(--highlight);">Simple</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Describe, don't calculate</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 — DEEP DIVE: Code Generation -->
+  <section class="slide centered">
+    <h2><span class="gradient-text">4.</span> Journey to Production Code</h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 20px; font-size: 0.95rem;">
+      Explore your app through conversation. mcp-appium generates production-ready test scripts automatically.
+    </p>
+    <div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1050px;">
+      <div style="min-width: 300px; max-width: 460px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Your Conversation</h3>
+        <div class="code-block" style="font-size: 0.76rem; line-height: 1.8; max-width: 100%;">
+<span class="comment">// You simply said:</span>
+<span class="string">"Open the login screen"</span>
+<span class="string">"Enter username bob@example.com"</span>
+<span class="string">"Enter password 10203040"</span>
+<span class="string">"Tap Login"</span>
+<span class="string">"Verify products page appears"</span>
+<span class="string">"Generate test code"</span>
+        </div>
+      </div>
+      <div style="min-width: 300px; max-width: 520px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--highlight); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Generated Code</h3>
+        <div class="code-block" style="font-size: 0.73rem; line-height: 1.7; max-width: 100%;">
+<span class="keyword">describe</span>(<span class="string">'Login Flow'</span>, () => {
+  <span class="keyword">it</span>(<span class="string">'should login successfully'</span>, <span class="keyword">async</span> () => {
+    <span class="comment">// Navigate to login</span>
+    <span class="keyword">const</span> menu = <span class="keyword">await</span> $(<span class="string">'~menu-button'</span>);
+    <span class="keyword">await</span> menu.<span class="fn">click</span>();
+    <span class="keyword">const</span> login = <span class="keyword">await</span> $(<span class="string">'~Login'</span>);
+    <span class="keyword">await</span> login.<span class="fn">click</span>();
+
+    <span class="comment">// Enter credentials</span>
+    <span class="keyword">const</span> user = <span class="keyword">await</span> $(<span class="string">'~username-input'</span>);
+    <span class="keyword">await</span> user.<span class="fn">setValue</span>(<span class="string">'bob@example.com'</span>);
+    <span class="keyword">const</span> pass = <span class="keyword">await</span> $(<span class="string">'~password-input'</span>);
+    <span class="keyword">await</span> pass.<span class="fn">setValue</span>(<span class="string">'10203040'</span>);
+
+    <span class="comment">// Submit and verify</span>
+    <span class="keyword">const</span> btn = <span class="keyword">await</span> $(<span class="string">'~login-button'</span>);
+    <span class="keyword">await</span> btn.<span class="fn">click</span>();
+    <span class="keyword">const</span> products = <span class="keyword">await</span> $(<span class="string">'~products'</span>);
+    <span class="keyword">await</span> <span class="fn">expect</span>(products).<span class="fn">toBeDisplayed</span>();
+  });
+});
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 20px; display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;">
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 140px;">
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlight);">0</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">Lines Written Manually</div>
+      </div>
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 140px;">
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlight);">Stable</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">Accessibility ID Locators</div>
+      </div>
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 140px;">
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlight);">CI-Ready</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">Production Quality</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 — DEEP DIVE: Debugging -->
+  <section class="slide centered">
+    <h2><span class="gradient-text">5.</span> Debugging &mdash; Why Did It Fail?</h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 24px; font-size: 0.95rem;">
+      Stop reading stack traces. Ask the AI what went wrong.
+    </p>
+    <div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1000px;">
+      <div style="min-width: 300px; max-width: 460px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Typical Debugging</h3>
+        <div class="card" style="border-left: 4px solid var(--text-muted); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="cross">&#x2717;</span> Read cryptic error message<br>
+            <span class="cross">&#x2717;</span> Dig through Appium server logs<br>
+            <span class="cross">&#x2717;</span> Manually take screenshots to compare<br>
+            <span class="cross">&#x2717;</span> Check if locator still exists in source<br>
+            <span class="cross">&#x2717;</span> Google the error, hope for answers<br>
+            <span class="cross">&#x2717;</span> Add waits, retry, pray it works
+          </p>
+        </div>
+      </div>
+      <div style="min-width: 300px; max-width: 460px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--highlight); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">With mcp-appium</h3>
+        <div class="card" style="border-left: 4px solid var(--highlight); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="check">&#x2713;</span> <strong>"Why did my login test fail?"</strong><br>
+            <span class="check">&#x2713;</span> AI analyzes session logs automatically<br>
+            <span class="check">&#x2713;</span> Compares screenshot vs expected state<br>
+            <span class="check">&#x2713;</span> Inspects current page source for changes<br>
+            <span class="check">&#x2713;</span> Pinpoints root cause with explanation<br>
+            <span class="check">&#x2713;</span> Suggests the fix with updated code
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="code-block" style="max-width: 700px; margin-top: 20px; font-size: 0.78rem; line-height: 1.7;">
+<span class="comment">// AI response after analyzing the failure:</span>
+<span class="string">"The login button locator ~login-btn was renamed to ~sign-in-btn"</span>
+<span class="string">"in the latest build. The button exists but the ID changed."</span>
+<span class="string">"Here's the updated test code with the new locator..."</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 13 — DEEP DIVE: Vision-Based Detection -->
+  <section class="slide centered">
+    <h2><span class="gradient-text">6.</span> Vision-Based Element Detection</h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 24px; font-size: 0.95rem;">
+      When accessibility IDs don't exist, mcp-appium sees the screen like a human tester.
+    </p>
+    <div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1000px;">
+      <div style="min-width: 300px; max-width: 440px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">DOM-Based (Traditional)</h3>
+        <div class="card" style="border-left: 4px solid var(--text-muted); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="cross">&#x2717;</span> Requires accessibility IDs on every element<br>
+            <span class="cross">&#x2717;</span> Falls apart on custom/hybrid views<br>
+            <span class="cross">&#x2717;</span> Canvas, games, WebViews &mdash; invisible<br>
+            <span class="cross">&#x2717;</span> Devs must add IDs retroactively
+          </p>
+        </div>
+      </div>
+      <div style="min-width: 300px; max-width: 440px; flex: 1;">
+        <h3 style="font-size: 0.9rem; color: var(--highlight); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Vision-Based (mcp-appium)</h3>
+        <div class="card" style="border-left: 4px solid var(--highlight); padding: 18px;">
+          <p style="font-size: 0.85rem; line-height: 1.8;">
+            <span class="check">&#x2713;</span> Takes a screenshot of the live screen<br>
+            <span class="check">&#x2713;</span> AI visually identifies buttons, text, inputs<br>
+            <span class="check">&#x2713;</span> Works on any app &mdash; native, hybrid, games<br>
+            <span class="check">&#x2713;</span> Zero markup or developer changes required
+          </p>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 28px; align-items: stretch; flex-wrap: wrap; justify-content: center; max-width: 900px; margin-top: 20px;">
+      <div class="card" style="flex: 1; min-width: 200px; text-align: center; padding: 18px; border-top: 4px solid var(--highlight);">
+        <h3 style="font-size: 0.95rem;">Dual Strategy</h3>
+        <p style="font-size: 0.8rem;">Uses DOM when available, falls back to vision automatically. Best of both worlds.</p>
+      </div>
+      <div class="card" style="flex: 1; min-width: 200px; text-align: center; padding: 18px; border-top: 4px solid var(--highlight);">
+        <h3 style="font-size: 0.95rem;">Coordinate Mapping</h3>
+        <p style="font-size: 0.8rem;">AI identifies the element visually and returns precise tap coordinates for Appium to act on.</p>
+      </div>
+      <div class="card" style="flex: 1; min-width: 200px; text-align: center; padding: 18px; border-top: 4px solid var(--highlight);">
+        <h3 style="font-size: 0.95rem;">Any App, Any Framework</h3>
+        <p style="font-size: 0.8rem;">Flutter, React Native, Unity, native &mdash; if a human can see it, mcp-appium can interact with it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 14 — APPCLAW: BUILT ON MCP-APPIUM                          -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h2>Built on mcp-appium:<br><span class="gradient-text">AppClaw</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 20px; font-size: 0.95rem;">
+      An autonomous mobile testing agent that goes beyond prompts &mdash; it's powered by <strong>context engineering</strong>.
+    </p>
+    <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1100px;">
+      <!-- Architecture -->
+      <div class="arch-flow" style="max-width: 440px;">
+        <div class="arch-layer llm">
+          <span class="chip">Claude</span><span class="chip">GPT-4</span><span class="chip">Gemini</span><span class="chip">Ollama</span>
+          <span class="tag">Any LLM</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">Context-Engineered Prompts</span></div>
+        <div class="arch-layer agent" style="background: linear-gradient(135deg, rgba(222,115,86,0.15), rgba(222,115,86,0.08)); border: 2px solid rgba(222,115,86,0.45);">
+          <span style="font-size: 1.1rem; font-weight: 700; color: var(--highlight);">AppClaw</span>
+          <span class="tag" style="background: rgba(222,115,86,0.2); color: var(--highlight);">Agent</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">MCP Protocol</span></div>
+        <div class="arch-layer mcp">
+          <span class="chip">mcp-appium</span><span class="chip">mcp-wda</span>
+          <span class="tag">MCP Servers</span>
+        </div>
+        <div class="arch-connector"><span class="arch-connector-label">WebDriver</span></div>
+        <div class="arch-layer device">
+          <span class="chip">Android</span><span class="chip">iOS</span><span class="chip">Cloud</span>
+          <span class="tag">Devices</span>
+        </div>
+      </div>
+      <!-- What makes it different -->
+      <div style="display: flex; flex-direction: column; gap: 14px; min-width: 300px; max-width: 440px;">
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem; color: var(--highlight);">Not Just Prompts</h3>
+          <p style="font-size: 0.8rem;">Most AI testing tools send a prompt and hope for the best. AppClaw <em>engineers the context</em> &mdash; curating exactly what the LLM needs at each step.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem; color: var(--highlight);">Perceive &rarr; Reason &rarr; Act</h3>
+          <p style="font-size: 0.8rem;">Autonomous agent loop: reads the screen, reasons about the next action, executes it, and verifies the result &mdash; all without human intervention.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem; color: var(--highlight);">Record &amp; Replay at $0</h3>
+          <p style="font-size: 0.8rem;">Record once with LLM, replay forever without it. Zero LLM cost on replay. Adapts to layout changes automatically.</p>
+        </div>
+        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
+          <h3 style="font-size: 0.95rem; color: var(--highlight);">Open Source</h3>
+          <p style="font-size: 0.8rem;">Apache 2.0. Zero telemetry. Privacy-first. No vendor lock-in. Works with any LLM.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 15 — WHAT IS CONTEXT ENGINEERING                            -->
+  <!-- ================================================================ -->
+  <section class="slide centered" style="padding: 0;">
+    <iframe src="context-engineering-standalone.html" style="width: 100%; height: 100%; border: none; position: absolute; inset: 0;" loading="lazy"></iframe>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 16 — 5 CONTEXT ENGINEERING PATTERNS                         -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h2>5 Patterns That <span class="gradient-text">Actually Work</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 20px; font-size: 0.95rem;">
+      How AppClaw engineers context at every step of the testing loop.
+    </p>
+    <div class="card-grid cols-5" style="max-width: 1100px;">
+      <div class="card" style="text-align: center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F5DC;</span>
+        <h3 style="font-size: 0.9rem; color: var(--highlight);">Compress</h3>
+        <p style="font-size: 0.75rem;">50KB page source &rarr; 3KB minimal DOM. Only what matters hits the context window.</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F50D;</span>
+        <h3 style="font-size: 0.9rem; color: var(--highlight);">Diff</h3>
+        <p style="font-size: 0.75rem;">Don't resend the whole screen. Send only what changed since the last action.</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F9E0;</span>
+        <h3 style="font-size: 0.9rem; color: var(--highlight);">Remember</h3>
+        <p style="font-size: 0.75rem;">Episodic memory from past runs. "Last time on this screen, swipe worked better than scroll."</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem;">&#x1F6E0;</span>
+        <h3 style="font-size: 0.9rem; color: var(--highlight);">Recover</h3>
+        <p style="font-size: 0.75rem;">Negative example cache &mdash; track failures per screen, never repeat the same mistake.</p>
+      </div>
+      <div class="card" style="text-align: center; padding: 16px;">
+        <span class="icon" style="font-size: 1.5rem;">&#x2705;</span>
+        <h3 style="font-size: 0.9rem; color: var(--highlight);">Verify</h3>
+        <p style="font-size: 0.75rem;">After every action, re-read the screen and confirm the expected state before moving on.</p>
+      </div>
+    </div>
+    <div style="margin-top: 24px; display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;">
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 150px;">
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlight);">70%</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">Fewer Tokens Per Step</div>
+      </div>
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 150px;">
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlight);">30-50%</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">Fewer Steps with Memory</div>
+      </div>
+      <div class="card" style="padding: 12px 20px; text-align: center; min-width: 150px;">
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--highlight);">+40%</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">Success Rate Improvement</div>
+      </div>
+    </div>
+    <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted); font-style: italic;">
+      "Every token in the context window should earn its place."
+    </p>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 17 — APPCLAW DEMO                                           -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <div style="position: relative; display: inline-block; margin-bottom: 16px;">
+      <div class="demo-icon">&#x1F4F1;</div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+      <div class="demo-ripple"></div>
+    </div>
+    <h2 style="font-size: 3rem; margin-bottom: 8px;"><span class="gradient-text">AppClaw Demo</span></h2>
+    <div class="divider"></div>
+    <p class="subtitle" style="margin-bottom: 20px; font-size: 0.95rem;">
+      All 5 context engineering patterns running live on a real device.
+    </p>
+    <div style="padding: 14px 28px; background: rgba(0,0,0,0.03); border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); display: inline-block;">
+      <div class="demo-typing">"Open YouTube, search Appium, verify TestMu AI channel appears"</div>
+    </div>
+    <div style="display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 28px;">
+      <div class="card" style="padding: 14px 24px; text-align: center; min-width: 130px;">
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--highlight);">50KB</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">&rarr; 3KB DOM</div>
+      </div>
+      <div class="card" style="padding: 14px 24px; text-align: center; min-width: 130px;">
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--highlight);">5x</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Memory Recall</div>
+      </div>
+      <div class="card" style="padding: 14px 24px; text-align: center; min-width: 130px;">
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--highlight);">2nd</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Pass Verify</div>
+      </div>
+    </div>
+    <div style="margin-top: 24px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+      <span class="pill">Compress</span>
+      <span class="pill">Diff</span>
+      <span class="pill">Remember</span>
+      <span class="pill">Recover</span>
+      <span class="pill">Verify</span>
+    </div>
+    <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <a href="https://github.com/AppiumTestDistribution/appclaw" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: linear-gradient(135deg, #24292e, #40464d); color: #fff; border-radius: 12px; text-decoration: none; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        <svg height="20" width="20" viewBox="0 0 16 16" fill="white"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>github.com/AppiumTestDistribution/appclaw</span>
+      </a>
+      <a href="https://appclaw.in" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, var(--highlight), #e07a5f); color: #fff; border-radius: 12px; text-decoration: none; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 20px rgba(222,115,86,0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        <span>appclaw.in</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- KEY TAKEAWAYS                                                     -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h2>Key <span class="gradient-text">Takeaways</span></h2>
+    <div class="divider"></div>
+    <div class="card-grid cols-2" style="max-width: 950px; margin-top: 20px;">
+      <div class="card" style="display: flex; align-items: flex-start; gap: 14px; padding: 18px;">
+        <span style="font-size: 1.6rem; flex-shrink: 0;">&#x1F50C;</span>
+        <div>
+          <h3 style="font-size: 0.95rem;">MCP Enables AI-Native Testing</h3>
+          <p style="font-size: 0.8rem;">AI agents safely control Appium sessions through a standardized protocol. No custom integrations needed.</p>
+        </div>
+      </div>
+      <div class="card" style="display: flex; align-items: flex-start; gap: 14px; padding: 18px;">
+        <span style="font-size: 1.6rem; flex-shrink: 0;">&#x1F3AF;</span>
+        <div>
+          <h3 style="font-size: 0.95rem;">Intent-Based, Not Command-Based</h3>
+          <p style="font-size: 0.8rem;">mcp-appium exposes high-level testing intents, not raw WebDriver calls. The AI reasons about <em>what</em> to test, the tools handle <em>how</em>.</p>
+        </div>
+      </div>
+      <div class="card" style="display: flex; align-items: flex-start; gap: 14px; padding: 18px;">
+        <span style="font-size: 1.6rem; flex-shrink: 0;">&#x1F441;</span>
+        <div>
+          <h3 style="font-size: 0.95rem;">Vision + DOM: Dual Strategy</h3>
+          <p style="font-size: 0.8rem;">Use structured page source when available, fall back to screenshot-based visual recognition when not. Works on any app.</p>
+        </div>
+      </div>
+      <div class="card" style="display: flex; align-items: flex-start; gap: 14px; padding: 18px;">
+        <span style="font-size: 1.6rem; flex-shrink: 0;">&#x1F4DD;</span>
+        <div>
+          <h3 style="font-size: 0.95rem;">Exploratory Testing Becomes Automation</h3>
+          <p style="font-size: 0.8rem;">Your testing journey generates production-ready code. Zero gap between exploration and regression suites.</p>
+        </div>
+      </div>
+      <div class="card" style="display: flex; align-items: flex-start; gap: 14px; padding: 18px;">
+        <span style="font-size: 1.6rem; flex-shrink: 0;">&#x1F517;</span>
+        <div>
+          <h3 style="font-size: 0.95rem;">MCP-to-MCP Solves iOS Pain</h3>
+          <p style="font-size: 0.8rem;">mcp-appium + mcp-webdriveragent automate the entire iOS device setup. Hours become minutes.</p>
+        </div>
+      </div>
+      <div class="card" style="display: flex; align-items: flex-start; gap: 14px; padding: 18px;">
+        <span style="font-size: 1.6rem; flex-shrink: 0;">&#x1F52E;</span>
+        <div>
+          <h3 style="font-size: 0.95rem;">The Future is Conversational</h3>
+          <p style="font-size: 0.8rem;">Self-healing tests, intelligent retries, and AI-augmented workflows are here today, not science fiction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- SLIDE 12 — GET STARTED + THANK YOU                                -->
+  <!-- ================================================================ -->
+  <section class="slide centered">
+    <h1 style="font-size: 3rem; margin-bottom: 4px;"><span class="gradient-text">Thank You!</span></h1>
+    <div class="divider"></div>
+    <div class="card-grid cols-2" style="max-width: 700px; margin-top: 20px;">
+      <div class="card" style="border-left: 4px solid var(--highlight); padding: 16px;">
+        <h3 style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 1.2rem;">&#x1F4E6;</span> mcp-appium</h3>
+        <div class="code-block" style="padding: 10px 14px; font-size: 0.75rem; margin-top: 8px; max-width: 100%;"><span class="keyword">npm</span> install -g <span class="string">appium-mcp</span></div>
+        <p style="font-size: 0.75rem; margin-top: 8px; color: var(--text-muted);">github.com/AppiumTestDistribution/mcp-appium</p>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--blue); padding: 16px;">
+        <h3 style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 1.2rem;">&#x1F34E;</span> mcp-webdriveragent</h3>
+        <div class="code-block" style="padding: 10px 14px; font-size: 0.75rem; margin-top: 8px; max-width: 100%;"><span class="keyword">npm</span> install -g <span class="string">mcp-webdriveragent</span></div>
+        <p style="font-size: 0.75rem; margin-top: 8px; color: var(--text-muted);">github.com/user/mcp-webdriveragent</p>
+      </div>
+    </div>
+    <div style="display: flex; align-items: flex-start; justify-content: center; gap: 60px; flex-wrap: wrap; margin-top: 24px;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/public/assets/sai-hero.webp" alt="Sai Krishna" style="width: 180px; height: 180px; border-radius: 50%; border: 3px solid rgba(222,115,86,0.5); object-fit: cover; box-shadow: 0 6px 30px rgba(222,115,86,0.25);">
+        <h3 style="margin-top: 12px; font-size: 1.2rem;"><span class="gradient-text">Sai Krishna</span></h3>
+        <div style="font-size: 0.85rem; color: var(--text-secondary);">saikrishna.tech</div>
+        <img src="qr-code.png" alt="QR Code" style="width: 140px; height: 140px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 10px;">
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="https://srini.codes/assets/ProfilePic-ad434bf7.webp" alt="Srinivasan Sekar" style="width: 180px; height: 180px; border-radius: 50%; border: 3px solid rgba(222,115,86,0.5); object-fit: cover; box-shadow: 0 6px 30px rgba(222,115,86,0.25);">
+        <h3 style="margin-top: 12px; font-size: 1.2rem;"><span class="gradient-text">Srinivasan Sekar</span></h3>
+        <div style="font-size: 0.85rem; color: var(--text-secondary);">srini.codes</div>
+        <img src="QR-sekar.png" alt="QR Code" style="width: 140px; height: 140px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 10px;">
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('slideCounter');
+  const shortcuts = document.getElementById('shortcuts');
+  let current = 0;
+  const total = slides.length;
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current) return;
+    const prev = slides[current];
+    const next = slides[index];
+    prev.classList.remove('active');
+    if (index > current) { prev.classList.add('exit-left'); setTimeout(() => prev.classList.remove('exit-left'), 500); }
+    current = index;
+    next.classList.add('active');
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = `${current + 1} / ${total}`;
+    window.location.hash = current + 1;
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  const hash = parseInt(window.location.hash.slice(1)) - 1;
+  current = (hash >= 0 && hash < total) ? hash : 0;
+  slides[current].classList.add('active');
+  progress.style.width = ((current + 1) / total * 100) + '%';
+  counter.textContent = `${current + 1} / ${total}`;
+
+  document.addEventListener('keydown', e => {
+    switch(e.key) {
+      case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(total - 1); break;
+      case 'f': case 'F': if (!e.metaKey && !e.ctrlKey) { e.preventDefault(); document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } break;
+      case '?': shortcuts.style.display = shortcuts.style.display === 'block' ? 'none' : 'block'; break;
+    }
+  });
+
+  document.addEventListener('click', e => { if (e.target.closest('a, button, code, .code-block')) return; e.clientX / window.innerWidth > 0.5 ? next() : prev(); });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', e => { const diff = touchStartX - e.changedTouches[0].screenX; if (Math.abs(diff) > 50) diff > 0 ? next() : prev(); });
+})();
+</script>
+
+</body>
+</html>

@@ -330,6 +330,14 @@ export const PRESENTATIONS: Presentation[] = [
     year: '2026',
     description: 'AppClaw: an AI-powered mobile QA agent that autonomously controls Android & iOS devices through natural-language goals.',
   },
+  {
+    id: 'selenium-appium-conf',
+    title: 'Bridging AI and Mobile Testing',
+    url: '/Bridging AI and Mobile Testing - standalone.html',
+    event: 'Selenium · Appium Conf 2026',
+    year: '2026',
+    description: 'Exploring the future of quality engineering through intelligence and mobility.',
+  },
 ];
 
 export type Video = {
