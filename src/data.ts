@@ -284,7 +284,7 @@ export const BOOK = {
   amazonUrl: 'https://www.amazon.in/Appium-Insights-Strategies-Successful-Automation/dp/B0FBRGBDBW',
   springerUrl: 'https://link.springer.com/book/10.1007/979-8-8688-1703-8',
   oreillyUrl: 'https://www.oreilly.com/library/view/appium-insights-strategies/9798868817038/',
-  coverImage: 'https://m.media-amazon.com/images/I/51w3vvzqGWL._SL1180_.jpg',
+  coverImage: '/book-appium-insights.jpg',
   blurb:
     'Written for engineers who already know Appium works and want it to stop surprising them. Architecture, patterns, and the anti-patterns I had to un-ship — the mobile slice of a broader automation practice.',
   learnings: [
@@ -300,6 +300,7 @@ export type Presentation = {
   id: string;
   title: string;
   url: string;
+  internal?: boolean;
   event?: string;
   year?: string;
   description?: string;
@@ -333,7 +334,8 @@ export const PRESENTATIONS: Presentation[] = [
   {
     id: 'selenium-appium-conf',
     title: 'Bridging AI and Mobile Testing',
-    url: '/Bridging AI and Mobile Testing - standalone.html',
+    url: '/presentations/bridging-ai',
+    internal: true,
     event: 'Selenium · Appium Conf 2026',
     year: '2026',
     description: 'Exploring the future of quality engineering through intelligence and mobility.',

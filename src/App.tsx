@@ -9,6 +9,7 @@ import About from './pages/About';
 import Work from './pages/Work';
 import Talks from './pages/Talks';
 import Presentations from './pages/Presentations';
+import BridgingAI from './pages/BridgingAI';
 import Writing from './pages/Writing';
 import Book from './pages/Book';
 import Workshops from './pages/Workshops';
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/work" element={<Work />} />
         <Route path="/talks" element={<Talks />} />
         <Route path="/presentations" element={<Presentations />} />
+        <Route path="/presentations/bridging-ai" element={<BridgingAI />} />
         <Route path="/writing" element={<Writing />} />
         <Route path="/book" element={<Book />} />
         <Route path="/workshops" element={<Workshops />} />

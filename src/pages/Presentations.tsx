@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { T } from '../theme';
 import { PRESENTATIONS } from '../data';
 import { Wrap } from '../components/Shared';
@@ -32,82 +33,58 @@ export default function Presentations() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(380px, 100%), 1fr))', gap: 16 }}>
-            {PRESENTATIONS.map((p, i) => (
-              <a
-                key={p.id}
-                href={p.url}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  display: 'block',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  padding: 32,
-                  background: 'transparent',
-                  border: `1px solid ${T.rule}`,
-                  transition: 'all .25s',
-                  position: 'relative',
-                  minHeight: 240,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(253,186,174,0.06)';
-                  e.currentTarget.style.borderColor = T.accent;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.borderColor = T.rule;
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                  <span
-                    style={{
-                      fontFamily: T.mono,
-                      fontSize: 10,
-                      color: T.muted,
-                      letterSpacing: '0.2em',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span style={{ fontFamily: T.mono, fontSize: 18, color: T.muted }}>↗</span>
-                </div>
-
-                <div
-                  style={{
-                    fontFamily: T.mono,
-                    fontSize: 10,
-                    color: T.accent,
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    marginBottom: 12,
-                  }}
-                >
-                  {p.event}{p.year ? ` · ${p.year}` : ''}
-                </div>
-
-                <h3 style={{ fontSize: 26, letterSpacing: -0.4, fontWeight: 500, margin: '0 0 12px', color: T.fg, lineHeight: 1.2 }}>
-                  {p.title}
-                </h3>
-
-                {p.description && (
-                  <p style={{ fontSize: 14, color: T.subdued, lineHeight: 1.6, margin: 0 }}>{p.description}</p>
-                )}
-
-                <div
-                  style={{
-                    fontFamily: T.mono,
-                    fontSize: 11,
-                    color: T.accent,
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
-                    marginTop: 24,
-                  }}
-                >
-                  Open deck →
-                </div>
-              </a>
-            ))}
+            {PRESENTATIONS.map((p, i) => {
+              const cardStyle = {
+                display: 'block',
+                textDecoration: 'none',
+                color: 'inherit',
+                padding: 32,
+                background: 'transparent',
+                border: `1px solid ${T.rule}`,
+                transition: 'all .25s',
+                position: 'relative' as const,
+                minHeight: 240,
+              };
+              const onEnter = (e: React.MouseEvent<HTMLElement>) => {
+                e.currentTarget.style.background = 'rgba(253,186,174,0.06)';
+                e.currentTarget.style.borderColor = T.accent;
+              };
+              const onLeave = (e: React.MouseEvent<HTMLElement>) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.borderColor = T.rule;
+              };
+              const cardContent = (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                    <span style={{ fontFamily: T.mono, fontSize: 10, color: T.muted, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span style={{ fontFamily: T.mono, fontSize: 18, color: T.muted }}>{p.internal ? '→' : '↗'}</span>
+                  </div>
+                  <div style={{ fontFamily: T.mono, fontSize: 10, color: T.accent, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    {p.event}{p.year ? ` · ${p.year}` : ''}
+                  </div>
+                  <h3 style={{ fontSize: 26, letterSpacing: -0.4, fontWeight: 500, margin: '0 0 12px', color: T.fg, lineHeight: 1.2 }}>
+                    {p.title}
+                  </h3>
+                  {p.description && (
+                    <p style={{ fontSize: 14, color: T.subdued, lineHeight: 1.6, margin: 0 }}>{p.description}</p>
+                  )}
+                  <div style={{ fontFamily: T.mono, fontSize: 11, color: T.accent, letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 24 }}>
+                    Open deck →
+                  </div>
+                </>
+              );
+              return p.internal ? (
+                <Link key={p.id} to={p.url} style={cardStyle} onMouseEnter={onEnter} onMouseLeave={onLeave}>
+                  {cardContent}
+                </Link>
+              ) : (
+                <a key={p.id} href={p.url} target="_blank" rel="noreferrer" style={cardStyle} onMouseEnter={onEnter} onMouseLeave={onLeave}>
+                  {cardContent}
+                </a>
+              );
+            })}
           </div>
         </Wrap>
       </section>
