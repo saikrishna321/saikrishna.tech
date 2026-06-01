@@ -308,6 +308,15 @@ export type Presentation = {
 
 export const PRESENTATIONS: Presentation[] = [
   {
+    id: 'playwright-mcp',
+    title: 'Playwright × AI — The Three Doors',
+    url: '/presentations/playwright-mcp',
+    internal: true,
+    event: 'Hands-on Workshop',
+    year: '2026',
+    description: 'Driving a real browser with natural language through Playwright’s MCP server, the token-efficient CLI, and the Planner → Generator → Healer agents.',
+  },
+  {
     id: 'context-engineering',
     title: 'Beyond Prompts: How Context Engineering Transforms Test Automation',
     url: '/presentation-context-engineering.html',
