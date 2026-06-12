@@ -257,7 +257,91 @@
     </div>
   </section>
 
-  <!-- SLIDE 2 — THE PROBLEM -->
+  <!-- SLIDE 3 — APPIUM MCP -->
+  <section class="slide centered">
+    <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" style="height: 80px; margin-bottom: 18px; opacity: 0.92;">
+    <h1 style="font-size: 3.4rem; margin-bottom: 6px;"><span class="gradient-text">MCP</span></h1>
+    <div class="divider"></div>
+    <p class="subtitle" style="font-size: 1.05rem; margin-top: 8px; max-width: 760px;">
+      Appium is the open-source standard for <strong>cross-platform automation</strong> — one API for Android, iOS, Windows, macOS, and the web. Battle-tested for over a decade by teams shipping mobile at scale.
+    </p>
+    <p class="subtitle" style="font-size: 1rem; margin-top: 16px; max-width: 760px; color: var(--text-secondary);">
+      <strong>Appium MCP</strong> exposes that engine as a Model Context Protocol server — <em>15 structured tools</em> that let any LLM perceive screens, locate elements, and drive real devices natively.
+    </p>
+
+    <div class="stats-row" style="margin-top: 36px;">
+      <div class="stat">
+        <div class="number gradient-text">2M+</div>
+        <div class="label">Monthly Downloads</div>
+      </div>
+      <div class="stat">
+        <div class="number gradient-text">10+ yrs</div>
+        <div class="label">Battle Tested</div>
+      </div>
+      <div class="stat">
+        <div class="number gradient-text">15</div>
+        <div class="label">MCP Tools</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+      <span class="pill">Android</span>
+      <span class="pill">iOS</span>
+      <span class="pill">Windows</span>
+      <span class="pill">macOS</span>
+      <span class="pill">Web</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 — TOOLS FOR AGENTS ARE NOT APIs -->
+  <section class="slide centered">
+    <h2>Tools for agents are <span class="gradient-text">not APIs</span></h2>
+    <div class="divider"></div>
+    <p style="max-width: 760px; margin-bottom: 24px; font-size: 1rem; text-align: center;">
+      When you design for the new consumer, the <em>unit of composition</em> changes.
+    </p>
+
+    <div class="card-grid cols-2" style="max-width: 1050px; align-items: stretch;">
+      <!-- Anti-pattern: Thin API wrappers -->
+      <div class="card" style="border-left: 4px solid var(--text-muted); display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <h3 style="color: var(--text-muted); font-size: 1.05rem;">Thin API wrappers</h3>
+          <p style="font-size: 0.85rem; margin-top: 4px;">Each endpoint becomes a tool.</p>
+        </div>
+        <div class="code-block" style="padding: 14px 18px; font-size: 0.78rem; line-height: 1.7;">
+<span class="keyword">get_user</span>(id)<br><span class="keyword">list_orders</span>(uid)<br><span class="keyword">get_shipment</span>(oid)
+        </div>
+        <p style="font-size: 0.85rem;">The agent has to be the systems integrator. <strong>5.3&times; more invocations.</strong></p>
+        <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-top: auto;">
+          &#x2717; Falls off the accuracy cliff
+        </div>
+      </div>
+
+      <!-- Recommended: Task / intent tools -->
+      <div class="card" style="border-left: 4px solid var(--highlight); display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <h3 style="color: var(--highlight); font-size: 1.05rem;">Task / intent tools</h3>
+          <p style="font-size: 0.85rem; margin-top: 4px;">Each tool wraps a goal.</p>
+        </div>
+        <div class="code-block" style="padding: 14px 18px; font-size: 0.78rem; line-height: 1.7;">
+<span class="keyword">track_order</span>(email)<br>&nbsp;&nbsp;&rarr; handles lookup,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status, formatting
+        </div>
+        <p style="font-size: 0.85rem;">The agent reasons about goals. Composition logic lives in the <em>tool</em>, not the agent.</p>
+        <div style="font-size: 0.85rem; color: var(--highlight); font-weight: 600; margin-top: auto;">
+          &#x2713; Keeps agents in the &gt;85% regime
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 22px; font-size: 0.82rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; text-align: center; max-width: 900px;">
+      GitHub: 40 &rarr; 13 tools, +2&ndash;5pp benchmarks &nbsp;&middot;&nbsp; Block: 200+ endpoints &rarr; 3 layered tools, &ndash;400ms latency
+    </div>
+    <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted); text-align: center; font-style: italic;">
+      Credit: <span style="color: var(--text-secondary); font-weight: 600; font-style: normal;">Sam Partee</span>, Chief Technology Officer, Arcade &middot; MCP Dev Summit Bengaluru
+    </div>
+  </section>
+
+  <!-- SLIDE 4 — THE PROBLEM -->
   <section class="slide centered">
     <h2>Mobile QA Today:<br><span class="gradient-text-2">Slow, Brittle, Expensive</span></h2>
     <div class="divider"></div>
@@ -305,7 +389,7 @@
       <div class="card" style="text-align:center; padding: 16px;">
         <span class="icon" style="font-size: 1.4rem;">&#x1F50C;</span>
         <h3 style="font-size: 0.9rem;">MCP + Appium</h3>
-        <p style="font-size: 0.78rem;">32 tools for structured device control</p>
+        <p style="font-size: 0.78rem;">15 tools for structured device control</p>
       </div>
       <div class="card" style="text-align:center; padding: 16px;">
         <span class="icon" style="font-size: 1.4rem;">&#x1F310;</span>
@@ -335,7 +419,7 @@
       <div class="arch-connector"><span class="arch-connector-label">API</span></div>
       <div class="arch-layer agent"><span>AppClaw</span><span class="tag">Agent</span></div>
       <div class="arch-connector"><span class="arch-connector-label">MCP</span></div>
-      <div class="arch-layer mcp"><span class="chip">appium-mcp</span><span class="tag">32 Tools</span></div>
+      <div class="arch-layer mcp"><span class="chip">appium-mcp</span><span class="tag">15 Tools</span></div>
       <div class="arch-connector"><span class="arch-connector-label">WebDriver</span></div>
       <div class="arch-layer device"><span class="chip">Android</span><span class="chip">iOS</span><span class="chip">Cloud</span><span class="tag">Devices</span></div>
     </div>
