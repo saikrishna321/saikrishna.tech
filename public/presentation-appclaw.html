@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AppClaw — AI-Powered Mobile QA Agent</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&family=Outfit:wght@300..600&display=swap');
 
   :root {
     --bg-primary: #ffffff;
@@ -90,21 +90,21 @@
   /* ── Title Slide ── */
   .slide-title-only {
     justify-content: flex-start;
-    padding-top: 12vh;
+    padding-top: 9vh;
     padding-left: 80px;
     padding-right: 80px;
     padding-bottom: 0;
     background-color: #ffffff;
     background-image: url('Slide1.png');
-    background-size: 65% auto;
-    background-position: center 58%;
+    background-size: 50% auto;
+    background-position: center 82%;
     background-repeat: no-repeat;
     overflow: hidden;
   }
   .title-slide-heading {
     font-size: 3.2rem;
     font-weight: 700;
-    color: #ED7D31;
+    color: #FC8EAC;
     letter-spacing: -0.02em;
     line-height: 1.2;
     text-align: center;
@@ -204,6 +204,2082 @@
   }
 
   .shortcuts-popup { display: none; position: fixed; bottom: 60px; right: 32px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 16px 20px; z-index: 2000; font-size: 0.8rem; color: var(--text-secondary); line-height: 2; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Editorial treatment for slides 1 + 2
+     Cream + olive + cobalt + chartreuse · Fraunces
+  ────────────────────────────────────────────── */
+  .slide-atlas em,
+  .slide.slide-tech em { font-style: normal; }
+  .slide.slide-atlas {
+    background:
+      radial-gradient(ellipse 70% 50% at 20% 20%, rgba(126, 139, 63, 0.06), transparent 60%),
+      #EFE7D1;
+    color: #1F1A12;
+  }
+  .slide.slide-atlas::after {
+    content: '';
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0.32;
+    z-index: 30;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  .atlas-orb { position: absolute; pointer-events: none; z-index: 2; }
+  .atlas-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: #D7E94B;
+    border: 1.5px solid #1F1A12;
+    z-index: 12;
+    box-shadow: 0 2px 6px rgba(31, 26, 18, 0.15);
+  }
+
+  /* ── SLIDE 1 — TITLE (Atlas, cream theme) ── */
+  .slide-atlas-title {
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    background-image: none !important;
+  }
+  .slide-atlas-title .at-bg-illustration {
+    position: absolute;
+    inset: 0;
+    background-image: url('Slide1.png');
+    background-size: 55% auto;
+    background-position: center 88%;
+    background-repeat: no-repeat;
+    opacity: 0.55;
+    mix-blend-mode: multiply;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .slide-atlas-title .at-inner {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1400px;
+    padding: 14vh 56px 0;
+    text-align: center;
+  }
+  .slide-atlas-title .at-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #6A7634;
+    margin-bottom: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .slide-atlas-title .at-eyebrow::before,
+  .slide-atlas-title .at-eyebrow::after {
+    content: '';
+    width: 44px;
+    height: 1.5px;
+    background: #7E8B3F;
+    opacity: 0.6;
+  }
+  .slide-atlas-title .at-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 3.6rem;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    color: #1F1A12;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+  .slide-atlas-title .at-headline em {
+    font-style: normal;
+    color: #4D62BC;
+    font-weight: 800;
+  }
+
+  /* ── SLIDE 2 — SPEAKERS (Atlas) ── */
+  .slide-atlas-speakers {
+    justify-content: center;
+    align-items: center;
+    padding: 6vh 6vw;
+  }
+  .slide-atlas-speakers .at-inner {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1280px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .slide-atlas-speakers .at-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(31, 26, 18, 0.12);
+    flex-wrap: wrap;
+  }
+  .slide-atlas-speakers .at-section-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 3.4rem;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: #1F1A12;
+  }
+  .slide-atlas-speakers .at-section-title em {
+    font-style: normal;
+    color: #4D62BC;
+  }
+  .slide-atlas-speakers .at-partners {
+    display: flex; align-items: center; gap: 28px;
+  }
+  .slide-atlas-speakers .at-partners img {
+    height: 28px;
+    opacity: 0.7;
+    filter: grayscale(100%) brightness(0.85);
+  }
+
+  .at-speakers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  .at-speaker {
+    position: relative;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    padding-top: 22px;
+    border-top: 1.5px solid #1F1A12;
+  }
+  .at-speaker::before {
+    content: '';
+    position: absolute;
+    top: -1.5px; left: 0;
+    height: 4px;
+    width: 80px;
+  }
+  .at-speaker.olive::before { background: #7E8B3F; }
+  .at-speaker.cobalt::before { background: #4D62BC; }
+
+  .at-speaker .at-photo-col { display: flex; flex-direction: column; gap: 14px; }
+  .at-speaker .at-photo {
+    width: 220px;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 2px;
+    display: block;
+    filter: grayscale(35%) contrast(1.04);
+    transition: filter 0.4s ease;
+  }
+  .slide.active .at-speaker .at-photo { filter: grayscale(0%); }
+
+  .at-speaker .at-qr-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .at-speaker .at-qr {
+    width: 64px;
+    height: 64px;
+    background: #F4ECD8;
+    border: 1px solid rgba(31, 26, 18, 0.18);
+    padding: 5px;
+  }
+  .at-speaker .at-qr img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .at-speaker .at-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: #1F1A12;
+    line-height: 1.4;
+  }
+  .at-speaker .at-handle .label {
+    color: #A89E84;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .at-speaker .at-info { display: flex; flex-direction: column; padding-top: 4px; }
+  .at-speaker .at-name {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 400;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 2.4rem;
+    line-height: 0.95;
+    letter-spacing: -0.018em;
+    margin: 0 0 16px;
+    color: #1F1A12;
+  }
+  .at-speaker .at-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #1F1A12;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .at-speaker .at-role .role-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    display: inline-block;
+  }
+  .at-speaker.olive .role-dot { background: #7E8B3F; }
+  .at-speaker.cobalt .role-dot { background: #4D62BC; }
+  .at-speaker .at-author {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #6E6753;
+    margin-bottom: 22px;
+  }
+  .at-speaker .at-author em {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-variation-settings: "opsz" 24, "SOFT" 0;
+    color: #1F1A12;
+  }
+  .at-speaker .at-domain-pill {
+    align-self: flex-start;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    background: transparent;
+    border: 1.5px solid #1F1A12;
+    color: #1F1A12;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .at-speaker .at-domain-pill::before {
+    content: '↗';
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+  }
+  .at-speaker.olive .at-domain-pill { background: rgba(126, 139, 63, 0.1); border-color: #7E8B3F; color: #6A7634; }
+  .at-speaker.cobalt .at-domain-pill { background: rgba(77, 98, 188, 0.1); border-color: #4D62BC; color: #3F52A0; }
+
+  /* Tighten Atlas slides on smaller viewports */
+  @media (max-width: 1100px) {
+    .slide-atlas-title .at-headline { font-size: 3rem; }
+    .slide-atlas-speakers .at-section-title { font-size: 2.4rem; }
+    .at-speakers { grid-template-columns: 1fr; gap: 32px; }
+    .at-speaker { grid-template-columns: 180px 1fr; gap: 24px; }
+    .at-speaker .at-photo { width: 180px; height: 220px; }
+    .at-speaker .at-name { font-size: 2rem; }
+  }
+
+  /* ──────────────────────────────────────────────
+     TECH — Crisp speaker card layout (slide 2 v2)
+     White · blue accent · corner brackets · mono
+  ────────────────────────────────────────────── */
+  .slide.slide-tech {
+    background:
+      radial-gradient(ellipse 70% 50% at 20% 20%, rgba(126, 139, 63, 0.06), transparent 60%),
+      #EFE7D1;
+    color: #0A0A0A;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+  }
+  .slide.slide-tech::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(31, 26, 18, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(31, 26, 18, 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: center center;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .slide.slide-tech::after {
+    content: '';
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0.32;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  .tech-stage {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    max-width: 1400px;
+    padding: 4vh 56px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 120px;
+  }
+
+  .tech-thanks-header {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 56px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .tech-thanks-header h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 4.6rem;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: #0A0A0A;
+    margin: 0;
+  }
+
+  .tech-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Photo with corner brackets */
+  .tech-photo-frame {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    padding: 22px;
+  }
+  .tech-photo-frame .br-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+  }
+  .tech-photo-frame .br-corner::before,
+  .tech-photo-frame .br-corner::after {
+    content: '';
+    position: absolute;
+    background: #0A0A0A;
+  }
+  .tech-photo-frame .br-corner::before { height: 1.5px; width: 100%; }
+  .tech-photo-frame .br-corner::after  { width: 1.5px; height: 100%; }
+  .tech-photo-frame .br-corner.tl { top: 0; left: 0; }
+  .tech-photo-frame .br-corner.tl::before { top: 0; left: 0; }
+  .tech-photo-frame .br-corner.tl::after  { top: 0; left: 0; }
+  .tech-photo-frame .br-corner.tr { top: 0; right: 0; }
+  .tech-photo-frame .br-corner.tr::before { top: 0; right: 0; }
+  .tech-photo-frame .br-corner.tr::after  { top: 0; right: 0; }
+  .tech-photo-frame .br-corner.bl { bottom: 0; left: 0; }
+  .tech-photo-frame .br-corner.bl::before { bottom: 0; left: 0; }
+  .tech-photo-frame .br-corner.bl::after  { bottom: 0; left: 0; }
+  .tech-photo-frame .br-corner.br { bottom: 0; right: 0; }
+  .tech-photo-frame .br-corner.br::before { bottom: 0; right: 0; }
+  .tech-photo-frame .br-corner.br::after  { bottom: 0; right: 0; }
+
+  .tech-photo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid #C7D2FE;
+    object-fit: cover;
+    background: #F4ECD8;
+    display: block;
+  }
+
+  .tech-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    color: #2563EB;
+    margin-top: 38px;
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+
+  .tech-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 2.9rem;
+    font-weight: 800;
+    letter-spacing: -0.032em;
+    color: #0A0A0A;
+    line-height: 1;
+    margin-bottom: 18px;
+    white-space: nowrap;
+  }
+
+  .tech-role {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    color: #4B5563;
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .tech-author {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.02rem;
+    color: #9CA3AF;
+    margin-bottom: 30px;
+    font-weight: 400;
+  }
+
+  .tech-qr-frame {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    padding: 16px;
+  }
+  .tech-qr-frame .br-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+  }
+  .tech-qr-frame .br-corner::before,
+  .tech-qr-frame .br-corner::after {
+    content: '';
+    position: absolute;
+    background: #0A0A0A;
+  }
+  .tech-qr-frame .br-corner::before { height: 1.5px; width: 100%; }
+  .tech-qr-frame .br-corner::after  { width: 1.5px; height: 100%; }
+  .tech-qr-frame .br-corner.tl { top: 0; left: 0; }
+  .tech-qr-frame .br-corner.tl::before { top: 0; left: 0; }
+  .tech-qr-frame .br-corner.tl::after  { top: 0; left: 0; }
+  .tech-qr-frame .br-corner.tr { top: 0; right: 0; }
+  .tech-qr-frame .br-corner.tr::before { top: 0; right: 0; }
+  .tech-qr-frame .br-corner.tr::after  { top: 0; right: 0; }
+  .tech-qr-frame .br-corner.bl { bottom: 0; left: 0; }
+  .tech-qr-frame .br-corner.bl::before { bottom: 0; left: 0; }
+  .tech-qr-frame .br-corner.bl::after  { bottom: 0; left: 0; }
+  .tech-qr-frame .br-corner.br { bottom: 0; right: 0; }
+  .tech-qr-frame .br-corner.br::before { bottom: 0; right: 0; }
+  .tech-qr-frame .br-corner.br::after  { bottom: 0; right: 0; }
+
+  .tech-qr {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .tech-domain {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: #9CA3AF;
+    letter-spacing: 0.06em;
+    margin-top: 22px;
+  }
+
+  /* Bottom row: progress + NEXT */
+  .tech-footer {
+    position: absolute;
+    bottom: 36px;
+    left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 56px;
+    z-index: 10;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .tech-progress {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 22px;
+  }
+  .tech-progress .bar {
+    width: 3px;
+    background: rgba(31, 26, 18, 0.18);
+  }
+  .tech-progress .bar.active { background: #2563EB; }
+  .tech-next {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    color: #0A0A0A;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  @media (max-width: 1100px) {
+    .tech-photo-frame { width: 240px; height: 240px; }
+    .tech-name { font-size: 2.4rem; }
+    .tech-qr-frame { width: 160px; height: 160px; }
+    .tech-stage { column-gap: 5vw; }
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Editorial split layout for stats slides
+  ────────────────────────────────────────────── */
+  .slide-atlas-split {
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  .slide-atlas-split .at-inner {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1400px;
+    padding: 6vh 56px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .at-split-logo {
+    height: 56px;
+    margin-bottom: 28px;
+    opacity: 0.85;
+    filter: grayscale(20%) contrast(1.05);
+  }
+  .at-split-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 6rem;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: #4D62BC;
+    margin-bottom: 28px;
+  }
+  .at-split-lede {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #2F2A20;
+    margin-bottom: 16px;
+    max-width: 560px;
+    font-weight: 400;
+  }
+  .at-split-lede strong {
+    color: #1F1A12;
+    font-weight: 600;
+  }
+  .at-split-lede em {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-variation-settings: "opsz" 24, "SOFT" 0;
+    color: #6A7634;
+    font-weight: 500;
+  }
+  .at-split-pills {
+    margin-top: 30px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .at-split-pills .at-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1.5px solid #1F1A12;
+    color: #1F1A12;
+    background: transparent;
+    font-weight: 500;
+  }
+  .at-split-pills .at-pill:nth-child(2n) {
+    border-color: #7E8B3F;
+    color: #6A7634;
+    background: rgba(126, 139, 63, 0.06);
+  }
+
+  .at-split-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    border-left: 1.5px solid #1F1A12;
+    padding-left: 36px;
+  }
+  .at-stat-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+  }
+  .at-stat-row::before {
+    content: '';
+    position: absolute;
+    left: -42px;
+    top: 18px;
+    width: 18px;
+    height: 1.5px;
+    background: #1F1A12;
+  }
+  .at-stat-row .at-stat-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 4.2rem;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: #4D62BC;
+  }
+  .at-stat-row:nth-child(2) .at-stat-num { color: #6A7634; }
+  .at-stat-row:nth-child(3) .at-stat-num { color: #1F1A12; }
+  .at-stat-row .at-stat-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #1F1A12;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .at-stat-row .at-stat-sub {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.92rem;
+    color: #6E6753;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 1100px) {
+    .at-split-headline { font-size: 4rem; }
+    .at-stat-row .at-stat-num { font-size: 3rem; }
+    .slide-atlas-split .at-inner { grid-template-columns: 1fr; gap: 36px; }
+    .at-split-stats { border-left: none; border-top: 1.5px solid #1F1A12; padding-left: 0; padding-top: 28px; }
+    .at-stat-row::before { display: none; }
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Comparison layout (anti vs recommended)
+  ────────────────────────────────────────────── */
+  .slide-atlas-compare .at-inner {
+    grid-template-columns: 1.35fr 1fr;
+    align-items: start;
+    gap: 80px;
+  }
+  .at-cmp-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #6A7634;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: 600;
+  }
+  .at-cmp-eyebrow::before {
+    content: '';
+    width: 38px;
+    height: 1.5px;
+    background: #7E8B3F;
+  }
+  .at-cmp-eyebrow .num {
+    font-style: normal;
+    color: #4D62BC;
+    font-weight: 500;
+  }
+  .at-cmp-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 6.4rem;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: #1F1A12;
+    margin-bottom: 32px;
+  }
+  .at-cmp-headline em {
+    font-style: normal;
+    color: #4D62BC;
+    font-weight: 800;
+  }
+  .at-cmp-lede {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 400;
+    font-style: normal;
+    font-size: 1.5rem;
+    line-height: 1.45;
+    color: #2F2A20;
+    max-width: 600px;
+    margin-bottom: 36px;
+    font-weight: 400;
+    padding-left: 22px;
+    border-left: 2px solid rgba(31, 26, 18, 0.25);
+  }
+  .at-cmp-lede em {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-variation-settings: "opsz" 24, "SOFT" 0;
+    color: #6A7634;
+  }
+  .at-evidence {
+    border-left: 2px solid #1F1A12;
+    padding: 4px 0 4px 22px;
+    margin-bottom: 24px;
+  }
+  .at-evidence .at-ev-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6A7634;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .at-evidence .at-ev-label::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #D7E94B;
+    border: 1.5px solid #1F1A12;
+    border-radius: 50%;
+  }
+  .at-evidence .at-ev-body {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #1F1A12;
+  }
+  .at-evidence .at-ev-body strong {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-variation-settings: "opsz" 24, "SOFT" 0;
+    color: #4D62BC;
+    font-weight: 500;
+  }
+  .at-credit {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    color: #6E6753;
+    font-style: normal;
+  }
+  .at-credit strong {
+    font-style: normal;
+    color: #1F1A12;
+    font-weight: 600;
+  }
+
+  .at-compare-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .at-cmp-card {
+    border: 1.5px solid #1F1A12;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 24px 26px;
+    position: relative;
+    border-radius: 2px;
+  }
+  .at-cmp-card.bad { border-color: rgba(31, 26, 18, 0.4); background: rgba(110, 103, 83, 0.06); }
+  .at-cmp-card.good { border-color: #6A7634; background: rgba(126, 139, 63, 0.07); }
+  .at-cmp-card.good::after {
+    content: '';
+    position: absolute;
+    top: -7px; right: 22px;
+    width: 14px; height: 14px;
+    background: #D7E94B;
+    border: 1.5px solid #1F1A12;
+    border-radius: 50%;
+  }
+
+  .at-cmp-card .at-cmp-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .at-cmp-card.bad .at-cmp-label { color: #6E6753; }
+  .at-cmp-card.good .at-cmp-label { color: #6A7634; }
+  .at-cmp-card .at-cmp-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: #1F1A12;
+    margin-bottom: 4px;
+  }
+  .at-cmp-card .at-cmp-tag {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    color: #6E6753;
+    margin-bottom: 14px;
+  }
+  .at-cmp-card .at-cmp-code {
+    background: #1F1A12;
+    color: #EFE7D1;
+    border-radius: 4px;
+    padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+  .at-cmp-card.bad .at-cmp-code .keyword { color: #C7D2FE; }
+  .at-cmp-card.good .at-cmp-code .keyword { color: #D7E94B; }
+  .at-cmp-card .at-cmp-outcome {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #2F2A20;
+    margin-bottom: 12px;
+  }
+  .at-cmp-card .at-cmp-outcome strong { color: #1F1A12; }
+  .at-cmp-card .at-cmp-verdict {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-variation-settings: "opsz" 24, "SOFT" 0;
+    font-size: 0.98rem;
+    font-weight: 500;
+    padding-top: 10px;
+    border-top: 1px solid rgba(31, 26, 18, 0.12);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .at-cmp-card.bad .at-cmp-verdict { color: #6E6753; }
+  .at-cmp-card.good .at-cmp-verdict { color: #6A7634; }
+
+  @media (max-width: 1100px) {
+    .at-cmp-headline { font-size: 3rem; }
+    .slide-atlas-compare .at-inner { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Problem list layout (numbered issues)
+  ────────────────────────────────────────────── */
+  .slide-atlas-problems .at-inner {
+    grid-template-columns: 1.25fr 1fr;
+    align-items: start;
+    gap: 80px;
+  }
+  .at-problems-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .at-problem-item {
+    padding: 22px 0 22px 4px;
+    position: relative;
+  }
+  .at-problem-item .at-prob-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #6E6753;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: 500;
+  }
+  .at-problem-item .at-prob-meta .num {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-variation-settings: "opsz" 24, "SOFT" 0;
+    font-size: 1.05rem;
+    color: #4D62BC;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    font-weight: 500;
+  }
+  .at-problem-item .at-prob-meta .tag {
+    color: #6A7634;
+    font-weight: 600;
+  }
+  .at-problem-item h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 2.1rem;
+    line-height: 1;
+    letter-spacing: -0.032em;
+    margin-bottom: 12px;
+    color: #1F1A12;
+  }
+  .at-problem-item p {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: #2F2A20;
+    max-width: 460px;
+  }
+  .at-problem-item:hover .at-prob-meta .num { color: #1F1A12; }
+
+  @media (max-width: 1100px) {
+    .slide-atlas-problems .at-inner { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — AppClaw reveal layout
+  ────────────────────────────────────────────── */
+  .slide-atlas-reveal .at-inner {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+    gap: 72px;
+  }
+  .at-reveal-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 9rem;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    color: #4D62BC;
+    margin-bottom: 22px;
+  }
+  .at-reveal-tagline {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 400;
+    font-style: normal;
+    font-size: 1.7rem;
+    line-height: 1.3;
+    color: #1F1A12;
+    margin-bottom: 18px;
+    padding-left: 22px;
+    border-left: 2px solid #1F1A12;
+    max-width: 600px;
+  }
+  .at-reveal-body {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: #2F2A20;
+    max-width: 580px;
+    margin-bottom: 36px;
+  }
+  .at-pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 36px;
+    max-width: 640px;
+  }
+  .at-pillar {
+    padding-left: 18px;
+    border-left: 2px solid rgba(31, 26, 18, 0.18);
+  }
+  .at-pillar.olive { border-left-color: #7E8B3F; }
+  .at-pillar.cobalt { border-left-color: #4D62BC; }
+  .at-pillar.olive .at-pillar-label { color: #6A7634; }
+  .at-pillar.cobalt .at-pillar-label { color: #4D62BC; }
+  .at-pillar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #6E6753;
+  }
+  .at-pillar h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.1;
+    color: #1F1A12;
+    margin-bottom: 6px;
+    letter-spacing: -0.025em;
+  }
+  .at-pillar p {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #6E6753;
+  }
+
+  /* QR scan block */
+  .at-qr-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .at-qr-shell {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    padding: 22px;
+  }
+  .at-qr-shell .br-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+  }
+  .at-qr-shell .br-corner::before,
+  .at-qr-shell .br-corner::after {
+    content: '';
+    position: absolute;
+    background: #1F1A12;
+  }
+  .at-qr-shell .br-corner::before { height: 1.5px; width: 100%; }
+  .at-qr-shell .br-corner::after  { width: 1.5px; height: 100%; }
+  .at-qr-shell .br-corner.tl { top: 0; left: 0; }
+  .at-qr-shell .br-corner.tl::before { top: 0; left: 0; }
+  .at-qr-shell .br-corner.tl::after  { top: 0; left: 0; }
+  .at-qr-shell .br-corner.tr { top: 0; right: 0; }
+  .at-qr-shell .br-corner.tr::before { top: 0; right: 0; }
+  .at-qr-shell .br-corner.tr::after  { top: 0; right: 0; }
+  .at-qr-shell .br-corner.bl { bottom: 0; left: 0; }
+  .at-qr-shell .br-corner.bl::before { bottom: 0; left: 0; }
+  .at-qr-shell .br-corner.bl::after  { bottom: 0; left: 0; }
+  .at-qr-shell .br-corner.br { bottom: 0; right: 0; }
+  .at-qr-shell .br-corner.br::before { bottom: 0; right: 0; }
+  .at-qr-shell .br-corner.br::after  { bottom: 0; right: 0; }
+  .at-qr-shell img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #F4ECD8;
+  }
+  .at-scan-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #6E6753;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+  }
+  .at-scan-label::before,
+  .at-scan-label::after {
+    content: '';
+    width: 24px;
+    height: 1.5px;
+    background: rgba(31, 26, 18, 0.3);
+  }
+  .at-reveal-url {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 500;
+    font-style: normal;
+    font-size: 1.8rem;
+    color: #4D62BC;
+    letter-spacing: -0.02em;
+  }
+  .at-reveal-url::before {
+    content: '↗';
+    margin-right: 6px;
+    color: #6A7634;
+    font-style: normal;
+  }
+
+  @media (max-width: 1100px) {
+    .at-reveal-headline { font-size: 5.5rem; }
+    .slide-atlas-reveal .at-inner { grid-template-columns: 1fr; gap: 32px; }
+    .at-qr-shell { width: 220px; height: 220px; }
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — How It Works (loop + stack)
+  ────────────────────────────────────────────── */
+  .slide-atlas-how .at-inner {
+    grid-template-columns: 1fr 1.15fr;
+    align-items: start;
+    gap: 80px;
+  }
+  .at-loop {
+    margin-top: 36px;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    max-width: 600px;
+  }
+  .at-loop-step {
+    flex: 1;
+    padding: 18px 20px;
+    border: 1.5px solid #1F1A12;
+    background: rgba(255, 255, 255, 0.3);
+    text-align: center;
+    position: relative;
+  }
+  .at-loop-step.middle {
+    background: rgba(126, 139, 63, 0.12);
+    border-color: #6A7634;
+  }
+  .at-loop-step .step-icon {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .at-loop-step h4 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    color: #1F1A12;
+    margin-bottom: 4px;
+  }
+  .at-loop-step .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #6E6753;
+  }
+  .at-loop-arrow {
+    align-self: center;
+    padding: 0 10px;
+    color: #1F1A12;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .at-loop-cycle {
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #6A7634;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .at-loop-cycle::before {
+    content: '↻';
+    font-size: 1.2rem;
+    color: #4D62BC;
+  }
+
+  .at-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .at-stack-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #6A7634;
+    margin-bottom: 22px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .at-stack-label::before {
+    content: '';
+    width: 36px;
+    height: 1.5px;
+    background: #7E8B3F;
+  }
+  .at-stack-layer {
+    padding: 24px 28px;
+    border: 1.5px solid #1F1A12;
+    background: rgba(255, 255, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    border-radius: 2px;
+  }
+  .at-stack-layer.agent {
+    background: rgba(77, 98, 188, 0.1);
+    border-color: #4D62BC;
+    padding: 28px 32px;
+  }
+  .at-stack-layer.agent .name {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 500;
+    font-style: normal;
+    font-size: 1.8rem;
+    color: #4D62BC;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .at-stack-layer .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    padding: 7px 14px;
+    background: rgba(31, 26, 18, 0.05);
+    border: 1px solid rgba(31, 26, 18, 0.2);
+    border-radius: 3px;
+    color: #1F1A12;
+  }
+  .at-stack-layer .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #6E6753;
+    font-weight: 600;
+    padding-left: 14px;
+    border-left: 1px solid rgba(31, 26, 18, 0.18);
+    margin-left: 6px;
+  }
+  .at-stack-layer.agent .tag { color: #4D62BC; font-size: 0.78rem; }
+  .at-stack-connector {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #6E6753;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-weight: 600;
+  }
+  .at-stack-connector::before,
+  .at-stack-connector::after {
+    content: '';
+    width: 36px;
+    height: 1px;
+    background: rgba(31, 26, 18, 0.25);
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Principles table (slide 8)
+  ────────────────────────────────────────────── */
+  .slide-atlas-table {
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  .slide-atlas-table .at-table-inner {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1400px;
+    padding: 5vh 56px;
+  }
+  .at-table-header {
+    margin-bottom: 36px;
+  }
+  .at-principles-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+  }
+  .at-principles-table thead th {
+    text-align: left;
+    padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #6A7634;
+    border-bottom: 1.5px solid #1F1A12;
+  }
+  .at-principles-table tbody td {
+    padding: 22px 18px;
+    border-bottom: 1px solid rgba(31, 26, 18, 0.12);
+    vertical-align: top;
+  }
+  .at-principles-table tbody tr:last-child td { border-bottom: none; }
+  .at-principles-table .at-pri-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4D62BC;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+  .at-principles-table .at-pri-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #6E6753;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .at-principles-table .at-pri-desc {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: #1F1A12;
+    padding-top: 6px;
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Demo Time
+  ────────────────────────────────────────────── */
+  .slide-atlas-demo .at-inner {
+    grid-template-columns: 1.3fr 1fr;
+    align-items: center;
+    gap: 72px;
+  }
+  .at-demo-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 8rem;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    color: #4D62BC;
+    margin-bottom: 22px;
+  }
+  .at-demo-tagline {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 500;
+    font-style: normal;
+    font-size: 1.6rem;
+    color: #1F1A12;
+    margin-bottom: 32px;
+    padding-left: 22px;
+    border-left: 2px solid #1F1A12;
+  }
+  .at-prompt-block {
+    background: #1F1A12;
+    color: #EFE7D1;
+    border-radius: 4px;
+    padding: 22px 26px;
+    border-left: 4px solid #D7E94B;
+    margin-bottom: 28px;
+    max-width: 580px;
+  }
+  .at-prompt-block .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #D7E94B;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .at-prompt-block .prompt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: #EFE7D1;
+  }
+  .at-github-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 26px;
+    background: #1F1A12;
+    color: #EFE7D1;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 1.5px solid #1F1A12;
+    transition: all 0.2s ease;
+  }
+  .at-github-cta:hover {
+    background: #EFE7D1;
+    color: #1F1A12;
+  }
+  .at-github-cta::after {
+    content: '↗';
+    color: #D7E94B;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+  }
+
+  .at-demo-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .at-demo-icon-wrap {
+    position: relative;
+    display: inline-block;
+    width: 140px;
+    height: 140px;
+  }
+  .at-demo-icon-wrap .ic {
+    font-size: 5rem;
+    line-height: 140px;
+    display: block;
+    text-align: center;
+    animation: atDemoPulse 2s ease-in-out infinite;
+  }
+  .at-demo-icon-wrap .ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 100px; height: 100px;
+    margin: -50px 0 0 -50px;
+    border-radius: 50%;
+    border: 2px solid #4D62BC;
+    opacity: 0;
+    animation: atDemoRing 2s ease-out infinite;
+  }
+  .at-demo-icon-wrap .ring:nth-child(2) { animation-delay: 0.6s; }
+  .at-demo-icon-wrap .ring:nth-child(3) { animation-delay: 1.2s; }
+  @keyframes atDemoPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  @keyframes atDemoRing { 0% { transform: scale(0.7); opacity: 1; } 100% { transform: scale(2.4); opacity: 0; } }
+
+  .at-demo-choice {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    border: 1.5px solid #1F1A12;
+    background: rgba(255, 255, 255, 0.35);
+    width: 100%;
+    max-width: 320px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .at-demo-choice:hover { background: rgba(77, 98, 188, 0.08); border-color: #4D62BC; }
+  .at-demo-choice .ic { font-size: 1.4rem; }
+  .at-demo-choice .lbl-stack {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    text-align: left;
+  }
+  .at-demo-choice .lbl-stack .main {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 500;
+    font-style: normal;
+    font-size: 1.15rem;
+    color: #1F1A12;
+  }
+  .at-demo-choice .lbl-stack .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6E6753;
+    margin-top: 4px;
+  }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Get Started (numbered steps)
+  ────────────────────────────────────────────── */
+  .slide-atlas-steps .at-inner {
+    grid-template-columns: 1.25fr 1fr;
+    align-items: start;
+    gap: 80px;
+  }
+  .at-step-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .at-step {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 18px;
+    align-items: center;
+    padding: 16px 18px;
+    border: 1.5px solid rgba(31, 26, 18, 0.15);
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
+  .at-step.olive { border-left: 3px solid #7E8B3F; }
+  .at-step.cobalt { border-left: 3px solid #4D62BC; }
+  .at-step-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 2.4rem;
+    color: #4D62BC;
+    line-height: 1;
+    text-align: center;
+    letter-spacing: -0.04em;
+  }
+  .at-step.olive .at-step-num { color: #6A7634; }
+  .at-step h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #1F1A12;
+    margin-bottom: 6px;
+    letter-spacing: -0.025em;
+  }
+  .at-step .step-code {
+    background: #1F1A12;
+    color: #EFE7D1;
+    border-radius: 3px;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .at-step .step-code .keyword { color: #D7E94B; }
+  .at-step .step-code .comment { color: #A89E84; }
+  .at-step .step-code .string { color: #C7D2FE; }
+
+  /* ──────────────────────────────────────────────
+     ATLAS — Thank you (final)
+  ────────────────────────────────────────────── */
+  .slide-atlas-thanks {
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  .slide-atlas-thanks .at-inner {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1200px;
+    padding: 5vh 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .at-thanks-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 6rem;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: #4D62BC;
+    margin-bottom: 12px;
+  }
+  .at-thanks-tagline {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 400;
+    font-style: normal;
+    font-size: 1.3rem;
+    color: #1F1A12;
+    margin-bottom: 40px;
+  }
+  .at-thanks-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 36px;
+  }
+  .at-thanks-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .at-thanks-card .ph-frame {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    padding: 16px;
+  }
+  .at-thanks-card .ph-frame .br-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+  }
+  .at-thanks-card .ph-frame .br-corner::before,
+  .at-thanks-card .ph-frame .br-corner::after {
+    content: '';
+    position: absolute;
+    background: #1F1A12;
+  }
+  .at-thanks-card .ph-frame .br-corner::before { height: 1.5px; width: 100%; }
+  .at-thanks-card .ph-frame .br-corner::after  { width: 1.5px; height: 100%; }
+  .at-thanks-card .ph-frame .br-corner.tl { top: 0; left: 0; }
+  .at-thanks-card .ph-frame .br-corner.tl::before { top: 0; left: 0; }
+  .at-thanks-card .ph-frame .br-corner.tl::after  { top: 0; left: 0; }
+  .at-thanks-card .ph-frame .br-corner.tr { top: 0; right: 0; }
+  .at-thanks-card .ph-frame .br-corner.tr::before { top: 0; right: 0; }
+  .at-thanks-card .ph-frame .br-corner.tr::after  { top: 0; right: 0; }
+  .at-thanks-card .ph-frame .br-corner.bl { bottom: 0; left: 0; }
+  .at-thanks-card .ph-frame .br-corner.bl::before { bottom: 0; left: 0; }
+  .at-thanks-card .ph-frame .br-corner.bl::after  { bottom: 0; left: 0; }
+  .at-thanks-card .ph-frame .br-corner.br { bottom: 0; right: 0; }
+  .at-thanks-card .ph-frame .br-corner.br::before { bottom: 0; right: 0; }
+  .at-thanks-card .ph-frame .br-corner.br::after  { bottom: 0; right: 0; }
+  .at-thanks-card .ph-frame img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid #C7D2FE;
+    object-fit: cover;
+    background: #F4ECD8;
+  }
+  .at-thanks-card .at-thanks-name {
+    font-family: 'Inter', sans-serif;
+    font-variation-settings: "opsz" 36, "SOFT" 0, "wght" 500;
+    font-style: normal;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #1F1A12;
+    margin-top: 6px;
+    letter-spacing: -0.01em;
+  }
+  .at-thanks-card .role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6E6753;
+    margin-bottom: 4px;
+  }
+  .at-thanks-card .at-thanks-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    color: #4D62BC;
+  }
+  .at-thanks-url {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #1F1A12;
+    color: #D7E94B;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    border-radius: 2px;
+  }
+  .at-thanks-url::before { content: '↗ '; color: #EFE7D1; }
+
+  @media (max-width: 1100px) {
+    .slide-atlas-how .at-inner,
+    .slide-atlas-demo .at-inner,
+    .slide-atlas-steps .at-inner { grid-template-columns: 1fr; gap: 32px; }
+    .at-demo-headline { font-size: 5rem; }
+    .at-thanks-headline { font-size: 3.4rem; }
+    .at-thanks-row { grid-template-columns: 1fr; gap: 32px; }
+    .at-loop { max-width: 100%; }
+  }
+
+  /* ── Editorial / Keynote redesign (prototype: Appium MCP slide) ── */
+  .slide-editorial {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 6vw;
+    padding: 8vh 9vw;
+    justify-content: stretch;
+    align-items: center;
+    text-align: left;
+    flex-direction: row;
+  }
+  .slide-editorial::before { display: none; }
+  .slide-editorial .editorial-left { padding-left: 0; }
+  .slide-editorial .editorial-right { padding-left: 12px; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--highlight);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::after {
+    content: '';
+    width: 50px;
+    height: 1.5px;
+    background: var(--highlight);
+    opacity: 0.5;
+  }
+  .editorial-logo {
+    height: 92px;
+    margin-bottom: 24px;
+    opacity: 0.95;
+    display: block;
+  }
+  .editorial-headline {
+    font-size: 6.5rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -3.5px;
+    margin-bottom: 32px;
+  }
+  .editorial-lede {
+    font-size: 1.3rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    max-width: 580px;
+    margin-bottom: 18px;
+    font-weight: 400;
+  }
+  .editorial-lede strong { color: var(--text-primary); font-weight: 700; }
+  .editorial-platform-pills {
+    margin-top: 32px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .editorial-stat-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .stat-big {
+    border-left: 3px solid rgba(222,115,86,0.3);
+    padding-left: 24px;
+    transition: border-color 0.3s ease;
+  }
+  .stat-big:hover { border-left-color: var(--highlight); }
+  .stat-big .num {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: var(--highlight);
+    line-height: 0.95;
+    letter-spacing: -2.5px;
+    font-family: 'Inter', sans-serif;
+  }
+  .stat-big .lbl {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  .stat-big .sub {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+  @media (max-width: 1024px) {
+    .slide-editorial { grid-template-columns: 1fr; padding: 5vh 6vw; gap: 32px; }
+    .editorial-headline { font-size: 4rem; }
+    .stat-big .num { font-size: 3rem; }
+  }
+
+  /* ── Editorial: Hero slides (single column, massive headline) ── */
+  .slide-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    padding: 8vh 9vw;
+    gap: 0;
+  }
+  .slide-hero.center-text { align-items: center; text-align: center; }
+  .slide-hero::before { display: none; }
+  .slide-hero .hero-inner { padding-left: 0; max-width: 1100px; width: 100%; }
+  .slide-hero.center-text .hero-inner { padding-left: 0; }
+  .hero-headline {
+    font-size: 7.5rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -4px;
+    margin-bottom: 24px;
+  }
+  .hero-headline.medium { font-size: 5.5rem; letter-spacing: -3px; }
+  .hero-sub {
+    font-size: 1.6rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    max-width: 800px;
+    margin-bottom: 28px;
+    font-weight: 400;
+  }
+  .hero-body {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 700px;
+  }
+
+  /* ── Editorial: Stacked issue/feature list (vertical, orange accent) ── */
+  .editorial-list { display: flex; flex-direction: column; gap: 26px; }
+  .editorial-list-item {
+    border-left: 3px solid rgba(222,115,86,0.3);
+    padding: 4px 0 4px 24px;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+  .editorial-list-item:hover { border-left-color: var(--highlight); transform: translateX(4px); }
+  .editorial-list-item .item-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--highlight);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .editorial-list-item h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+  .editorial-list-item p {
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+
+  /* ── Editorial: Comparison cards (Anti-pattern vs Recommended) ── */
+  .editorial-compare { display: flex; flex-direction: column; gap: 22px; }
+  .editorial-compare-card {
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 14px;
+    padding: 22px 24px;
+    border-left: 4px solid var(--text-muted);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .editorial-compare-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  .editorial-compare-card.good { border-left-color: var(--highlight); }
+  .editorial-compare-card .ec-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .editorial-compare-card.good .ec-label { color: var(--highlight); }
+  .editorial-compare-card h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .editorial-compare-card .ec-tagline { font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 14px; }
+  .editorial-compare-card .ec-code {
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #e0e0e0;
+    margin-bottom: 14px;
+  }
+  .editorial-compare-card .ec-code .keyword { color: var(--highlight); }
+  .editorial-compare-card .ec-outcome { font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 12px; }
+  .editorial-compare-card .ec-verdict { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); }
+  .editorial-compare-card.good .ec-verdict { color: var(--highlight); }
+
+  /* ── Editorial: Speaker 2-up cards ── */
+  .editorial-speakers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 8px;
+  }
+  .editorial-speaker {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding-left: 28px;
+    border-left: 3px solid rgba(222,115,86,0.3);
+  }
+  .editorial-speaker img.headshot {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    border: 4px solid rgba(222,115,86,0.45);
+    object-fit: cover;
+    box-shadow: 0 8px 40px rgba(222,115,86,0.25);
+    margin-bottom: 24px;
+  }
+  .editorial-speaker h2 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--highlight);
+    margin-bottom: 4px;
+  }
+  .editorial-speaker .role {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .editorial-speaker .author {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+  .editorial-speaker .domain { margin-top: 14px; }
+  .editorial-speaker img.qr {
+    width: 180px;
+    height: 180px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border: 2px solid rgba(0,0,0,0.06);
+    margin-top: 18px;
+  }
+
+  /* Compact variant for the Speaker Intro slide (no overflow) */
+  .slide-speakers::before { display: none; }
+  .slide-speakers { align-items: center; justify-content: center; }
+  .slide-speakers .hero-inner {
+    padding-left: 0;
+    max-width: 1300px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .slide-speakers .speakers-header { width: 100%; }
+  .slide-speakers .editorial-speakers.compact {
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+  }
+  .speakers-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .editorial-speakers.compact { gap: 56px; margin-top: 0; }
+  .editorial-speakers.compact .editorial-speaker {
+    padding-left: 0;
+    border-left: none;
+  }
+  .editorial-speakers.compact .speaker-top {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 22px;
+  }
+  .editorial-speakers.compact .headshot {
+    width: 240px;
+    height: 240px;
+    margin-bottom: 0;
+  }
+  .editorial-speakers.compact .qr {
+    width: 190px;
+    height: 190px;
+    margin-top: 0;
+  }
+  .editorial-speakers.compact h2 { font-size: 2.3rem; }
+  .editorial-speakers.compact .role { font-size: 1.05rem; margin-top: 4px; }
+  .editorial-speakers.compact .author { font-size: 0.95rem; }
+  .editorial-speakers.compact .domain { margin-top: 14px; }
+
+  /* ── Editorial: Wider, breathable table for 7 Principles ── */
+  .editorial-table {
+    width: 100%;
+    max-width: 1300px;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  .editorial-table thead tr { background: var(--highlight); color: #fff; }
+  .editorial-table th {
+    padding: 18px 22px;
+    text-align: left;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .editorial-table td { padding: 18px 22px; }
+  .editorial-table tbody tr { border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .editorial-table tbody tr:nth-child(even) { background: rgba(222,115,86,0.035); }
+  .editorial-table .principle { font-weight: 700; color: var(--text-primary); font-size: 1.05rem; }
+  .editorial-table .impact { color: var(--highlight); font-weight: 700; font-size: 1.05rem; text-align: center; letter-spacing: -0.3px; white-space: nowrap; }
+  .editorial-table .center { text-align: center; color: var(--text-secondary); }
+  .editorial-table.compact { font-size: 0.95rem; max-width: 1400px; }
+  .editorial-table.compact th { padding: 12px 18px; }
+  .editorial-table.compact td { padding: 11px 18px; }
+  .editorial-table.compact .principle { font-size: 1rem; }
+  .editorial-table.compact .impact { font-size: 1rem; }
+  .editorial-table.principles { font-size: 1.3rem; max-width: 1400px; margin-top: 32px; }
+  .editorial-table.principles th { padding: 22px 28px; font-size: 0.9rem; letter-spacing: 2.5px; }
+  .editorial-table.principles td { padding: 22px 28px; }
+  .editorial-table.principles .principle { font-size: 1.35rem; font-weight: 700; }
+
+  /* Principles slide layout */
+  .slide-principles .hero-inner { max-width: 1400px; }
+  .principles-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Editorial: Numbered install steps ── */
+  .editorial-steps { display: flex; flex-direction: column; gap: 18px; }
+  .editorial-step {
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-left: 4px solid var(--highlight);
+    border-radius: 12px;
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 16px;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .editorial-step .step-num {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--highlight);
+    line-height: 1;
+    text-align: center;
+  }
+  .editorial-step h3 { font-size: 1.05rem; margin-bottom: 6px; font-weight: 700; color: var(--text-primary); }
+  .editorial-step .step-code {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .editorial-step .step-code .keyword { color: var(--highlight); }
+  .editorial-step .step-code .comment { color: #888; }
+  .editorial-step .step-code .string { color: #c0c0c0; }
+
+  /* ── Bigger architecture diagram for How It Works ── */
+  .arch-flow.big { max-width: 720px; }
+  .arch-flow.big .arch-layer { font-size: 1.05rem; padding: 22px 32px; }
+  .arch-flow.big .arch-layer.agent { font-size: 1.2rem; padding: 26px 36px; }
+  .arch-flow.big .arch-layer .chip { padding: 8px 16px; font-size: 0.9rem; }
+  .loop-diagram.big .loop-step { padding: 22px 32px; font-size: 1rem; min-width: 170px; }
+
+  /* ── Title slide refinements ── */
+  .title-slide-heading.big { font-size: 3.6rem; line-height: 1.18; letter-spacing: -1.5px; max-width: 1100px; }
+
+  /* ── Demo slide refinements ── */
+  .demo-icon.big { font-size: 7rem; }
+  .demo-typing.big { font-size: 1.7rem; }
+
+  @media (max-width: 1024px) {
+    .hero-headline { font-size: 4rem; }
+    .editorial-speakers { grid-template-columns: 1fr; gap: 32px; }
+    .editorial-speaker img.headshot { width: 220px; height: 220px; }
+    .editorial-table { font-size: 0.88rem; }
+  }
   kbd { background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; padding: 2px 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-primary); }
 </style>
 </head>
@@ -222,433 +2298,607 @@
 
 <div class="deck" id="deck">
 
-  <!-- SLIDE 1 — TITLE -->
-  <section class="slide centered slide-title-only">
-    <h1 class="title-slide-heading">Building an Autonomous Mobile Agent with LLMs and the Model Context Protocol</h1>
-  </section>
+  <!-- SLIDE 1 — TITLE (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-title">
+    <div class="at-bg-illustration"></div>
 
-  <!-- SLIDE 2 — SPEAKER INTRO -->
-  <section class="slide centered">
-    <div style="display: flex; align-items: flex-start; justify-content: center; gap: 80px; flex-wrap: wrap;">
-      <!-- Sai Krishna -->
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/public/assets/sai-hero.webp" alt="Sai Krishna" style="width: 300px; height: 300px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 20px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
-        <h2 style="font-size: 2.6rem; margin: 0;"><span class="gradient-text">Sai Krishna</span></h2>
-        <div class="divider"></div>
-        <div style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 500;">Core Maintainer — Appium</div>
-        <div style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">Author — <em>Appium Insights</em> (Apress)</div>
-        <div style="margin-top: 10px;"><span class="pill">saikrishna.tech</span></div>
-        <img src="qr-code.png" alt="QR Code Sai Krishna" style="width: 200px; height: 200px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 2px solid rgba(0,0,0,0.06); margin-top: 16px;">
-      </div>
-      <!-- Srinivasan Sekar -->
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <img src="https://srini.codes/assets/ProfilePic-ad434bf7.webp" alt="Srinivasan Sekar" style="width: 300px; height: 300px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 20px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
-        <h2 style="font-size: 2.6rem; margin: 0;"><span class="gradient-text">Srinivasan Sekar</span></h2>
-        <div class="divider"></div>
-        <div style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 500;">Core Maintainer — Appium &amp; Appium MCP</div>
-        <div style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">Author — <em>MCP Standard</em></div>
-        <div style="margin-top: 10px;"><span class="pill">srini.codes</span></div>
-        <img src="QR-sekar.png" alt="QR Code Srinivasan Sekar" style="width: 200px; height: 200px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 2px solid rgba(0,0,0,0.06); margin-top: 16px;">
-      </div>
-    </div>
-    <div style="margin-top: 20px; display: flex; align-items: center; gap: 32px;">
-      <img src="https://assets.testmuai.com/resources/images/logos/logo.svg" alt="TestMuAI" style="height: 40px; opacity: 0.85;">
-      <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" style="height: 40px; opacity: 0.85; filter: grayscale(100%) brightness(0.7);">
+    <!-- Orbital decoration -->
+    <svg class="atlas-orb" style="top: -10%; left: -8%;" width="780" height="780" viewBox="0 0 780 780" fill="none">
+      <ellipse cx="390" cy="390" rx="370" ry="270" stroke="#1F1A12" stroke-width="0.7" opacity="0.14" transform="rotate(-18 390 390)" />
+    </svg>
+    <svg class="atlas-orb" style="top: -4%; right: -12%;" width="900" height="900" viewBox="0 0 900 900" fill="none">
+      <ellipse cx="450" cy="450" rx="430" ry="300" stroke="#7E8B3F" stroke-width="0.9" opacity="0.32" transform="rotate(24 450 450)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -18%; left: 5%;" width="680" height="680" viewBox="0 0 680 680" fill="none">
+      <ellipse cx="340" cy="340" rx="320" ry="210" stroke="#4D62BC" stroke-width="0.8" opacity="0.18" transform="rotate(-8 340 340)" />
+    </svg>
+
+    <!-- Chartreuse focal dots -->
+    <div class="atlas-dot" style="top: 22%; right: 16%; width: 20px; height: 20px;"></div>
+    <div class="atlas-dot" style="bottom: 26%; left: 14%; width: 12px; height: 12px;"></div>
+
+    <div class="at-inner">
+      <div class="at-eyebrow">A Talk by Sai &amp; Srinivasan</div>
+      <h1 class="at-headline">
+        Building an <em>Autonomous</em> Mobile Agent with LLMs and the <em>Model Context Protocol</em>
+      </h1>
     </div>
   </section>
 
-  <!-- SLIDE 3 — APPIUM MCP -->
-  <section class="slide centered">
-    <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" style="height: 80px; margin-bottom: 18px; opacity: 0.92;">
-    <h1 style="font-size: 3.4rem; margin-bottom: 6px;"><span class="gradient-text">MCP</span></h1>
-    <div class="divider"></div>
-    <p class="subtitle" style="font-size: 1.05rem; margin-top: 8px; max-width: 760px;">
-      Appium is the open-source standard for <strong>cross-platform automation</strong> — one API for Android, iOS, Windows, macOS, and the web. Battle-tested for over a decade by teams shipping mobile at scale.
-    </p>
-    <p class="subtitle" style="font-size: 1rem; margin-top: 16px; max-width: 760px; color: var(--text-secondary);">
-      <strong>Appium MCP</strong> exposes that engine as a Model Context Protocol server — <em>15 structured tools</em> that let any LLM perceive screens, locate elements, and drive real devices natively.
-    </p>
+  <!-- SLIDE 2 — SPEAKERS (Tech treatment) -->
+  <section class="slide slide-tech">
+    <div class="tech-stage">
+      <div class="tech-card">
+        <div class="tech-photo-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-photo" src="sai_gray_profile.png" alt="Sai Krishna">
+        </div>
+        <div class="tech-handle">@SAIKRISV</div>
+        <h2 class="tech-name">Sai Krishna</h2>
+        <div class="tech-role">Core Maintainer &middot; Appium</div>
+        <div class="tech-author">Author &mdash; Appium Insights (Apress)</div>
+        <div class="tech-qr-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-qr" src="qr-code.png" alt="QR Code Sai Krishna">
+        </div>
+        <div class="tech-domain">saikrishna.tech</div>
+      </div>
 
-    <div class="stats-row" style="margin-top: 36px;">
-      <div class="stat">
-        <div class="number gradient-text">2M+</div>
-        <div class="label">Monthly Downloads</div>
-      </div>
-      <div class="stat">
-        <div class="number gradient-text">10+ yrs</div>
-        <div class="label">Battle Tested</div>
-      </div>
-      <div class="stat">
-        <div class="number gradient-text">15</div>
-        <div class="label">MCP Tools</div>
+      <div class="tech-card">
+        <div class="tech-photo-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-photo" src="srini_gray_profile.png" alt="Srinivasan Sekar">
+        </div>
+        <div class="tech-handle">@SRISEKAR</div>
+        <h2 class="tech-name">Srinivasan Sekar</h2>
+        <div class="tech-role">Core Maintainer &middot; Appium &amp; Appium MCP</div>
+        <div class="tech-author">Author &mdash; The MCP Standard</div>
+        <div class="tech-qr-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-qr" src="QR-sekar.png" alt="QR Code Srinivasan Sekar">
+        </div>
+        <div class="tech-domain">srini.codes</div>
       </div>
     </div>
 
-    <div style="margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-      <span class="pill">Android</span>
-      <span class="pill">iOS</span>
-      <span class="pill">Windows</span>
-      <span class="pill">macOS</span>
-      <span class="pill">Web</span>
+    <div class="tech-footer">
+      <div class="tech-progress">
+        <div class="bar active" style="height: 22px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 10px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 12px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 8px;"></div>
+        <div class="bar" style="height: 14px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 10px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 8px;"></div>
+      </div>
+      <div class="tech-next">NEXT&nbsp;&nbsp;&rarr;</div>
     </div>
   </section>
 
-  <!-- SLIDE 4 — TOOLS FOR AGENTS ARE NOT APIs -->
-  <section class="slide centered">
-    <h2>Tools for agents are <span class="gradient-text">not APIs</span></h2>
-    <div class="divider"></div>
-    <p style="max-width: 760px; margin-bottom: 24px; font-size: 1rem; text-align: center;">
-      When you design for the new consumer, the <em>unit of composition</em> changes.
-    </p>
+  <!-- SLIDE 3 — APPIUM MCP (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-split">
 
-    <div class="card-grid cols-2" style="max-width: 1050px; align-items: stretch;">
-      <!-- Anti-pattern: Thin API wrappers -->
-      <div class="card" style="border-left: 4px solid var(--text-muted); display: flex; flex-direction: column; gap: 14px;">
-        <div>
-          <h3 style="color: var(--text-muted); font-size: 1.05rem;">Thin API wrappers</h3>
-          <p style="font-size: 0.85rem; margin-top: 4px;">Each endpoint becomes a tool.</p>
-        </div>
-        <div class="code-block" style="padding: 14px 18px; font-size: 0.78rem; line-height: 1.7;">
-<span class="keyword">get_user</span>(id)<br><span class="keyword">list_orders</span>(uid)<br><span class="keyword">get_shipment</span>(oid)
-        </div>
-        <p style="font-size: 0.85rem;">The agent has to be the systems integrator. <strong>5.3&times; more invocations.</strong></p>
-        <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-top: auto;">
-          &#x2717; Falls off the accuracy cliff
-        </div>
-      </div>
+    <!-- Orbital decoration -->
+    <svg class="atlas-orb" style="top: 6%; left: 18%;" width="780" height="780" viewBox="0 0 780 780" fill="none">
+      <ellipse cx="390" cy="390" rx="370" ry="240" stroke="#7E8B3F" stroke-width="0.9" opacity="0.28" transform="rotate(-14 390 390)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -10%; right: -6%;" width="880" height="880" viewBox="0 0 880 880" fill="none">
+      <ellipse cx="440" cy="440" rx="420" ry="280" stroke="#4D62BC" stroke-width="0.8" opacity="0.18" transform="rotate(22 440 440)" />
+    </svg>
 
-      <!-- Recommended: Task / intent tools -->
-      <div class="card" style="border-left: 4px solid var(--highlight); display: flex; flex-direction: column; gap: 14px;">
-        <div>
-          <h3 style="color: var(--highlight); font-size: 1.05rem;">Task / intent tools</h3>
-          <p style="font-size: 0.85rem; margin-top: 4px;">Each tool wraps a goal.</p>
-        </div>
-        <div class="code-block" style="padding: 14px 18px; font-size: 0.78rem; line-height: 1.7;">
-<span class="keyword">track_order</span>(email)<br>&nbsp;&nbsp;&rarr; handles lookup,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status, formatting
-        </div>
-        <p style="font-size: 0.85rem;">The agent reasons about goals. Composition logic lives in the <em>tool</em>, not the agent.</p>
-        <div style="font-size: 0.85rem; color: var(--highlight); font-weight: 600; margin-top: auto;">
-          &#x2713; Keeps agents in the &gt;85% regime
+    <!-- Chartreuse focal dots -->
+    <div class="atlas-dot" style="top: 24%; right: 16%; width: 14px; height: 14px;"></div>
+    <div class="atlas-dot" style="bottom: 22%; left: 44%; width: 10px; height: 10px;"></div>
+
+    <div class="at-inner">
+      <div>
+        <img src="https://appium.io/docs/en/latest/assets/images/appium-logo-horiz.png" alt="Appium" class="at-split-logo">
+        <h1 class="at-split-headline">MCP</h1>
+        <p class="at-split-lede">
+          Appium is the open-source standard for <strong>cross-platform automation</strong> — one API for Android, iOS, Windows, macOS, and the web. Battle-tested for over a decade.
+        </p>
+        <p class="at-split-lede">
+          <strong>Appium MCP</strong> exposes that engine as a Model Context Protocol server — <em>15 structured tools</em> that let any LLM perceive screens, locate elements, and drive real devices natively.
+        </p>
+        <div class="at-split-pills">
+          <span class="at-pill">Android</span>
+          <span class="at-pill">iOS</span>
+          <span class="at-pill">Windows</span>
+          <span class="at-pill">macOS</span>
+          <span class="at-pill">Web</span>
         </div>
       </div>
-    </div>
 
-    <div style="margin-top: 22px; font-size: 0.82rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; text-align: center; max-width: 900px;">
-      GitHub: 40 &rarr; 13 tools, +2&ndash;5pp benchmarks &nbsp;&middot;&nbsp; Block: 200+ endpoints &rarr; 3 layered tools, &ndash;400ms latency
-    </div>
-    <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted); text-align: center; font-style: italic;">
-      Credit: <span style="color: var(--text-secondary); font-weight: 600; font-style: normal;">Sam Partee</span>, Chief Technology Officer, Arcade &middot; MCP Dev Summit Bengaluru
-    </div>
-  </section>
-
-  <!-- SLIDE 4 — THE PROBLEM -->
-  <section class="slide centered">
-    <h2>Mobile QA Today:<br><span class="gradient-text-2">Slow, Brittle, Expensive</span></h2>
-    <div class="divider"></div>
-    <div class="card-grid cols-3" style="margin-top: 24px;">
-      <div class="card" style="text-align:center;">
-        <span class="icon">&#x1F4DD;</span>
-        <h3>Scripting Overhead</h3>
-        <p>Writing and maintaining automation scripts takes weeks. Element locators break with every UI change.</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <span class="icon">&#x1F9EA;</span>
-        <h3>Flaky Tests</h3>
-        <p>Hard-coded coordinates and selectors crumble when layouts change. Constant maintenance drains the team.</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <span class="icon">&#x23F3;</span>
-        <h3>Manual Effort</h3>
-        <p>Exploratory testing still relies on humans tapping through every screen, every flow, every edge case.</p>
-      </div>
-    </div>
-    <p style="margin-top: 32px; font-size: 1.1rem; color: var(--highlight); font-weight: 500;">
-      What if you could just <em>describe</em> what to test?
-    </p>
-  </section>
-
-  <!-- SLIDE 3 — APPCLAW REVEAL -->
-  <section class="slide centered" style="justify-content: center;">
-    <h1 style="font-size: 4rem; margin-bottom: 8px;"><span class="gradient-text">AppClaw</span></h1>
-    <p class="subtitle" style="font-size: 1.4rem; margin-bottom: 24px;">Your AI-Powered Mobile QA Agent</p>
-    <div class="divider"></div>
-    <p class="subtitle" style="font-size: 1rem; margin-top: 12px;">
-      Describe your goal in plain English. AppClaw reads the screen, plans actions, and executes them — autonomously.
-    </p>
-    <div class="card-grid cols-4" style="max-width: 900px; margin-top: 32px;">
-      <div class="card" style="text-align:center; padding: 16px;">
-        <span class="icon" style="font-size: 1.4rem;">&#x1F9E0;</span>
-        <h3 style="font-size: 0.9rem;">Agentic Brain</h3>
-        <p style="font-size: 0.78rem;">Perceive-reason-act loop powered by LLM</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 16px;">
-        <span class="icon" style="font-size: 1.4rem;">&#x1F4F1;</span>
-        <h3 style="font-size: 0.9rem;">Real Devices</h3>
-        <p style="font-size: 0.78rem;">Android, iOS, emulators, cloud farms</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 16px;">
-        <span class="icon" style="font-size: 1.4rem;">&#x1F50C;</span>
-        <h3 style="font-size: 0.9rem;">MCP + Appium</h3>
-        <p style="font-size: 0.78rem;">15 tools for structured device control</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 16px;">
-        <span class="icon" style="font-size: 1.4rem;">&#x1F310;</span>
-        <h3 style="font-size: 0.9rem;">Any LLM</h3>
-        <p style="font-size: 0.78rem;">Claude, GPT-4, Gemini, Groq, Ollama</p>
-      </div>
-    </div>
-    <div style="margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-      <img src="appclaw_qr.jpg" alt="AppClaw QR Code" style="width: 220px; height: 220px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); border: 2px solid rgba(0,0,0,0.06);">
-      <div style="font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5px;">scan &middot; <span style="color: var(--highlight); font-weight: 600;">appclaw.in</span></div>
-    </div>
-  </section>
-
-  <!-- SLIDE 4 — HOW IT WORKS -->
-  <section class="slide centered">
-    <h2>How It <span class="gradient-text">Works</span></h2>
-    <div class="divider"></div>
-    <div class="loop-diagram" style="margin-bottom: 24px;">
-      <div class="loop-step">&#x1F441; Perceive<br><span style="font-size: 0.75rem; font-weight: 400; color: var(--text-muted);">Read live screen</span></div>
-      <div class="loop-arrow">&#x27A1;</div>
-      <div class="loop-step highlight">&#x1F9E0; Reason<br><span style="font-size: 0.75rem; font-weight: 400; color: var(--text-muted);">LLM decides action</span></div>
-      <div class="loop-arrow">&#x27A1;</div>
-      <div class="loop-step">&#x26A1; Act<br><span style="font-size: 0.75rem; font-weight: 400; color: var(--text-muted);">Execute on device</span></div>
-      <div class="loop-arrow">&#x1F504;</div>
-    </div>
-    <div class="arch-flow">
-      <div class="arch-layer llm">
-        <span class="chip">Claude</span><span class="chip">GPT-4</span><span class="chip">Gemini</span><span class="chip">Groq</span><span class="chip">Ollama</span>
-        <span class="tag">LLM</span>
-      </div>
-      <div class="arch-connector"><span class="arch-connector-label">API</span></div>
-      <div class="arch-layer agent"><span>AppClaw</span><span class="tag">Agent</span></div>
-      <div class="arch-connector"><span class="arch-connector-label">MCP</span></div>
-      <div class="arch-layer mcp"><span class="chip">appium-mcp</span><span class="tag">15 Tools</span></div>
-      <div class="arch-connector"><span class="arch-connector-label">WebDriver</span></div>
-      <div class="arch-layer device"><span class="chip">Android</span><span class="chip">iOS</span><span class="chip">Cloud</span><span class="tag">Devices</span></div>
-    </div>
-  </section>
-
-  <!-- SLIDE 5 — KEY FEATURES -->
-  <section class="slide centered">
-    <h2>Powerful <span class="gradient-text">Features</span></h2>
-    <div class="divider"></div>
-    <div class="card-grid cols-3" style="max-width: 1000px;">
-      <div class="card" style="text-align:center; padding: 18px;">
-        <span class="icon" style="font-size: 1.5rem;">&#x1F446;</span>
-        <h3>16 Agent Actions</h3>
-        <p>tap, type, swipe, scroll, find_and_tap, smart_type, screenshot, submit_message &amp; more</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 18px;">
-        <span class="icon" style="font-size: 1.5rem;">&#x1F3AC;</span>
-        <h3>Record &amp; Replay</h3>
-        <p>Record once, replay forever — $0 LLM cost. Adapts to layout changes automatically.</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 18px;">
-        <span class="icon" style="font-size: 1.5rem;">&#x1F9E9;</span>
-        <h3>Goal Decomposition</h3>
-        <p>Complex multi-app tasks split into sub-goals and executed sequentially.</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 18px;">
-        <span class="icon" style="font-size: 1.5rem;">&#x1F4C4;</span>
-        <h3>YAML Flows</h3>
-        <p>Declarative test flows — no LLM needed. CI/CD ready with <code>appclaw --plan</code>.</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 18px;">
-        <span class="icon" style="font-size: 1.5rem;">&#x1F4A1;</span>
-        <h3>70% Fewer Tokens</h3>
-        <p>~7k tokens vs ~23k DOM-based. Lower cost, faster responses.</p>
-      </div>
-      <div class="card" style="text-align:center; padding: 18px;">
-        <span class="icon" style="font-size: 1.5rem;">&#x1F512;</span>
-        <h3>Open Source</h3>
-        <p>Apache 2.0. Zero telemetry. Privacy-first. No vendor lock-in.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SLIDE 6 — CONTEXT ENGINEERING -->
-  <section class="slide centered">
-    <h2>Beyond Prompts: <span class="gradient-text">Context Engineering</span></h2>
-    <div class="divider"></div>
-    <p style="max-width: 700px; margin-bottom: 20px; font-size: 0.95rem;">
-      The context window is not a prompt — it's an <em>information retrieval system</em>. Every token should earn its place.
-    </p>
-    <div style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; justify-content: center; max-width: 1000px;">
-      <!-- Context Window Diagram -->
-      <div style="background: #1a1a1a; border-radius: 14px; padding: 22px 26px; color: #e0e0e0; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; line-height: 1.8; min-width: 320px; box-shadow: 0 4px 20px rgba(0,0,0,0.12);">
-        <div style="color: var(--highlight); font-weight: 600; margin-bottom: 8px; font-size: 0.78rem;">CONTEXT WINDOW</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-          <div style="background: rgba(222,115,86,0.15); border: 1px solid rgba(222,115,86,0.3); border-radius: 6px; padding: 8px; text-align: center;">System<br>Prompt</div>
-          <div style="background: rgba(222,115,86,0.15); border: 1px solid rgba(222,115,86,0.3); border-radius: 6px; padding: 8px; text-align: center;">Current<br>Screen</div>
-          <div style="background: rgba(222,115,86,0.15); border: 1px solid rgba(222,115,86,0.3); border-radius: 6px; padding: 8px; text-align: center;">Action<br>History</div>
-          <div style="background: rgba(222,115,86,0.15); border: 1px solid rgba(222,115,86,0.3); border-radius: 6px; padding: 8px; text-align: center;">Goal &amp;<br>Progress</div>
-          <div style="background: rgba(222,115,86,0.15); border: 1px solid rgba(222,115,86,0.3); border-radius: 6px; padding: 8px; text-align: center;">Recovery<br>Hints</div>
-          <div style="background: rgba(222,115,86,0.15); border: 1px solid rgba(222,115,86,0.3); border-radius: 6px; padding: 8px; text-align: center;">Tools<br>Schema</div>
+      <div class="at-split-stats">
+        <div class="at-stat-row">
+          <div class="at-stat-num">2M+</div>
+          <div class="at-stat-lbl">Monthly Downloads</div>
+          <div class="at-stat-sub">npm registry, last 30 days</div>
         </div>
-        <div style="text-align: center; margin-top: 12px; color: #888;">&#x2193;</div>
-        <div style="background: rgba(222,115,86,0.25); border-radius: 8px; padding: 10px; text-align: center; margin-top: 4px; font-weight: 600;">LLM decides &amp; acts</div>
-      </div>
-      <!-- Comparison -->
-      <div style="display: flex; flex-direction: column; gap: 12px; min-width: 280px;">
-        <div class="card" style="padding: 16px; border-left: 4px solid var(--text-muted);">
-          <h3 style="font-size: 0.9rem; opacity: 0.6;">Prompt Engineering</h3>
-          <p style="font-size: 0.78rem;">"Write better instructions" — static, one-size-fits-all, dumps everything in.</p>
+        <div class="at-stat-row">
+          <div class="at-stat-num">10+ yrs</div>
+          <div class="at-stat-lbl">Battle Tested</div>
+          <div class="at-stat-sub">Production at thousands of teams</div>
         </div>
-        <div class="card" style="padding: 16px; border-left: 4px solid var(--highlight);">
-          <h3 style="font-size: 0.9rem; color: var(--highlight);">Context Engineering</h3>
-          <p style="font-size: 0.78rem;">Curate, compress, retrieve &amp; deliver the <em>right knowledge</em> at the <em>right time</em>. Dynamic per step.</p>
+        <div class="at-stat-row">
+          <div class="at-stat-num">15</div>
+          <div class="at-stat-lbl">MCP Tools</div>
+          <div class="at-stat-sub">Structured device control surface</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SLIDE 7 — 7 PRINCIPLES -->
-  <section class="slide centered">
-    <h2>The <span class="gradient-text">7 Principles</span> Behind AppClaw</h2>
-    <div class="divider"></div>
-    <table style="margin-top: 16px; max-width: 960px; width: 100%; border-collapse: collapse; font-size: 0.88rem; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.08);">
-      <thead>
-        <tr style="background: var(--highlight); color: #fff;">
-          <th style="padding: 14px 16px; text-align: left; font-size: 0.78rem; letter-spacing: 1px; font-weight: 700; width: 30%;">PRINCIPLE</th>
-          <th style="padding: 14px 16px; text-align: left; font-size: 0.78rem; letter-spacing: 1px; font-weight: 700; width: 38%;">WHAT IT DOES</th>
-          <th style="padding: 14px 12px; text-align: center; font-size: 0.78rem; letter-spacing: 1px; font-weight: 700; width: 14%;">EXTRA LLM?</th>
-          <th style="padding: 14px 16px; text-align: center; font-size: 0.78rem; letter-spacing: 1px; font-weight: 700; width: 18%;">IMPACT</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom: 1px solid rgba(0,0,0,0.08);">
-          <td style="padding: 13px 16px; font-weight: 600; color: var(--text-primary);">Negative Example Cache</td>
-          <td style="padding: 13px 16px; color: var(--text-secondary);">Track failures per screen — never repeat same mistake</td>
-          <td style="padding: 13px 12px; text-align:center; color: var(--text-secondary);">No</td>
-          <td style="padding: 13px 16px; text-align:center; color: var(--highlight); font-weight: 700;">3 steps saved</td>
-        </tr>
-        <tr style="background: rgba(222,115,86,0.04); border-bottom: 1px solid rgba(0,0,0,0.08);">
-          <td style="padding: 13px 16px; font-weight: 600; color: var(--text-primary);">Progressive Rule Disclosure</td>
-          <td style="padding: 13px 16px; color: var(--text-secondary);">Load rules just-in-time, not all at once</td>
-          <td style="padding: 13px 12px; text-align:center; color: var(--text-secondary);">No</td>
-          <td style="padding: 13px 16px; text-align:center; color: var(--highlight); font-weight: 700;">Faster</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(0,0,0,0.08);">
-          <td style="padding: 13px 16px; font-weight: 600; color: var(--text-primary);">Adaptive Context Budget</td>
-          <td style="padding: 13px 16px; color: var(--text-secondary);">Scale prompt size to screen complexity</td>
-          <td style="padding: 13px 12px; text-align:center; color: var(--text-secondary);">No</td>
-          <td style="padding: 13px 16px; text-align:center; color: var(--highlight); font-weight: 700;">-1,200 tok/step</td>
-        </tr>
-        <tr style="background: rgba(222,115,86,0.04); border-bottom: 1px solid rgba(0,0,0,0.08);">
-          <td style="padding: 13px 16px; font-weight: 600; color: var(--text-primary);">Episodic Memory</td>
-          <td style="padding: 13px 16px; color: var(--text-secondary);">Learn from past runs via trajectory store</td>
-          <td style="padding: 13px 12px; text-align:center; color: var(--text-secondary);">No</td>
-          <td style="padding: 13px 16px; text-align:center; color: var(--highlight); font-weight: 700;">30-50% fewer steps</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(0,0,0,0.08);">
-          <td style="padding: 13px 16px; font-weight: 600; color: var(--text-primary);">Few-Shot Trajectories</td>
-          <td style="padding: 13px 16px; color: var(--text-secondary);">Inject one golden example — show, don't tell</td>
-          <td style="padding: 13px 12px; text-align:center; color: var(--text-secondary);">No</td>
-          <td style="padding: 13px 16px; text-align:center; color: var(--highlight); font-weight: 700;">+20-40% success</td>
-        </tr>
-        <tr style="background: rgba(222,115,86,0.04); border-bottom: 1px solid rgba(0,0,0,0.08);">
-          <td style="padding: 13px 16px; font-weight: 600; color: var(--text-primary);">Rolling Summarization</td>
-          <td style="padding: 13px 16px; color: var(--text-secondary);">Compress old steps, keep recent in full detail</td>
-          <td style="padding: 13px 12px; text-align:center; color: var(--text-secondary);">No</td>
-          <td style="padding: 13px 16px; text-align:center; color: var(--highlight); font-weight: 700;">50 vs 2k tokens</td>
-        </tr>
-        <tr>
-          <td style="padding: 13px 16px; font-weight: 600; color: var(--text-primary);">Screen Fingerprinting</td>
-          <td style="padding: 13px 16px; color: var(--text-secondary);">"This is a login screen" — anchor all reasoning</td>
-          <td style="padding: 13px 12px; text-align:center; color: var(--text-secondary);">No</td>
-          <td style="padding: 13px 16px; text-align:center; color: var(--highlight); font-weight: 700;">~20 extra tokens</td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="margin-top: 20px; font-size: 0.95rem; color: var(--text-muted); font-style: italic;">
-      "Every token in the context window should earn its place."
+  <!-- SLIDE 4 — TOOLS FOR AGENTS ARE NOT APIs (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-split slide-atlas-compare">
+
+    <!-- Orbital decoration -->
+    <svg class="atlas-orb" style="top: -8%; left: -6%;" width="780" height="780" viewBox="0 0 780 780" fill="none">
+      <ellipse cx="390" cy="390" rx="370" ry="240" stroke="#4D62BC" stroke-width="0.8" opacity="0.2" transform="rotate(-12 390 390)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -14%; right: 8%;" width="880" height="880" viewBox="0 0 880 880" fill="none">
+      <ellipse cx="440" cy="440" rx="420" ry="270" stroke="#7E8B3F" stroke-width="0.9" opacity="0.26" transform="rotate(22 440 440)" />
+    </svg>
+
+    <!-- Chartreuse focal dots -->
+    <div class="atlas-dot" style="top: 18%; right: 24%; width: 14px; height: 14px;"></div>
+    <div class="atlas-dot" style="bottom: 26%; left: 38%; width: 10px; height: 10px;"></div>
+
+    <div class="at-inner">
+      <div>
+        <h1 class="at-cmp-headline">Tools for agents are <em>not APIs</em>.</h1>
+        <div class="at-evidence">
+          <div class="at-ev-label">Evidence</div>
+          <div class="at-ev-body">
+            <strong>GitHub:</strong> 40 &rarr; 13 tools, +2&ndash;5pp benchmarks<br>
+            <strong>Block:</strong> 200+ endpoints &rarr; 3 layered tools, &minus;400ms latency
+          </div>
+        </div>
+        <div class="at-credit">
+          Credit: <strong>Sam Partee</strong> &middot; CTO, Arcade &middot; MCP Dev Summit Bengaluru
+        </div>
+      </div>
+
+      <div class="at-compare-stack">
+        <div class="at-cmp-card bad">
+          <div class="at-cmp-label">&#x2717; Anti-pattern</div>
+          <h3 class="at-cmp-title">Thin API wrappers</h3>
+          <div class="at-cmp-tag">Each endpoint becomes a tool.</div>
+          <div class="at-cmp-code"><span class="keyword">get_user</span>(id)<br><span class="keyword">list_orders</span>(uid)<br><span class="keyword">get_shipment</span>(oid)</div>
+          <div class="at-cmp-verdict">Falls off the accuracy cliff</div>
+        </div>
+
+        <div class="at-cmp-card good">
+          <div class="at-cmp-label">&#x2713; Recommended</div>
+          <h3 class="at-cmp-title">Task / intent tools</h3>
+          <div class="at-cmp-tag">Each tool wraps a goal.</div>
+          <div class="at-cmp-code"><span class="keyword">track_order</span>(email)<br>&nbsp;&nbsp;&rarr; handles lookup,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status, formatting</div>
+          <div class="at-cmp-verdict">Keeps agents in the &gt;85% regime</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- SLIDE 8 — LIVE DEMO -->
-  <section class="slide centered">
-    <div style="position: relative; display: inline-block; margin-bottom: 16px;">
-      <div class="demo-icon">&#x1F680;</div>
-      <div class="demo-ripple"></div>
-      <div class="demo-ripple"></div>
-      <div class="demo-ripple"></div>
-    </div>
-    <h2 style="font-size: 3.8rem; margin-bottom: 8px;"><span class="gradient-text">Demo Time</span></h2>
-    <div class="divider"></div>
-    <div style="margin-top: 28px; padding: 16px 32px; background: rgba(0,0,0,0.03); border-radius: 12px; display: inline-block;">
-      <div class="demo-typing">"Open the calculator app and compute 42 x 7"</div>
-    </div>
-    <div class="demo-choice-container">
-      <div class="demo-choice">
-        <span class="choice-icon">&#x1F534;</span>
-        <div class="choice-label"><span>Live Demo</span><span class="choice-sub">Real device, real time</span></div>
+  <!-- SLIDE 5 — THE PROBLEM (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-split slide-atlas-problems">
+
+    <!-- Orbital decoration -->
+    <svg class="atlas-orb" style="top: -10%; left: 28%;" width="880" height="880" viewBox="0 0 880 880" fill="none">
+      <ellipse cx="440" cy="440" rx="420" ry="270" stroke="#7E8B3F" stroke-width="0.9" opacity="0.26" transform="rotate(-16 440 440)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -16%; right: -8%;" width="900" height="900" viewBox="0 0 900 900" fill="none">
+      <ellipse cx="450" cy="450" rx="430" ry="290" stroke="#4D62BC" stroke-width="0.8" opacity="0.16" transform="rotate(20 450 450)" />
+    </svg>
+
+    <!-- Chartreuse focal dots -->
+    <div class="atlas-dot" style="top: 22%; right: 22%; width: 14px; height: 14px;"></div>
+    <div class="atlas-dot" style="bottom: 24%; left: 38%; width: 10px; height: 10px;"></div>
+
+    <div class="at-inner">
+      <div>
+        <h1 class="at-cmp-headline">Mobile QA today is <em>slow, brittle, expensive</em>.</h1>
       </div>
-      <div class="demo-choice">
-        <span class="choice-icon">&#x25B6;&#xFE0F;</span>
-        <div class="choice-label"><span>Recording</span><span class="choice-sub">Pre-recorded walkthrough</span></div>
+
+      <div class="at-problems-list">
+        <div class="at-problem-item">
+          <div class="at-prob-meta"><span class="num">01</span><span class="tag">Overhead</span></div>
+          <h3>Scripting Overhead</h3>
+          <p>Writing and maintaining automation scripts takes weeks. Element locators break with every UI change.</p>
+        </div>
+        <div class="at-problem-item">
+          <div class="at-prob-meta"><span class="num">02</span><span class="tag">Flakiness</span></div>
+          <h3>Flaky Tests</h3>
+          <p>Hard-coded coordinates and selectors crumble when layouts change. Constant maintenance drains the team.</p>
+        </div>
+        <div class="at-problem-item">
+          <div class="at-prob-meta"><span class="num">03</span><span class="tag">Toil</span></div>
+          <h3>Manual Effort</h3>
+          <p>Exploratory testing still relies on humans tapping through every screen, every flow, every edge case.</p>
+        </div>
       </div>
-    </div>
-    <div style="margin-top: 28px;">
-      <a href="https://github.com/AppiumTestDistribution/appclaw" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #24292e, #40464d); color: #fff; border-radius: 12px; text-decoration: none; font-size: 1.1rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 6px 28px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.2)'">
-        <svg height="24" width="24" viewBox="0 0 16 16" fill="white"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        <span>Star us on GitHub</span>
-        <span style="font-size: 1.3rem;">&#x2B50;</span>
-      </a>
     </div>
   </section>
 
-  <!-- SLIDE 7 — GET STARTED -->
-  <section class="slide centered">
-    <h2>Get Started in <span class="gradient-text">4 Steps</span></h2>
-    <div class="divider"></div>
-    <div class="card-grid cols-2" style="max-width: 850px; margin-top: 16px;">
-      <div class="card" style="border-left: 4px solid var(--highlight);">
-        <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--highlight); font-weight: 800; font-size: 1.3rem;">1</span> Install</h3>
-        <div class="code-block" style="padding: 12px 16px; font-size: 0.78rem; margin-top: 8px; max-width: 100%;"><span class="keyword">npm</span> install -g <span class="string">appclaw</span></div>
+  <!-- SLIDE 6 — APPCLAW REVEAL (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-split slide-atlas-reveal">
+
+    <!-- Orbital decoration -->
+    <svg class="atlas-orb" style="top: -14%; left: -8%;" width="900" height="900" viewBox="0 0 900 900" fill="none">
+      <ellipse cx="450" cy="450" rx="430" ry="280" stroke="#4D62BC" stroke-width="0.9" opacity="0.22" transform="rotate(-14 450 450)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -16%; right: -10%;" width="940" height="940" viewBox="0 0 940 940" fill="none">
+      <ellipse cx="470" cy="470" rx="450" ry="300" stroke="#7E8B3F" stroke-width="0.9" opacity="0.3" transform="rotate(22 470 470)" />
+    </svg>
+
+    <!-- Chartreuse focal dots -->
+    <div class="atlas-dot" style="top: 18%; right: 14%; width: 16px; height: 16px;"></div>
+    <div class="atlas-dot" style="bottom: 22%; left: 36%; width: 10px; height: 10px;"></div>
+
+    <div class="at-inner">
+      <div>
+        <h1 class="at-reveal-headline">AppClaw</h1>
+        <p class="at-reveal-tagline">Your AI-powered mobile QA agent.</p>
+        <p class="at-reveal-body">
+          Describe your goal in plain English. AppClaw reads the screen, plans actions, and executes them &mdash; autonomously.
+        </p>
+
+        <div class="at-pillars">
+          <div class="at-pillar olive">
+            <div class="at-pillar-label">Brain</div>
+            <h3>Agentic Brain</h3>
+            <p>Perceive-reason-act loop powered by LLM</p>
+          </div>
+          <div class="at-pillar cobalt">
+            <div class="at-pillar-label">Devices</div>
+            <h3>Real Devices</h3>
+            <p>Android, iOS, emulators, cloud farms</p>
+          </div>
+          <div class="at-pillar olive">
+            <div class="at-pillar-label">Protocol</div>
+            <h3>MCP + Appium</h3>
+            <p>15 tools for structured device control</p>
+          </div>
+          <div class="at-pillar cobalt">
+            <div class="at-pillar-label">Models</div>
+            <h3>Any LLM</h3>
+            <p>Claude, GPT-4, Gemini, Groq, Ollama</p>
+          </div>
+        </div>
       </div>
-      <div class="card" style="border-left: 4px solid var(--highlight);">
-        <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--highlight); font-weight: 800; font-size: 1.3rem;">2</span> Configure LLM</h3>
-        <div class="code-block" style="padding: 12px 16px; font-size: 0.78rem; margin-top: 8px; max-width: 100%;"><span class="comment"># .env file</span><br><span class="keyword">ANTHROPIC_API_KEY</span>=<span class="string">sk-...</span></div>
-      </div>
-      <div class="card" style="border-left: 4px solid var(--highlight);">
-        <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--highlight); font-weight: 800; font-size: 1.3rem;">3</span> Connect Device</h3>
-        <div class="code-block" style="padding: 12px 16px; font-size: 0.78rem; margin-top: 8px; max-width: 100%;"><span class="keyword">adb</span> devices &nbsp;<span class="comment"># verify connection</span></div>
-      </div>
-      <div class="card" style="border-left: 4px solid var(--highlight);">
-        <h3 style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--highlight); font-weight: 800; font-size: 1.3rem;">4</span> Run!</h3>
-        <div class="code-block" style="padding: 12px 16px; font-size: 0.78rem; margin-top: 8px; max-width: 100%;"><span class="keyword">appclaw</span> <span class="string">"Open Settings and turn on WiFi"</span></div>
+
+      <div class="at-qr-block">
+        <div class="at-qr-shell">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img src="appclaw_qr.jpg" alt="AppClaw QR Code">
+        </div>
+        <div class="at-scan-label">Scan</div>
+        <div class="at-reveal-url">appclaw.in</div>
       </div>
     </div>
-    <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
-      Requires Node.js 18+ &middot; Works with USB devices, emulators, simulators, and remote farms &middot; <span style="color: var(--highlight); font-weight: 600;">appclaw.in</span>
-    </p>
   </section>
 
-  <!-- SLIDE 8 — THANK YOU -->
-  <section class="slide centered">
-    <h1 style="font-size: 3.2rem; margin-bottom: 4px;"><span class="gradient-text">Thank You!</span></h1>
-    <div class="divider"></div>
-    <div style="display: flex; align-items: flex-start; justify-content: center; gap: 80px; flex-wrap: wrap; margin-top: 24px;">
-      <!-- Sai Krishna -->
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <img src="https://raw.githubusercontent.com/saikrishna321/saikrishna.tech/main/public/assets/sai-hero.webp" alt="Sai Krishna" style="width: 300px; height: 300px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 20px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
-        <h2 style="font-size: 2.6rem; margin: 0;"><span class="gradient-text">Sai Krishna</span></h2>
-        <div style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 500; margin-top: 6px;">Core Maintainer — Appium</div>
-        <div style="margin-top: 10px;"><span class="pill">saikrishna.tech</span></div>
-        <img src="qr-code.png" alt="QR Code Sai Krishna" style="width: 200px; height: 200px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 2px solid rgba(0,0,0,0.06); margin-top: 16px;">
+  <!-- SLIDE 7 — HOW IT WORKS (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-split slide-atlas-how">
+
+    <svg class="atlas-orb" style="top: -12%; left: -8%;" width="820" height="820" viewBox="0 0 820 820" fill="none">
+      <ellipse cx="410" cy="410" rx="390" ry="260" stroke="#7E8B3F" stroke-width="0.9" opacity="0.26" transform="rotate(-14 410 410)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -18%; right: -10%;" width="900" height="900" viewBox="0 0 900 900" fill="none">
+      <ellipse cx="450" cy="450" rx="430" ry="280" stroke="#4D62BC" stroke-width="0.8" opacity="0.16" transform="rotate(22 450 450)" />
+    </svg>
+    <div class="atlas-dot" style="top: 22%; right: 30%; width: 14px; height: 14px;"></div>
+    <div class="atlas-dot" style="bottom: 24%; left: 36%; width: 10px; height: 10px;"></div>
+
+    <div class="at-inner">
+      <div>
+        <h1 class="at-cmp-headline">How it <em>works</em>.</h1>
+        <p class="at-cmp-lede">
+          Every step is a tight loop &mdash; perceive, reason, act &mdash; then start over.
+        </p>
+        <div class="at-loop">
+          <div class="at-loop-step">
+            <span class="step-icon">&#x1F441;</span>
+            <h4>Perceive</h4>
+            <div class="sub">Read live screen</div>
+          </div>
+          <div class="at-loop-arrow">&rarr;</div>
+          <div class="at-loop-step middle">
+            <span class="step-icon">&#x1F9E0;</span>
+            <h4>Reason</h4>
+            <div class="sub">LLM decides action</div>
+          </div>
+          <div class="at-loop-arrow">&rarr;</div>
+          <div class="at-loop-step">
+            <span class="step-icon">&#x26A1;</span>
+            <h4>Act</h4>
+            <div class="sub">Execute on device</div>
+          </div>
+        </div>
+        <div class="at-loop-cycle">Loop repeats until goal is met</div>
       </div>
-      <!-- Srinivasan Sekar -->
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <img src="https://srini.codes/assets/ProfilePic-ad434bf7.webp" alt="Srinivasan Sekar" style="width: 300px; height: 300px; border-radius: 50%; border: 4px solid rgba(222,115,86,0.5); margin-bottom: 20px; object-fit: cover; box-shadow: 0 8px 40px rgba(222,115,86,0.3);">
-        <h2 style="font-size: 2.6rem; margin: 0;"><span class="gradient-text">Srinivasan Sekar</span></h2>
-        <div style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 500; margin-top: 6px;">Core Maintainer — Appium &amp; Appium MCP</div>
-        <div style="margin-top: 10px;"><span class="pill">srini.codes</span></div>
-        <img src="QR-sekar.png" alt="QR Code Srinivasan Sekar" style="width: 200px; height: 200px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 2px solid rgba(0,0,0,0.06); margin-top: 16px;">
+
+      <div class="at-stack">
+        <div class="at-stack-label">The Stack</div>
+        <div class="at-stack-layer">
+          <span class="chip">Claude</span><span class="chip">GPT-4</span><span class="chip">Gemini</span><span class="chip">Groq</span><span class="chip">Ollama</span>
+          <span class="tag">LLM</span>
+        </div>
+        <div class="at-stack-connector">API</div>
+        <div class="at-stack-layer agent">
+          <span class="name">AppClaw</span>
+          <span class="tag">Agent</span>
+        </div>
+        <div class="at-stack-connector">MCP</div>
+        <div class="at-stack-layer">
+          <span class="chip">appium-mcp</span>
+          <span class="tag">15 Tools</span>
+        </div>
+        <div class="at-stack-connector">WebDriver</div>
+        <div class="at-stack-layer">
+          <span class="chip">Android</span><span class="chip">iOS</span><span class="chip">Cloud</span>
+          <span class="tag">Devices</span>
+        </div>
       </div>
     </div>
-    <div class="code-block" style="margin-top: 24px; max-width: 400px; text-align: center; font-size: 1rem;">
-      <span class="keyword">appclaw.in</span>
+  </section>
+
+  <!-- SLIDE 8 — 7 PRINCIPLES (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-table">
+
+    <svg class="atlas-orb" style="top: -10%; left: 22%;" width="900" height="900" viewBox="0 0 900 900" fill="none">
+      <ellipse cx="450" cy="450" rx="430" ry="280" stroke="#7E8B3F" stroke-width="0.9" opacity="0.22" transform="rotate(-12 450 450)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -18%; right: -8%;" width="880" height="880" viewBox="0 0 880 880" fill="none">
+      <ellipse cx="440" cy="440" rx="420" ry="280" stroke="#4D62BC" stroke-width="0.8" opacity="0.14" transform="rotate(20 440 440)" />
+    </svg>
+    <div class="atlas-dot" style="top: 18%; right: 18%; width: 14px; height: 14px;"></div>
+    <div class="atlas-dot" style="bottom: 22%; left: 12%; width: 10px; height: 10px;"></div>
+
+    <div class="at-table-inner">
+      <div class="at-table-header">
+        <h1 class="at-cmp-headline" style="font-size: 4.4rem;">The <em>7 Principles</em> behind AppClaw.</h1>
+      </div>
+
+      <table class="at-principles-table">
+        <thead>
+          <tr>
+            <th style="width: 38%;">Principle</th>
+            <th style="width: 62%;">What it does</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="at-pri-name">Negative Example Cache</div></td>
+            <td class="at-pri-desc">Track failures per screen &mdash; never repeat same mistake</td>
+          </tr>
+          <tr>
+            <td><div class="at-pri-name">Progressive Rule Disclosure</div></td>
+            <td class="at-pri-desc">Load rules just-in-time, not all at once</td>
+          </tr>
+          <tr>
+            <td><div class="at-pri-name">Adaptive Context Budget</div></td>
+            <td class="at-pri-desc">Scale prompt size to screen complexity</td>
+          </tr>
+          <tr>
+            <td><div class="at-pri-name">Episodic Memory</div></td>
+            <td class="at-pri-desc">Learn from past runs via trajectory store</td>
+          </tr>
+          <tr>
+            <td><div class="at-pri-name">Few-Shot Trajectories</div></td>
+            <td class="at-pri-desc">Inject one golden example &mdash; show, don't tell</td>
+          </tr>
+          <tr>
+            <td><div class="at-pri-name">Rolling Summarization</div></td>
+            <td class="at-pri-desc">Compress old steps, keep recent in full detail</td>
+          </tr>
+          <tr>
+            <td><div class="at-pri-name">Screen Fingerprinting</div></td>
+            <td class="at-pri-desc">"This is a login screen" &mdash; anchor all reasoning</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SLIDE 9 — DEMO (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-split slide-atlas-demo">
+
+    <svg class="atlas-orb" style="top: -14%; left: -12%;" width="900" height="900" viewBox="0 0 900 900" fill="none">
+      <ellipse cx="450" cy="450" rx="430" ry="280" stroke="#4D62BC" stroke-width="0.9" opacity="0.22" transform="rotate(-12 450 450)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -18%; right: -10%;" width="920" height="920" viewBox="0 0 920 920" fill="none">
+      <ellipse cx="460" cy="460" rx="440" ry="290" stroke="#7E8B3F" stroke-width="0.9" opacity="0.28" transform="rotate(22 460 460)" />
+    </svg>
+    <div class="atlas-dot" style="top: 18%; right: 16%; width: 16px; height: 16px;"></div>
+    <div class="atlas-dot" style="bottom: 22%; left: 36%; width: 10px; height: 10px;"></div>
+
+    <div class="at-inner">
+      <div>
+        <h1 class="at-demo-headline">Demo Time</h1>
+        <p class="at-demo-tagline">One prompt. One device. No scripts.</p>
+
+        <div class="at-prompt-block">
+          <div class="lbl">Prompt</div>
+          <div class="prompt">"Open the calculator app and compute 42 x 7"</div>
+        </div>
+
+        <a href="https://github.com/AppiumTestDistribution/appclaw" target="_blank" rel="noopener noreferrer" class="at-github-cta">
+          <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>Star us on GitHub</span>
+        </a>
+      </div>
+
+      <div class="at-demo-side">
+        <div class="at-demo-icon-wrap">
+          <span class="ic">&#x1F680;</span>
+          <span class="ring"></span>
+          <span class="ring"></span>
+          <span class="ring"></span>
+        </div>
+        <div class="at-demo-choice">
+          <span class="ic">&#x1F534;</span>
+          <div class="lbl-stack">
+            <span class="main">Live Demo</span>
+            <span class="sub">Real device, real time</span>
+          </div>
+        </div>
+        <div class="at-demo-choice">
+          <span class="ic">&#x25B6;&#xFE0F;</span>
+          <div class="lbl-stack">
+            <span class="main">Recording</span>
+            <span class="sub">Pre-recorded walkthrough</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10 — GET STARTED (Atlas treatment) -->
+  <section class="slide slide-atlas slide-atlas-split slide-atlas-steps">
+
+    <svg class="atlas-orb" style="top: -12%; left: 14%;" width="880" height="880" viewBox="0 0 880 880" fill="none">
+      <ellipse cx="440" cy="440" rx="420" ry="270" stroke="#4D62BC" stroke-width="0.9" opacity="0.18" transform="rotate(-14 440 440)" />
+    </svg>
+    <svg class="atlas-orb" style="bottom: -16%; right: -8%;" width="920" height="920" viewBox="0 0 920 920" fill="none">
+      <ellipse cx="460" cy="460" rx="440" ry="280" stroke="#7E8B3F" stroke-width="0.9" opacity="0.26" transform="rotate(20 460 460)" />
+    </svg>
+    <div class="atlas-dot" style="top: 22%; right: 18%; width: 14px; height: 14px;"></div>
+    <div class="atlas-dot" style="bottom: 26%; left: 36%; width: 10px; height: 10px;"></div>
+
+    <div class="at-inner">
+      <div>
+        <h1 class="at-cmp-headline">Get started in <em>4 steps</em>.</h1>
+
+        <div class="at-evidence" style="margin-top: 28px; margin-bottom: 24px;">
+          <div class="at-ev-label">Requirements</div>
+          <div class="at-ev-body">
+            Node.js 18+ &middot; USB devices, emulators, simulators, or remote farms
+          </div>
+        </div>
+
+        <div style="font-family: 'Inter', sans-serif; font-variation-settings: 'opsz' 36, 'SOFT' 0, 'wght' 500; font-size: 1.6rem; color: #4D62BC;">↗ appclaw.in</div>
+      </div>
+
+      <div class="at-step-stack">
+        <div class="at-step cobalt">
+          <div class="at-step-num">01</div>
+          <div>
+            <h3>Install</h3>
+            <div class="step-code"><span class="keyword">npm</span> install -g <span class="string">appclaw</span></div>
+          </div>
+        </div>
+        <div class="at-step olive">
+          <div class="at-step-num">02</div>
+          <div>
+            <h3>Configure LLM</h3>
+            <div class="step-code"><span class="comment"># .env file</span><br><span class="keyword">ANTHROPIC_API_KEY</span>=<span class="string">sk-...</span></div>
+          </div>
+        </div>
+        <div class="at-step cobalt">
+          <div class="at-step-num">03</div>
+          <div>
+            <h3>Connect Device</h3>
+            <div class="step-code"><span class="keyword">adb</span> devices &nbsp;<span class="comment"># verify connection</span></div>
+          </div>
+        </div>
+        <div class="at-step olive">
+          <div class="at-step-num">04</div>
+          <div>
+            <h3>Run!</h3>
+            <div class="step-code"><span class="keyword">appclaw</span> <span class="string">"Open Settings and turn on WiFi"</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 — THANK YOU (Tech treatment, matching slide 2) -->
+  <section class="slide slide-tech">
+    <div class="tech-thanks-header">
+      <h1>Thank you.</h1>
+    </div>
+    <div class="tech-stage">
+      <div class="tech-card">
+        <div class="tech-photo-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-photo" src="sai_gray_profile.png" alt="Sai Krishna">
+        </div>
+        <div class="tech-handle">@SAIKRISV</div>
+        <h2 class="tech-name">Sai Krishna</h2>
+        <div class="tech-role">Core Maintainer &middot; Appium</div>
+        <div class="tech-author">Author &mdash; Appium Insights (Apress)</div>
+        <div class="tech-qr-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-qr" src="qr-code.png" alt="QR Code Sai Krishna">
+        </div>
+        <div class="tech-domain">saikrishna.tech</div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-photo-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-photo" src="srini_gray_profile.png" alt="Srinivasan Sekar">
+        </div>
+        <div class="tech-handle">@SRISEKAR</div>
+        <h2 class="tech-name">Srinivasan Sekar</h2>
+        <div class="tech-role">Core Maintainer &middot; Appium &amp; Appium MCP</div>
+        <div class="tech-author">Author &mdash; The MCP Standard</div>
+        <div class="tech-qr-frame">
+          <span class="br-corner tl"></span>
+          <span class="br-corner tr"></span>
+          <span class="br-corner bl"></span>
+          <span class="br-corner br"></span>
+          <img class="tech-qr" src="QR-sekar.png" alt="QR Code Srinivasan Sekar">
+        </div>
+        <div class="tech-domain">srini.codes</div>
+      </div>
+    </div>
+
+    <div class="tech-footer">
+      <div class="tech-progress">
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 10px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 12px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 8px;"></div>
+        <div class="bar" style="height: 14px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 10px;"></div>
+        <div class="bar" style="height: 6px;"></div>
+        <div class="bar" style="height: 8px;"></div>
+        <div class="bar active" style="height: 22px;"></div>
+      </div>
+      <div class="tech-next">THANK YOU</div>
     </div>
   </section>
 
