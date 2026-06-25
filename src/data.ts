@@ -568,5 +568,24 @@ export const VIDEOS: Video[] = [
     publishedAt: '2026-02-11',
     tags: ['AI', 'Testing', 'Conference', 'Automation Guild'],
   },
+  {
+    id: '22',
+    title: 'Lightning Talks | Appium Installer | Sai Krishna',
+    description: 'Lightning talk on the Appium Installer — simplifying Appium setup and configuration.',
+    url: 'https://www.youtube.com/watch?v=hBM3U02P8fM',
+    thumbnail: 'https://img.youtube.com/vi/hBM3U02P8fM/maxresdefault.jpg',
+    publishedAt: '2026-06-25',
+    tags: ['Appium', 'Lightning Talk', 'Mobile Testing', 'Automation'],
+  },
+  {
+    id: '23',
+    title: 'Bridging AI and Mobile Testing: Appium Meets Model Context Protocol',
+    description:
+      'Sai K. & Srinivasan S. explore how AI and mobile testing come together as Appium meets the Model Context Protocol (MCP).',
+    url: 'https://www.youtube.com/watch?v=zt9D5JlSFdo',
+    thumbnail: 'https://img.youtube.com/vi/zt9D5JlSFdo/maxresdefault.jpg',
+    publishedAt: '2026-06-25',
+    tags: ['Appium', 'AI', 'MCP', 'Mobile Testing'],
+  },
 ];
 
